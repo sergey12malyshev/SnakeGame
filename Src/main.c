@@ -65,28 +65,37 @@ UART_HandleTypeDef huart1;
 *
 *
 *******************/
-#define X_MIN     1u
-#define X_MAX     319u
-#define Y_MIN     1u
-#define Y_MAX     200u
+
+#define DEBUG     false 
+
+#define X_MIN     1U
+#define X_MAX     319U
+#define Y_MIN     1U
+#define Y_MAX     200U
+
+#define TIME_UPDATE 15
 
 int16_t x_snake = 160;
-int16_t y_snake = 100;
+int16_t y_snake = 80;
 int16_t old_x = 0;
 int16_t old_y = 0;
 
-int changeX = 0;   //changes the direction of the snake
-int changeY = -1;
+int8_t changeX = 0;   //changes the direction of the snake
+int8_t changeY = -1;
+/* Параметры еды: */
+int16_t  xFood = 100;
+int16_t  yFood = 100;
+int8_t sizeFood = 10;
+
+uint16_t score = 0;
 
 typedef enum {UP, LEFT, DOWN, RIGHT} SPACE_ENUM;
 SPACE_ENUM space = UP;
 
-uint16_t adc = 0;
-
 uint16_t b_color = COLOR(255, 255, 255);
 
-
-
+//Old
+uint16_t adc = 0;
 typedef struct
   {
     uint8_t Parameter1;    // 1 byte
@@ -116,12 +125,41 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-static void screensaver(void)
+static void screenSaver(void)
 {
   const uint16_t colorBg = COLOR(48, 207, 172);
 	LCD_Fill(colorBg);
   STRING_OUT("Snake", 140, 210, 3, 0x00FF, colorBg);
 }
+
+static void screenEndGame(void)
+{
+  const uint16_t colorBg = COLOR(242, 65, 98);
+	LCD_Fill(colorBg);
+  STRING_OUT("GAME OVER", 140, 210, 3, 0x00FF, colorBg);
+}
+
+static void screenGameCompleted(void)
+{
+  const uint16_t colorBg = COLOR(43, 217, 46);
+	LCD_Fill(colorBg);
+  STRING_OUT("Good game!", 140, 210, 3, 0x00FF, colorBg);
+}
+
+static void createFood(uint16_t x0, uint16_t y0)
+{
+ const uint16_t radius = sizeFood;
+ const uint16_t green = COLOR(0, 255, 0);
+ fillCircle(x0, y0, radius, green);
+}
+
+static void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+{
+ const uint16_t size = 4;
+ const uint16_t blue = COLOR(42, 165, 184);
+ H_line(x0, y0, x1, y1, size, blue);
+}
+
 
 void up() 
 {
@@ -177,8 +215,8 @@ int main(void)
 	LCD_Init();
 	LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
 	
-  screensaver();
-  HAL_Delay(650);
+  screenSaver();
+  HAL_Delay(950);
 
   /* Отрисуем рабочее поле */
 	LCD_Fill(0x0000);
@@ -186,9 +224,12 @@ int main(void)
 	line(0, 0, 0, 199, 0xFFFF);
 	STRING_OUT("Счет", 15, 210, 1, 0xFFFF, 0x0000);
 
-  /* Отрисуем мишени */
-  const uint16_t green = COLOR(0, 255, 0);
-  fillCircle(100, 100, 10, green);
+  /* Отрисуем еду */
+  createFood(xFood, yFood);
+
+  /* Отрисуем препятствия */
+  createWalls(140, 180, 140, 20);
+  createWalls(75, 180, 75, 20);
 
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
   
@@ -286,10 +327,21 @@ int main(void)
 		  LCD_DrawPixel(x_snake, y_snake, 0XFFFF);
       LCD_DrawPixel(old_x, old_y, 0X0000);
 		
+#if DEBUG
+		  STRING_NUM_L(y_snake, 3, 120, 210, b_color, 0x0000);
+      STRING_NUM_L(x_snake, 3, 195, 210, b_color, 0x0000);
+#else
 
-		  STRING_NUM_L(y_snake, 3, 125, 210, b_color, 0x0000);
-
-    HAL_Delay(10); // (развертка по Х)
+      STRING_NUM_L(score, 3, 195, 210, b_color, 0x0000);
+#endif
+    if (((x_snake <= (xFood + sizeFood))&&(x_snake >= (xFood - sizeFood))) \
+    && ((y_snake <= (yFood + sizeFood))&&(y_snake >= (yFood - sizeFood))))
+    { //food
+      screenGameCompleted();
+      HAL_Delay(5000);
+      HAL_NVIC_SystemReset();
+    }
+    HAL_Delay(TIME_UPDATE); // (развертка по Х)
 	
 		
   }
