@@ -59,8 +59,8 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-/*Y0*******************
- *
+/*X0*******************
+ Y0
  *
  *
  *******************/
@@ -96,10 +96,10 @@ typedef enum
   DOWN,
   RIGHT
 } SPACE_ENUM;
+
 SPACE_ENUM space = UP;
 
 uint16_t b_color = COLOR(255, 255, 255);
-
 
 typedef struct
 {
@@ -110,14 +110,12 @@ typedef struct
 
 } wals;
 
-const wals wals1 = {140, 180, 140, 20};
-const wals wals2 = {75, 180, 75, 20};
+const wals wals1 = {75, 180, 75, 20}; 
+const wals wals2 = {140, Y_MAX, 140, 105};
+const wals wals3 = {140, 95, 140, Y_MIN};
 
 // Old
 uint16_t adc = 0;
-
-
-
 
 /* USER CODE END PV */
 
@@ -172,6 +170,25 @@ static void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
   H_line(x0, y0, x1, y1, size, blue);
 }
 
+static bool checkWalls(void)
+{
+  bool rc = false;
+
+  rc |= (((x_snake <= (wals1.x1)) && (x_snake >= (wals1.x2))) && ((y_snake <= (wals1.y1)) && (y_snake >= (wals1.y2))));
+  rc |= (((x_snake <= (wals2.x1)) && (x_snake >= (wals2.x2))) && ((y_snake <= (wals2.y1)) && (y_snake >= (wals2.y2))));
+  rc |= (((x_snake <= (wals3.x1)) && (x_snake >= (wals3.x2))) && ((y_snake <= (wals3.y1)) && (y_snake >= (wals3.y2))));
+
+  return rc;
+}
+
+static void endGame(void)
+{
+  HAL_Delay(3000);
+  LCD_SendCommand(LCD_SWRESET);
+  HAL_Delay(1000);
+  HAL_NVIC_SystemReset();
+}
+
 void up()
 {
   changeX = 0; // changes the direction of the snake
@@ -198,7 +215,7 @@ void right()
 
 static void direction(void)
 {
-  //STRING_NUM_L(space, 3, 120, 210, b_color, 0x0000);
+  // STRING_NUM_L(space, 3, 120, 210, b_color, 0x0000);
 
   switch (space)
   {
@@ -327,9 +344,7 @@ int main(void)
   /* Отрисуем препятствия */
   createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-
-  //createWalls(140, 180, 140, 20);
-  //createWalls(75, 180, 75, 20);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
 
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
@@ -340,9 +355,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-/* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
-/* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
     // LCD_fillRect(i+1, 0, 2, 200, 0x0000); // закрашиваем отрисованный график перед его перерисовкой новым графикомS
     old_x = x_snake;
     old_y = y_snake;
@@ -376,23 +391,17 @@ int main(void)
 #else
     STRING_NUM_L(score, 3, 195, 210, b_color, 0x0000);
 #endif
+
     if (((x_snake <= (xFood + sizeFood)) && (x_snake >= (xFood - sizeFood))) && ((y_snake <= (yFood + sizeFood)) && (y_snake >= (yFood - sizeFood))))
     { // food
       screenGameCompleted();
-      HAL_Delay(2000);
-      LCD_SendCommand(LCD_SWRESET);
-      HAL_Delay(2000);
-      HAL_NVIC_SystemReset();
+      endGame();
     }
-    
-    if (((x_snake <= (wals1.x1)) && (x_snake >= (wals1.x2))) \
-    && ((y_snake <= (wals1.y1)) && (y_snake >= (wals1.y2))))
-    { // wals
+
+    if (checkWalls())
+    {
       screenEndGame();
-      HAL_Delay(2000);
-      LCD_SendCommand(LCD_SWRESET);
-      HAL_Delay(2000);
-      HAL_NVIC_SystemReset();
+      endGame();
     }
 
     buttonLeftHandler();
