@@ -90,6 +90,7 @@ uint16_t score = 0;
 
 typedef enum
 {
+  NONE = 0,
   UP,
   LEFT,
   DOWN,
@@ -191,6 +192,8 @@ void right()
 
 static void direction(void)
 {
+  //STRING_NUM_L(space, 3, 120, 210, b_color, 0x0000);
+
   switch (space)
   {
   case UP:
@@ -222,12 +225,11 @@ static void buttonRightHandler(void)
     if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET)
     {
       flagBut2 = true;
-
+      space--;
       if (space == 0)
       {
         space = RIGHT;
       }
-      space--;
       direction();
     }
   }
@@ -248,7 +250,7 @@ static void buttonLeftHandler(void)
     {
       flagBut1 = true;
       space++;
-      if (space >= 4)
+      if (space >= 5)
       {
         space = UP;
       }
