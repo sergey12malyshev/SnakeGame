@@ -74,20 +74,6 @@ UART_HandleTypeDef huart1;
 
 #define TIME_UPDATE 15
 
-int16_t x_snake = 160;
-int16_t y_snake = 80;
-int16_t old_x = 0;
-int16_t old_y = 0;
-
-int8_t changeX = 0; // changes the direction of the snake
-int8_t changeY = -1;
-/* Параметры еды: */
-int16_t xFood = 100;
-int16_t yFood = 100;
-int8_t sizeFood = 10;
-
-uint16_t score = 0;
-
 typedef enum
 {
   NONE = 0,
@@ -99,20 +85,41 @@ typedef enum
 
 SPACE_ENUM space = UP;
 
+int16_t x_snake = 240;
+int16_t y_snake = 80;
+int16_t old_x = 0;
+int16_t old_y = 0;
+
+int8_t changeX = 0; // changes the direction of the snake
+int8_t changeY = -1;
+
+uint16_t score = 0;
 uint16_t b_color = COLOR(255, 255, 255);
 
+/* Параметры еды: */
 typedef struct
 {
-  uint8_t x1; // 1 byte
-  uint8_t y1; // 1 byte
-  uint8_t x2; // 1 byte
-  uint8_t y2; // 1 byte
+  int16_t x;
+  int16_t y;
+  int8_t size;
+} food;
 
+const food food1 = {50, 100, 10}; 
+const food food2 = {280, 25, 10};
+const food food3 = {125, 175, 10};
+
+/* Параметры стен: */
+typedef struct
+{
+  uint8_t x1;
+  uint8_t y1;
+  uint8_t x2;
+  uint8_t y2;
 } wals;
 
-const wals wals1 = {75, 180, 75, 20}; 
-const wals wals2 = {140, Y_MAX, 140, 105};
-const wals wals3 = {140, 95, 140, Y_MIN};
+const wals wals1 = {80, 180, 80, 20}; 
+const wals wals2 = {165, Y_MAX, 165, 110};
+const wals wals3 = {165, 90, 165, Y_MIN};
 
 // Old
 uint16_t adc = 0;
@@ -139,7 +146,7 @@ static void screenSaver(void)
 {
   const uint16_t colorBg = COLOR(48, 207, 172);
   LCD_Fill(colorBg);
-  STRING_OUT("Snake", 140, 210, 3, 0x00FF, colorBg);
+  STRING_OUT("Snake GAME", 100, 180, 5, 0x00FF, colorBg);
 }
 
 static void screenEndGame(void)
@@ -156,11 +163,10 @@ static void screenGameCompleted(void)
   STRING_OUT("Good game!", 140, 210, 3, 0x00FF, colorBg);
 }
 
-static void createFood(uint16_t x0, uint16_t y0)
+static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
-  const uint16_t radius = sizeFood;
   const uint16_t green = COLOR(0, 255, 0);
-  fillCircle(x0, y0, radius, green);
+  fillCircle(x0, y0, sizeFood, green);
 }
 
 static void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
@@ -339,7 +345,9 @@ int main(void)
   STRING_OUT("Счет", 15, 210, 1, 0xFFFF, 0x0000);
 
   /* Отрисуем еду */
-  createFood(xFood, yFood);
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
 
   /* Отрисуем препятствия */
   createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
@@ -392,7 +400,7 @@ int main(void)
     STRING_NUM_L(score, 3, 195, 210, b_color, 0x0000);
 #endif
 
-    if (((x_snake <= (xFood + sizeFood)) && (x_snake >= (xFood - sizeFood))) && ((y_snake <= (yFood + sizeFood)) && (y_snake >= (yFood - sizeFood))))
+    if (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))))
     { // food
       screenGameCompleted();
       endGame();
