@@ -65,7 +65,8 @@ UART_HandleTypeDef huart1;
  *
  *******************/
 
-#define DEBUG false
+#define DEBUG              false
+#define NO_WALS_DEATH      false
 
 #define X_MIN 1U
 #define X_MAX 319U
@@ -107,9 +108,9 @@ typedef struct
   bool disable;
 } food;
 
-food food1 = {50, 100, 10, false}; 
-food food2 = {280, 25, 10, false};
-food food3 = {125, 175, 10, false};
+food food1 = {50, 100, 11, false}; 
+food food2 = {280, 25, 8, false};
+food food3 = {125, 175, 9, false};
 
 
 /* Параметры стен: */
@@ -157,14 +158,14 @@ static void screenEndGame(void)
 {
   const uint16_t colorBg = COLOR(242, 65, 98);
   LCD_Fill(colorBg);
-  STRING_OUT("GAME OVER", 140, 210, 3, 0x00FF, colorBg);
+  STRING_OUT("GAME OVER", 100, 180, 3, 0x00FF, colorBg);
 }
 
 static void screenGameCompleted(void)
 {
   const uint16_t colorBg = COLOR(43, 217, 46);
   LCD_Fill(colorBg);
-  STRING_OUT("Good game!", 140, 210, 3, 0x00FF, colorBg);
+  STRING_OUT("Good game!", 100, 180, 3, 0x00FF, colorBg);
 }
 
 static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
@@ -383,6 +384,7 @@ int main(void)
     y_snake = y_snake + changeY;
     x_snake = x_snake + changeX;
 
+#if NO_WALS_DEATH
     if (y_snake > Y_MAX)
     {
       y_snake = Y_MIN;
@@ -399,7 +401,13 @@ int main(void)
     {
       x_snake = X_MAX;
     }
-
+#else
+    if ((y_snake > Y_MAX)||(x_snake > X_MAX)||(y_snake < Y_MIN)||(x_snake < X_MIN))
+    {
+      screenEndGame();
+      endGame();
+    }
+#endif
     LCD_DrawPixel(x_snake, y_snake, 0XFFFF);
     LCD_DrawPixel(old_x, old_y, 0X0000);
 
