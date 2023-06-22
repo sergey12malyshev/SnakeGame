@@ -100,18 +100,24 @@ SPACE_ENUM space = UP;
 
 uint16_t b_color = COLOR(255, 255, 255);
 
-// Old
-uint16_t adc = 0;
+
 typedef struct
 {
-  uint8_t Parameter1; // 1 byte
-  uint8_t Parameter2; // 1 byte
-  uint8_t Parameter3; // 1 byte
-  uint8_t Parameter4; // 1 byte
+  uint8_t x1; // 1 byte
+  uint8_t y1; // 1 byte
+  uint8_t x2; // 1 byte
+  uint8_t y2; // 1 byte
 
-} tpSettings;
+} wals;
 
-tpSettings settings;
+const wals wals1 = {140, 180, 140, 20};
+const wals wals2 = {75, 180, 75, 20};
+
+// Old
+uint16_t adc = 0;
+
+
+
 
 /* USER CODE END PV */
 
@@ -319,8 +325,11 @@ int main(void)
   createFood(xFood, yFood);
 
   /* Отрисуем препятствия */
-  createWalls(140, 180, 140, 20);
-  createWalls(75, 180, 75, 20);
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
+
+  //createWalls(140, 180, 140, 20);
+  //createWalls(75, 180, 75, 20);
 
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
@@ -370,6 +379,16 @@ int main(void)
     if (((x_snake <= (xFood + sizeFood)) && (x_snake >= (xFood - sizeFood))) && ((y_snake <= (yFood + sizeFood)) && (y_snake >= (yFood - sizeFood))))
     { // food
       screenGameCompleted();
+      HAL_Delay(2000);
+      LCD_SendCommand(LCD_SWRESET);
+      HAL_Delay(2000);
+      HAL_NVIC_SystemReset();
+    }
+    
+    if (((x_snake <= (wals1.x1)) && (x_snake >= (wals1.x2))) \
+    && ((y_snake <= (wals1.y1)) && (y_snake >= (wals1.y2))))
+    { // wals
+      screenEndGame();
       HAL_Delay(2000);
       LCD_SendCommand(LCD_SWRESET);
       HAL_Delay(2000);
