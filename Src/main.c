@@ -97,16 +97,20 @@ uint16_t score = 0;
 uint16_t b_color = COLOR(255, 255, 255);
 
 /* Параметры еды: */
+const uint8_t quantityFood = 3;
+
 typedef struct
 {
-  int16_t x;
-  int16_t y;
-  int8_t size;
+  const int16_t x;
+  const int16_t y;
+  const int8_t size;
+  bool disable;
 } food;
 
-const food food1 = {50, 100, 10}; 
-const food food2 = {280, 25, 10};
-const food food3 = {125, 175, 10};
+food food1 = {50, 100, 10, false}; 
+food food2 = {280, 25, 10, false};
+food food3 = {125, 175, 10, false};
+
 
 /* Параметры стен: */
 typedef struct
@@ -167,6 +171,12 @@ static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
   const uint16_t green = COLOR(0, 255, 0);
   fillCircle(x0, y0, sizeFood, green);
+}
+
+static void deleteFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
+{
+  const uint16_t black = COLOR(0, 0, 0);
+  fillCircle(x0, y0, sizeFood, black);
 }
 
 static void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
@@ -401,7 +411,37 @@ int main(void)
 #endif
 
     if (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))))
-    { // food
+    { // food 1
+      if(!food1.disable)
+      {
+        food1.disable = true;
+        score += 1;
+        deleteFood(food1.x, food1.y, food1.size);
+      }
+    }
+
+    if (((x_snake <= (food2.x + food2.size)) && (x_snake >= (food2.x - food2.size))) && ((y_snake <= (food2.y + food2.size)) && (y_snake >= (food2.y - food2.size))))
+    { // food 2
+      if(!food2.disable)
+      {
+        food2.disable = true;
+        score += 1;
+        deleteFood(food2.x, food2.y, food2.size);
+      }
+    }
+
+    if (((x_snake <= (food3.x + food3.size)) && (x_snake >= (food3.x - food3.size))) && ((y_snake <= (food3.y + food3.size)) && (y_snake >= (food3.y - food3.size))))
+    { // food 3
+      if(!food3.disable)
+      {
+        food3.disable = true;
+        score += 1;
+        deleteFood(food3.x, food3.y, food3.size);
+      }
+    }
+
+    if (score == quantityFood)
+    {
       screenGameCompleted();
       endGame();
     }
