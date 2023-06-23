@@ -94,10 +94,11 @@ int16_t old_y = 0;
 int8_t changeX = 0; // changes the direction of the snake
 int8_t changeY = -1;
 
-uint16_t score = 0;
+uint16_t score = 0, oldScore = 0;
 uint16_t b_color = COLOR(255, 255, 255);
+uint8_t timeCount = 0;
 
-/* Параметры еды: */
+/* РџР°СЂР°РјРµС‚СЂС‹ РµРґС‹: */
 const uint8_t quantityFood = 3;
 
 typedef struct
@@ -113,7 +114,7 @@ food food2 = {280, 25, 8, false};
 food food3 = {125, 175, 9, false};
 
 
-/* Параметры стен: */
+/* РџР°СЂР°РјРµС‚СЂС‹ СЃС‚РµРЅ: */
 typedef struct
 {
   uint8_t x1;
@@ -166,6 +167,20 @@ static void screenGameCompleted(void)
   const uint16_t colorBg = COLOR(43, 217, 46);
   LCD_Fill(colorBg);
   STRING_OUT("Good game!", 100, 180, 3, 0x00FF, colorBg);
+}
+
+static void screenOverVoltageError(void)
+{
+  const uint16_t colorBg = COLOR(255, 0, 0);
+  LCD_Fill(colorBg);
+  STRING_OUT("OVERVOLTAGE!", 80, 180, 3, 0xFFFF, colorBg);
+}
+
+static void screenUnderVoltageError(void)
+{
+  const uint16_t colorBg = COLOR(255, 0, 0);
+  LCD_Fill(colorBg);
+  STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, 0xFFFF, colorBg);
 }
 
 static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
@@ -260,7 +275,7 @@ static void buttonRightHandler(void)
   static bool flagBut2 = false;
 
   if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) && !flagBut2)
-  { // обработчик нажатия
+  { // РѕР±СЂР°Р±РѕС‚С‡РёРє РЅР°Р¶Р°С‚РёСЏ
     HAL_Delay(20);
     if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET)
     {
@@ -274,7 +289,7 @@ static void buttonRightHandler(void)
     }
   }
   if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET) && flagBut2)
-  { // обработчик отпускания
+  { // РѕР±СЂР°Р±РѕС‚С‡РёРє РѕС‚РїСѓСЃРєР°РЅРёСЏ
     flagBut2 = false;
   }
 }
@@ -284,7 +299,7 @@ static void buttonLeftHandler(void)
   static bool flagBut1 = false;
 
   if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET) && !flagBut1)
-  { // обработчик нажатия
+  { // РѕР±СЂР°Р±РѕС‚С‡РёРє РЅР°Р¶Р°С‚РёСЏ
     HAL_Delay(20);
     if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET)
     {
@@ -298,30 +313,96 @@ static void buttonLeftHandler(void)
     }
   }
   if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) && flagBut1)
-  { // обработчик отпускания
+  { // РѕР±СЂР°Р±РѕС‚С‡РёРє РѕС‚РїСѓСЃРєР°РЅРёСЏ
     flagBut1 = false;
   }
 }
-#if 0
-		  HAL_ADC_Start(&hadc1);
-		  HAL_ADC_PollForConversion(&hadc1, 100);
-		  adc = HAL_ADC_GetValue(&hadc1);
-		  HAL_ADC_Stop(&hadc1);
-		  adc = adc/y_scale; // (развертка по У)
 
-      adc++;
-      if (adc > 200) 
-      {
-        adc = 0;
-      } // чтобы не вылазило за экран графика
-#endif
+
+/* Hardware */
+/*
+Standard operating voltage STM32: 2 - 3.6 V
+Standard operating voltage li-ion battery: 3 - 4.2 V
+Standard operating voltage ili9341: 2.5 - 3.3V 
+Standart forward drop silicon diodes: 0.6 - 0.7 V
+----------------------------------------------------
+Total: Voltage control STM32: 2.5 V - 3.3V
+*/
+static uint16_t getADCvalueVrefint(void)
+{ //internal VDA voltage
+  uint16_t adcVal = 0;
+
+	HAL_ADC_Start(&hadc1);
+  HAL_ADC_PollForConversion(&hadc1, 100);
+	adcVal = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Stop(&hadc1);
+  
+  return adcVal;
+}
+
+static uint16_t getBatteryVoltage(void)
+{
+  const uint16_t Vrefint = 1200;
+  const uint16_t adcData =  getADCvalueVrefint();
+  uint16_t voltage_mV = 0;
+
+  if(adcData > 75) // Р·Р°С‰РёС‚Р° РѕС‚ РїРµСЂРµРїРѕР»РЅРµРЅРёСЏ voltage_mV
+  {
+    voltage_mV = (Vrefint * 4095) / adcData; 
+  } 
+  
+  return voltage_mV;
+}
+
+static bool overVoltageControl(uint16_t voltage)
+{
+  const uint16_t V_max = 3300;
+
+  if (voltage > V_max)
+  {
+    return true;
+  }
+  return false;
+}
+
+static bool underVoltageControl(uint16_t voltage)
+{
+  const uint16_t V_min = 2500;
+
+  if (voltage < V_min)
+  {
+    return true;
+  }
+  return false;
+}
+
+static void batteryControlProcess(void)
+{
+  uint16_t voltage = getBatteryVoltage();
+
+  if(overVoltageControl(voltage))
+  {
+    screenOverVoltageError();
+    while (true);
+  }
+  else if(underVoltageControl(voltage))
+  {
+    screenUnderVoltageError();
+    while (true);
+  }
+  else
+  {
+    STRING_NUM_L(voltage, 5, 210, 210, b_color, 0x0000); // Р’С‹РІРµРґРµРј РЅР°РїСЂСЏР¶РµРЅРёРµ
+  }
+}
+
 /* USER CODE END 0 */
 
 int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+   
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -342,25 +423,26 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(50); // Добавим задержку, для исключения дребезга питания
+  HAL_Delay(50); // Р”РѕР±Р°РІРёРј Р·Р°РґРµСЂР¶РєСѓ, РґР»СЏ РёСЃРєР»СЋС‡РµРЅРёСЏ РґСЂРµР±РµР·РіР° РїРёС‚Р°РЅРёСЏ
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
-
+  
+  HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
   HAL_Delay(950);
 
-  /* Отрисуем рабочее поле */
+  /* РћС‚СЂРёСЃСѓРµРј СЂР°Р±РѕС‡РµРµ РїРѕР»Рµ */
   LCD_Fill(0x0000);
   line(0, 201, 319, 201, 0xFFFF);
   line(0, 0, 0, 199, 0xFFFF);
-  STRING_OUT("Счет", 15, 210, 1, 0xFFFF, 0x0000);
+  STRING_OUT("Score", 15, 210, 1, 0xFFFF, 0x0000);
 
-  /* Отрисуем еду */
+  /* РћС‚СЂРёСЃСѓРµРј РµРґСѓ */
   createFood(food1.x, food1.y, food1.size);
   createFood(food2.x, food2.y, food2.size);
   createFood(food3.x, food3.y, food3.size);
 
-  /* Отрисуем препятствия */
+  /* РћС‚СЂРёСЃСѓРµРј РїСЂРµРїСЏС‚СЃС‚РІРёСЏ */
   createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
@@ -377,7 +459,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // LCD_fillRect(i+1, 0, 2, 200, 0x0000); // закрашиваем отрисованный график перед его перерисовкой новым графикомS
+    // LCD_fillRect(i+1, 0, 2, 200, 0x0000); // Р·Р°РєСЂР°С€РёРІР°РµРј РѕС‚СЂРёСЃРѕРІР°РЅРЅС‹Р№ РіСЂР°С„РёРє РїРµСЂРµРґ РµРіРѕ РїРµСЂРµСЂРёСЃРѕРІРєРѕР№ РЅРѕРІС‹Рј РіСЂР°С„РёРєРѕРјS
     old_x = x_snake;
     old_y = y_snake;
 
@@ -411,12 +493,6 @@ int main(void)
     LCD_DrawPixel(x_snake, y_snake, 0XFFFF);
     LCD_DrawPixel(old_x, old_y, 0X0000);
 
-#if DEBUG
-    STRING_NUM_L(y_snake, 3, 120, 210, b_color, 0x0000);
-    STRING_NUM_L(x_snake, 3, 195, 210, b_color, 0x0000);
-#else
-    STRING_NUM_L(score, 3, 195, 210, b_color, 0x0000);
-#endif
 
     if (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))))
     { // food 1
@@ -462,8 +538,25 @@ int main(void)
 
     buttonLeftHandler();
     buttonRightHandler();
+	
+#if DEBUG
+    STRING_NUM_L(y_snake, 3, 120, 210, b_color, 0x0000);
+    STRING_NUM_L(x_snake, 3, 195, 210, b_color, 0x0000);
+#else
+    if(++timeCount > 66 * (15 / TIME_UPDATE)) // РџСЂРё СѓРјРµРЅСЊС€РµРЅРёРё TIME_UPDATE Р·Р°РґРµСЂР¶РєР° РІ 1 СЃ СЃРѕС…СЂР°РЅРёС‚СЃСЏ!
+    {
+      timeCount = 0;
+      batteryControlProcess(); // РљРѕРЅС‚СЂРѕР»РёСЂСѓРµРј РђРљР‘ ~ СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ
+    } 
 
-    HAL_Delay(TIME_UPDATE); // (развертка по Х)
+    if (score != oldScore)
+    {
+      oldScore = score;
+      STRING_NUM_L(score, 3, 135, 210, b_color, 0x0000);   // РћР±РЅРѕРІР»СЏРµРј РїСЂРё РёР·РјРµРЅРµРЅРёРё
+    }
+#endif
+
+    HAL_Delay(TIME_UPDATE); // (СЂР°Р·РІРµСЂС‚РєР° РїРѕ РҐ)
   }
   /* USER CODE END 3 */
 }
@@ -549,7 +642,7 @@ static void MX_ADC1_Init(void)
 
   /**Configure Regular Channel
    */
-  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
