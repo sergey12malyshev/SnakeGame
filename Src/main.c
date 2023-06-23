@@ -94,8 +94,10 @@ int16_t old_y = 0;
 int8_t changeX = 0; // changes the direction of the snake
 int8_t changeY = -1;
 
-uint16_t score = 0, oldScore = 0;
+int16_t score = 0, oldScore = -1;
+uint16_t blue_color = COLOR(56, 214, 255);
 uint16_t b_color = COLOR(255, 255, 255);
+uint16_t orange_color = COLOR(255, 187, 0);
 uint8_t timeCount = 0;
 
 /* Параметры еды: */
@@ -152,7 +154,7 @@ static void screenSaver(void)
 {
   const uint16_t colorBg = COLOR(48, 207, 172);
   LCD_Fill(colorBg);
-  STRING_OUT("Snake GAME", 100, 180, 5, 0x00FF, colorBg);
+  STRING_OUT("SNAKE GAME", 100, 180, 5, 0x00FF, colorBg);
 }
 
 static void screenEndGame(void)
@@ -247,8 +249,6 @@ void right()
 
 static void direction(void)
 {
-  // STRING_NUM_L(space, 3, 120, 210, b_color, 0x0000);
-
   switch (space)
   {
   case UP:
@@ -392,7 +392,7 @@ static void batteryControlProcess(void)
   }
   else
   {
-    STRING_NUM_L(voltage, 5, 210, 210, b_color, 0x0000); // Выведем напряжение
+    STRING_NUM_L(voltage, 4, 190, 210, blue_color, 0x0000); // Выведем напряжение
   }
 }
 
@@ -435,7 +435,8 @@ int main(void)
   LCD_Fill(0x0000);
   line(0, 201, 319, 201, 0xFFFF);
   line(0, 0, 0, 199, 0xFFFF);
-  STRING_OUT("Score", 15, 210, 1, 0xFFFF, 0x0000);
+  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
+  STRING_OUT("mV", 270, 210, 1, blue_color, 0x0000);
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -459,7 +460,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    // LCD_fillRect(i+1, 0, 2, 200, 0x0000); // закрашиваем отрисованный график перед его перерисовкой новым графикомS
+
     old_x = x_snake;
     old_y = y_snake;
 
@@ -552,7 +553,7 @@ int main(void)
     if (score != oldScore)
     {
       oldScore = score;
-      STRING_NUM_L(score, 3, 135, 210, b_color, 0x0000);   // Обновляем при изменении
+      STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);   // Обновляем при изменении
     }
 #endif
 
