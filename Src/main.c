@@ -22,14 +22,14 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
-#include "SPI_TFT.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "SPI_TFT.h"
+#include "hard.h"
 
 /* USER CODE END Includes */
 
@@ -40,6 +40,16 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DEBUG              false
+#define NO_WALS_DEATH      false
+
+#define X_MIN 1U
+#define X_MAX 319U
+#define Y_MIN 1U
+#define Y_MAX 200U
+
+#define TIME_UPDATE 15
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -58,21 +68,14 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
+const int16_t SWversionMajor = 0;
+const int16_t SWversionMinor = 1;
+
 /*X0*******************
  Y0
  *
  *
  *******************/
-
-#define DEBUG              false
-#define NO_WALS_DEATH      false
-
-#define X_MIN 1U
-#define X_MAX 319U
-#define Y_MIN 1U
-#define Y_MAX 200U
-
-#define TIME_UPDATE 15
 
 typedef enum
 {
@@ -114,7 +117,6 @@ food food1 = {50, 100, 11, false};
 food food2 = {280, 25, 8, false};
 food food3 = {125, 175, 9, false};
 
-
 /* Параметры стен: */
 typedef struct
 {
@@ -128,8 +130,6 @@ const wals wals1 = {80, 180, 80, 20};
 const wals wals2 = {165, Y_MAX, 165, 110};
 const wals wals3 = {165, 90, 165, Y_MIN};
 
-// Old
-uint16_t adc = 0;
 
 /* USER CODE END PV */
 
@@ -147,11 +147,16 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 static void screenSaver(void)
 {
   const uint16_t colorBg = COLOR(48, 207, 172);
   LCD_Fill(colorBg);
   STRING_OUT("SNAKE GAME", 100, 180, 5, 0x00FF, colorBg);
+  STRING_OUT("Version", 100, 220, 5, 0x00FF, colorBg);
+  STRING_NUM_L(SWversionMajor, 2, 125, 220, 0x00FF, colorBg);
+  STRING_OUT(".", 135, 220, 5, 0x00FF, colorBg);
+  STRING_NUM_L(SWversionMinor, 2, 145, 220, 0x00FF, colorBg); 
 }
 
 static void screenEndGame(void)
@@ -316,64 +321,6 @@ static void buttonLeftHandler(void)
   { // обработчик отпускания
     flagBut1 = false;
   }
-}
-
-
-/* Hardware */
-/*
-Standard operating voltage STM32: 2 - 3.6 V
-Standard operating voltage li-ion battery: 3 - 4.2 V
-Standard operating voltage ili9341: 2.5 - 3.3V 
-Standart forward drop silicon diodes: 0.6 - 0.7 V
-----------------------------------------------------
-Total: Voltage control STM32: 2.5 V - 3.3V
-*/
-static uint16_t getADCvalueVrefint(void)
-{ //internal VDA voltage
-  uint16_t adcVal = 0;
-
-	HAL_ADC_Start(&hadc1);
-  HAL_ADC_PollForConversion(&hadc1, 100);
-	adcVal = HAL_ADC_GetValue(&hadc1);
-	HAL_ADC_Stop(&hadc1);
-  
-  return adcVal;
-}
-
-static uint16_t getBatteryVoltage(void)
-{
-  const uint16_t Vrefint = 1200;
-  const uint16_t adcData =  getADCvalueVrefint();
-  uint16_t voltage_mV = 0;
-
-  if(adcData > 75) // защита от переполнения voltage_mV
-  {
-    voltage_mV = (Vrefint * 4095) / adcData; 
-  } 
-  
-  return voltage_mV;
-}
-
-static bool overVoltageControl(uint16_t voltage)
-{
-  const uint16_t V_max = 3300;
-
-  if (voltage > V_max)
-  {
-    return true;
-  }
-  return false;
-}
-
-static bool underVoltageControl(uint16_t voltage)
-{
-  const uint16_t V_min = 2500;
-
-  if (voltage < V_min)
-  {
-    return true;
-  }
-  return false;
 }
 
 static void batteryControlProcess(void)
