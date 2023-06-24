@@ -153,10 +153,10 @@ static void screenSaver(void)
   const uint16_t colorBg = COLOR(48, 207, 172);
   LCD_Fill(colorBg);
   STRING_OUT("SNAKE GAME", 100, 180, 5, 0x00FF, colorBg);
-  STRING_OUT("Version", 100, 220, 5, 0x00FF, colorBg);
-  STRING_NUM_L(SWversionMajor, 2, 125, 220, 0x00FF, colorBg);
-  STRING_OUT(".", 135, 220, 5, 0x00FF, colorBg);
-  STRING_NUM_L(SWversionMinor, 2, 145, 220, 0x00FF, colorBg); 
+  STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
+  STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
+  STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
+  STRING_NUM_L(SWversionMinor, 1, 205, 220, 0x00FF, colorBg); 
 }
 
 static void screenEndGame(void)
@@ -385,7 +385,7 @@ int main(void)
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
-  HAL_Delay(950);
+  HAL_Delay(1100);
 
   /* Отрисуем рабочее поле */
   LCD_Fill(0x0000);
