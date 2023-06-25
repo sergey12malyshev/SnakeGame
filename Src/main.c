@@ -197,6 +197,8 @@ static void deleteFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
   const uint16_t black = COLOR(0, 0, 0);
   fillCircle(x0, y0, sizeFood, black);
+  score += 1;
+  beep(10);
 }
 
 static void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
@@ -456,7 +458,6 @@ int main(void)
       if(!food1.disable)
       {
         food1.disable = true;
-        score += 1;
         deleteFood(food1.x, food1.y, food1.size);
       }
     }
@@ -466,7 +467,6 @@ int main(void)
       if(!food2.disable)
       {
         food2.disable = true;
-        score += 1;
         deleteFood(food2.x, food2.y, food2.size);
       }
     }
@@ -476,7 +476,6 @@ int main(void)
       if(!food3.disable)
       {
         food3.disable = true;
-        score += 1;
         deleteFood(food3.x, food3.y, food3.size);
       }
     }
