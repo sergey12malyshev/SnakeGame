@@ -45,8 +45,8 @@
 
 #define X_MIN 1U
 #define X_MAX 319U
-#define Y_MIN 1U
-#define Y_MAX 200U
+#define Y_MIN 0U
+#define Y_MAX 198U
 
 #define TIME_UPDATE 15
 
@@ -219,18 +219,6 @@ static bool checkWalls(void)
   return rc;
 }
 
-static void endGame(void)
-{
-  beep(80);
-  while (true);
-#if 0
-  HAL_Delay(3000);
-  LCD_SendCommand(LCD_SWRESET);
-  HAL_Delay(1000);
-  HAL_NVIC_SystemReset();
-#endif
-}
-
 void up()
 {
   changeX = 0; // changes the direction of the snake
@@ -346,6 +334,48 @@ static void batteryControlProcess(void)
   }
 }
 
+static void initGame(void)
+{
+  /* Отрисуем рабочее поле */
+  LCD_Fill(0x0000);
+  line(0, 201, 319, 201, 0xFFFF);
+  line(0, 0, 0, 199, 0xFFFF);
+  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
+  STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
+
+  /* Отрисуем еду */
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
+
+  /* Отрисуем препятствия */
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
+  
+  /* Обнулим переменные */
+  up();
+  oldScore = score = 0;
+  x_snake = 240;
+  y_snake = 80;
+  old_x = 0;
+  old_y = 0;
+}
+
+static void endGame(void)
+{
+  beep(80);
+  HAL_Delay(300);
+  while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET));
+  initGame();
+#if 0
+  HAL_Delay(3000);
+  LCD_SendCommand(LCD_SWRESET);
+  HAL_Delay(1000);
+  HAL_NVIC_SystemReset();
+#endif
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -390,26 +420,10 @@ int main(void)
   screenSaver();
   HAL_Delay(1100);
 
-  /* Отрисуем рабочее поле */
-  LCD_Fill(0x0000);
-  line(0, 201, 319, 201, 0xFFFF);
-  line(0, 0, 0, 199, 0xFFFF);
-  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
-  STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
-
-  /* Отрисуем еду */
-  createFood(food1.x, food1.y, food1.size);
-  createFood(food2.x, food2.y, food2.size);
-  createFood(food3.x, food3.y, food3.size);
-
-  /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-
+  initGame();
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
-  up();
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
