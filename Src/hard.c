@@ -62,6 +62,7 @@ bool underVoltageControl(uint16_t voltage)
 
 void beep(uint16_t time)
 {
-  HAL_GPIO_WritePin(PORTB, GPIO_PIN_13, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
   HAL_Delay(time);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 }
