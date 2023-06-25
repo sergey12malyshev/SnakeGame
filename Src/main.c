@@ -163,7 +163,8 @@ static void screenEndGame(void)
 {
   const uint16_t colorBg = COLOR(242, 65, 98);
   LCD_Fill(colorBg);
-  STRING_OUT("GAME OVER", 100, 180, 3, 0x00FF, colorBg);
+  STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, colorBg);
+  STRING_OUT("press button >", 5, 210, 1, 0x00FF, green_color);
 }
 
 static void screenGameCompleted(void)
@@ -270,10 +271,10 @@ static void buttonRightHandler(void)
 {
   static bool flagBut2 = false;
 
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET) && !flagBut2)
+  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) && !flagBut2)
   { // обработчик нажатия
     HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET)
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
     {
       flagBut2 = true;
       space--;
@@ -284,7 +285,7 @@ static void buttonRightHandler(void)
       direction();
     }
   }
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET) && flagBut2)
+  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET) && flagBut2)
   { // обработчик отпускания
     flagBut2 = false;
   }
@@ -360,13 +361,16 @@ static void initGame(void)
   y_snake = 80;
   old_x = 0;
   old_y = 0;
+  food1.disable = false;
+  food2.disable = false;
+  food3.disable = false;
 }
 
 static void endGame(void)
 {
   beep(80);
   HAL_Delay(300);
-  while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET));
+  while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET));
   initGame();
 #if 0
   HAL_Delay(3000);
@@ -411,6 +415,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
   HAL_Delay(50); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
@@ -421,9 +426,8 @@ int main(void)
   HAL_Delay(1100);
 
   initGame();
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
-  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -731,7 +735,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -740,15 +744,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pins : PB0 LED_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB12 PB13 PB14 PB15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+  /*Configure GPIO pins : PB13 PB14 PB15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
