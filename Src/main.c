@@ -88,22 +88,21 @@ typedef enum
 
 SPACE_ENUM space = UP;
 
-int16_t x_snake = 240;
-int16_t y_snake = 80;
+int16_t x_snake, y_snake;
 int16_t old_x = 0;
 int16_t old_y = 0;
 
 int8_t changeX = 0; // changes the direction of the snake
 int8_t changeY = -1;
 
-int16_t score = 0, oldScore = -1;
+int16_t score = 0, oldScore = 0;
 uint16_t green_color = COLOR(17, 255, 0);
 uint16_t b_color = COLOR(255, 255, 255);
 uint16_t orange_color = COLOR(255, 187, 0);
 uint8_t timeCount = 0;
 
 /* Параметры еды: */
-const uint8_t quantityFood = 3;
+const uint8_t quantityFood = 4;
 
 typedef struct
 {
@@ -116,6 +115,7 @@ typedef struct
 food food1 = {50, 100, 11, false}; 
 food food2 = {280, 25, 8, false};
 food food3 = {125, 175, 9, false};
+food food4 = {235, 180, 12, false};
 
 /* Параметры стен: */
 typedef struct
@@ -129,6 +129,7 @@ typedef struct
 const wals wals1 = {80, 180, 80, 20}; 
 const wals wals2 = {165, Y_MAX, 165, 110};
 const wals wals3 = {165, 90, 165, Y_MIN};
+const wals wals4 = {250, 90, 250, Y_MIN};
 
 
 /* USER CODE END PV */
@@ -216,6 +217,7 @@ static bool checkWalls(void)
   rc |= (((x_snake <= (wals1.x1)) && (x_snake >= (wals1.x2))) && ((y_snake <= (wals1.y1)) && (y_snake >= (wals1.y2))));
   rc |= (((x_snake <= (wals2.x1)) && (x_snake >= (wals2.x2))) && ((y_snake <= (wals2.y1)) && (y_snake >= (wals2.y2))));
   rc |= (((x_snake <= (wals3.x1)) && (x_snake >= (wals3.x2))) && ((y_snake <= (wals3.y1)) && (y_snake >= (wals3.y2))));
+  rc |= (((x_snake <= (wals4.x1)) && (x_snake >= (wals4.x2))) && ((y_snake <= (wals4.y1)) && (y_snake >= (wals4.y2))));
 
   return rc;
 }
@@ -342,28 +344,32 @@ static void initGame(void)
   line(0, 201, 319, 201, 0xFFFF);
   line(0, 0, 0, 199, 0xFFFF);
   STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
+  STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
   STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
   createFood(food2.x, food2.y, food2.size);
   createFood(food3.x, food3.y, food3.size);
+  createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
   createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2);
   
-  /* Обнулим переменные */
+  /* Предустановим переменные */
   up();
   oldScore = score = 0;
-  x_snake = 240;
+  x_snake = 215;
   y_snake = 80;
   old_x = 0;
   old_y = 0;
   food1.disable = false;
   food2.disable = false;
   food3.disable = false;
+  food4.disable = false;
 }
 
 static void endGame(void)
@@ -496,6 +502,15 @@ int main(void)
       {
         food3.disable = true;
         deleteFood(food3.x, food3.y, food3.size);
+      }
+    }
+    
+    if (((x_snake <= (food4.x + food4.size)) && (x_snake >= (food4.x - food4.size))) && ((y_snake <= (food4.y + food4.size)) && (y_snake >= (food4.y - food4.size))))
+    { // food 4
+      if(!food4.disable)
+      {
+        food4.disable = true;
+        deleteFood(food4.x, food4.y, food4.size);
       }
     }
 
