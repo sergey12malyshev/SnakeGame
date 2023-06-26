@@ -48,7 +48,7 @@
 #define Y_MIN 0U
 #define Y_MAX 198U
 
-#define TIME_UPDATE 15
+#define TIME_UPDATE 10
 
 /* USER CODE END PD */
 
@@ -88,6 +88,8 @@ typedef enum
 
 SPACE_ENUM space = UP;
 
+const uint16_t sizeSnake = 2;
+const uint16_t colorSnake = COLOR(255, 255, 0);
 int16_t x_snake, y_snake;
 int16_t old_x = 0;
 int16_t old_y = 0;
@@ -474,9 +476,12 @@ int main(void)
       endGame();
     }
 #endif
-    LCD_DrawPixel(x_snake, y_snake, 0XFFFF);
-    LCD_DrawPixel(old_x, old_y, 0X0000);
 
+    if (((x_snake <= (old_x + sizeSnake)) || (x_snake >= (old_x - sizeSnake))) && ((y_snake <= (old_y + sizeSnake)) && (y_snake >= (old_y - sizeSnake))))
+    {
+      fillCircle(old_x, old_y, 2, 0X0000);
+      fillCircle(x_snake, y_snake, 2, colorSnake);
+    }
 
     if (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))))
     { // food 1
