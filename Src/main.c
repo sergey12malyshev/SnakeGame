@@ -224,6 +224,10 @@ static bool checkWalls(void)
   return rc;
 }
 
+static void scoreUpdate(uint16_t scoreLoc)
+{
+  STRING_NUM_L(scoreLoc, 2, 125, 210,  orange_color, 0x0000);  
+}
 void up()
 {
   changeX = 0; // changes the direction of the snake
@@ -364,6 +368,7 @@ static void initGame(void)
   /* Предустановим переменные */
   up();
   oldScore = score = 0;
+  scoreUpdate(score);
   x_snake = 215;
   y_snake = 80;
   old_x = 0;
@@ -547,7 +552,7 @@ int main(void)
     if (score != oldScore)
     {
       oldScore = score;
-      STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);   // Обновляем при изменении
+      scoreUpdate(score);   // Обновляем при изменении
     }
 #endif
 
@@ -764,11 +769,29 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PA0 PA1 PA2 PA3
+                           PA4 PA8 PA11 PA12
+                           PA15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
+                          |GPIO_PIN_4|GPIO_PIN_8|GPIO_PIN_11|GPIO_PIN_12
+                          |GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pins : PB0 LED_Pin */
   GPIO_InitStruct.Pin = GPIO_PIN_0|LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB1 PB2 PB10 PB11
+                           PB3 PB4 PB5 PB6
+                           PB7 PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11
+                          |GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6
+                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB13 PB14 PB15 */
@@ -812,6 +835,8 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
+
+  STRING_OUT("ERROR!", 80, 180, 3, 0xFFFF,  0x0000);
 }
 #endif /* USE_FULL_ASSERT */
 

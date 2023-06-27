@@ -41,6 +41,10 @@ Cppcheck 2.10 https://cppcheck.sourceforge.io/
 ## Прошивка ПО
 Запустить **programFlash.bat**
 
+## Настройка периферии
+STM32 CubeMX
+
+(Установленны галочки Enable Full Assert и Set All Free Pins as Analog)
 ## Hardware
 - МК - STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
 - Дисплей - 2.8 TFT SPI 240x320 display (ILI9341)
