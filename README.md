@@ -10,7 +10,7 @@ Snake game project on STM32 controller and ILI9341 display
 ### Компилятор 
 *GCC* (gcc-arm-none-eabi) version 5.4.1 20160919
 
-### Настройка системы сборки
+### Настройка системы сборки в WINDOWS10
 1. Скачать GNU Arm Embedded Toolchain 
 https://developer.arm.com/downloads/-/gnu-rm#:~:text=The%20GNU%20Arm%20Embedded%20Toolchain,Arm%20Cortex%2DR%20processor%20families
 or
