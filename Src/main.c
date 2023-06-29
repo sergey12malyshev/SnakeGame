@@ -171,6 +171,8 @@ static void screenEndGame(void)
   LCD_Fill(colorBg);
   STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, colorBg);
   STRING_OUT("press button >", 5, 210, 1, 0x00FF, green_color);
+
+  level = 0; //выделить эту логику!!
 }
 
 static void screenGameCompleted(void)
@@ -178,6 +180,12 @@ static void screenGameCompleted(void)
   const uint16_t colorBg = COLOR(43, 217, 46);
   LCD_Fill(colorBg);
   STRING_OUT("Good game!", 100, 180, 3, 0x00FF, colorBg);
+
+  level++;
+  if(level > 1)
+  {
+    level = 0; //выделить эту логику!!
+  }
 }
 
 static void screenOverVoltageError(void)
@@ -374,15 +382,15 @@ static void levelOne(void)
 
 static void levelTwo(void)
 {
-  food1 = (food){50, 100, 4, false}; 
-  food2 = (food){280, 25, 4, false};
-  food3 = (food){125, 175, 4, false};
-  food4 = (food){235, 180, 4, false};
+  food1 = (food){20, 100, 4, false}; 
+  food2 = (food){200, 10, 6, false};
+  food3 = (food){100, 160, 12, false};
+  food4 = (food){280, 135, 7, false};
 
-  wals1 = (wals){80, 180, 80, 20}; 
-  wals2 = (wals){165, Y_MAX, 165, 110};
-  wals3 = (wals){165, 90, 165, Y_MIN};
-  wals4 = (wals){250, 90, 250, Y_MIN};
+  wals1 = (wals){40, 180, 40, 20}; 
+  wals2 = (wals){150, Y_MAX, 150, 110};
+  wals3 = (wals){185, 85, 185, 40};
+  wals4 = (wals){255, 160, 255, 40};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -423,12 +431,10 @@ static void initGame(void)
   switch (level)
   {
      case 0:
-      level = 1;
       levelOne();
       break;
      case 1:
-     level = 0;
-     levelTwo();
+      levelTwo();
       break; 
     default:
       break;
