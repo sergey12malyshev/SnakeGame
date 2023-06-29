@@ -88,6 +88,8 @@ typedef enum
 
 SPACE_ENUM space = UP;
 
+static uint8_t level = 0;
+
 const uint16_t sizeSnake = 2;
 const uint16_t colorSnake = COLOR(255, 255, 0);
 int16_t x_snake, y_snake;
@@ -98,6 +100,7 @@ int8_t changeX = 0; // changes the direction of the snake
 int8_t changeY = -1;
 
 int16_t score = 0, oldScore = 0;
+/* https://colorscheme.ru/color-converter.html */
 uint16_t green_color = COLOR(17, 255, 0);
 uint16_t b_color = COLOR(255, 255, 255);
 uint16_t orange_color = COLOR(255, 187, 0);
@@ -108,16 +111,16 @@ const uint8_t quantityFood = 4;
 
 typedef struct
 {
-  const int16_t x;
-  const int16_t y;
-  const int8_t size;
+  int16_t x;
+  int16_t y;
+  int8_t size;
   bool disable;
 } food;
 
-food food1 = {50, 100, 11, false}; 
-food food2 = {280, 25, 8, false};
-food food3 = {125, 175, 9, false};
-food food4 = {235, 180, 12, false};
+food food1 = {0}; 
+food food2 = {0};
+food food3 = {0};
+food food4 = {0};
 
 /* Параметры стен: */
 typedef struct
@@ -128,10 +131,10 @@ typedef struct
   uint8_t y2;
 } wals;
 
-const wals wals1 = {80, 180, 80, 20}; 
-const wals wals2 = {165, Y_MAX, 165, 110};
-const wals wals3 = {165, 90, 165, Y_MIN};
-const wals wals4 = {250, 90, 250, Y_MIN};
+wals wals1 = {0}; 
+wals wals2 = {0};
+wals wals3 = {0};
+wals wals4 = {0};
 
 
 /* USER CODE END PV */
@@ -343,15 +346,18 @@ static void batteryControlProcess(void)
   }
 }
 
-static void initGame(void)
+static void levelOne(void)
 {
-  /* Отрисуем рабочее поле */
-  LCD_Fill(0x0000);
-  line(0, 201, 319, 201, 0xFFFF);
-  line(0, 0, 0, 199, 0xFFFF);
-  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
-  STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
-  STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
+  food tmp1 = {50, 100, 11, false}; 
+  food1 = tmp1;
+  food2 = (food){280, 25, 8, false};
+  food3 = (food){125, 175, 9, false};
+  food4 = (food){235, 180, 12, false};
+
+  wals1 = (wals){80, 180, 80, 20}; 
+  wals2 = (wals){165, Y_MAX, 165, 110};
+  wals3 = (wals){165, 90, 165, Y_MIN};
+  wals4 = (wals){250, 90, 250, Y_MIN};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -363,7 +369,43 @@ static void initGame(void)
   createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+}
+
+static void levelTwo(void)
+{
+  food1 = (food){50, 100, 4, false}; 
+  food2 = (food){280, 25, 4, false};
+  food3 = (food){125, 175, 4, false};
+  food4 = (food){235, 180, 4, false};
+
+  wals1 = (wals){80, 180, 80, 20}; 
+  wals2 = (wals){165, Y_MAX, 165, 110};
+  wals3 = (wals){165, 90, 165, Y_MIN};
+  wals4 = (wals){250, 90, 250, Y_MIN};
+
+  /* Отрисуем еду */
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
+  createFood(food4.x, food4.y, food4.size);
+
+  /* Отрисуем препятствия */
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+}
+
+static void initGame(void)
+{
+  /* Отрисуем рабочее поле */
+  LCD_Fill(0x0000);
+  line(0, 201, 319, 201, 0xFFFF);
+  line(0, 0, 0, 199, 0xFFFF);
+  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
+  STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
+  STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
   
   /* Предустановим переменные */
   up();
@@ -377,6 +419,20 @@ static void initGame(void)
   food2.disable = false;
   food3.disable = false;
   food4.disable = false;
+
+  switch (level)
+  {
+     case 0:
+      level = 1;
+      levelOne();
+      break;
+     case 1:
+     level = 0;
+     levelTwo();
+      break; 
+    default:
+      break;
+  }
 }
 
 static void endGame(void)
@@ -385,12 +441,6 @@ static void endGame(void)
   HAL_Delay(300);
   while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET));
   initGame();
-#if 0
-  HAL_Delay(3000);
-  LCD_SendCommand(LCD_SWRESET);
-  HAL_Delay(1000);
-  HAL_NVIC_SystemReset();
-#endif
 }
 
 /* USER CODE END 0 */
