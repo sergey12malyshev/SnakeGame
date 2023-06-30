@@ -421,7 +421,6 @@ static void initGame(void)
   food3.disable = false;
   food4.disable = false;
 
-#if 0
   switch (level)
   {
      case 0:
@@ -433,9 +432,6 @@ static void initGame(void)
     default:
       break;
   }
-#else
-levelTwo();
-#endif
 }
 
 static void endGame(void)
