@@ -69,7 +69,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 1;
+const int16_t SWversionMinor = 2;
 
 /*X0*******************
  Y0
@@ -351,7 +351,7 @@ static void levelOne(void)
 {
   food tmp1 = {50, 100, 11, false}; 
   food1 = tmp1;
-  food2 = (food){280, 25, 8, false};
+  food2 = (food){280, 25, 8, false};  //Составной литерал C99 http://zonakoda.ru/sostavnye-literaly-v-c99.html
   food3 = (food){125, 175, 9, false};
   food4 = (food){235, 180, 12, false};
 
@@ -382,7 +382,7 @@ static void levelTwo(void)
 
   wals1 = (wals){40, 180, 40, 20}; 
   wals2 = (wals){150, Y_MAX, 150, 110};
-  wals3 = (wals){185, 85, 185, 40};
+  wals3 = (wals){185, 120, 185, 5};
   wals4 = (wals){255, 160, 255, 40};
 
   /* Отрисуем еду */
@@ -421,6 +421,7 @@ static void initGame(void)
   food3.disable = false;
   food4.disable = false;
 
+#if 0
   switch (level)
   {
      case 0:
@@ -432,6 +433,9 @@ static void initGame(void)
     default:
       break;
   }
+#else
+levelTwo();
+#endif
 }
 
 static void endGame(void)
