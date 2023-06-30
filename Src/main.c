@@ -171,8 +171,6 @@ static void screenEndGame(void)
   LCD_Fill(colorBg);
   STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, colorBg);
   STRING_OUT("press button >", 5, 210, 1, 0x00FF, green_color);
-
-  level = 0; //выделить эту логику!!
 }
 
 static void screenGameCompleted(void)
@@ -180,12 +178,6 @@ static void screenGameCompleted(void)
   const uint16_t colorBg = COLOR(43, 217, 46);
   LCD_Fill(colorBg);
   STRING_OUT("Good game!", 100, 180, 3, 0x00FF, colorBg);
-
-  level++;
-  if(level > 1)
-  {
-    level = 0; //выделить эту логику!!
-  }
 }
 
 static void screenOverVoltageError(void)
@@ -239,6 +231,7 @@ static void scoreUpdate(uint16_t scoreLoc)
 {
   STRING_NUM_L(scoreLoc, 2, 125, 210,  orange_color, 0x0000);  
 }
+
 void up()
 {
   changeX = 0; // changes the direction of the snake
@@ -449,6 +442,20 @@ static void endGame(void)
   initGame();
 }
 
+static void levelUp(void)
+{
+  level++;
+  if(level > 1)
+  {
+    level = 0;
+  }
+}
+
+static void levelReset(void)
+{
+  level = 0;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -534,6 +541,7 @@ int main(void)
     if ((y_snake > Y_MAX)||(x_snake > X_MAX)||(y_snake < Y_MIN)||(x_snake < X_MIN))
     {
       screenEndGame();
+      levelReset();
       endGame();
     }
 #endif
@@ -583,12 +591,14 @@ int main(void)
     if (score == quantityFood)
     {
       screenGameCompleted();
+      levelUp();
       endGame();
     }
 
     if (checkWalls())
     {
       screenEndGame();
+      levelReset();
       endGame();
     }
 
