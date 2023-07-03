@@ -5,6 +5,7 @@ Snake game project on STM32 controller and ILI9341 display
 
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
 
+ <img src="https://github.com/sergey12malyshev/SnakeGame/blob/develop/image/1688404908254.jpg" width=30% height=35%> <img src="https://github.com/sergey12malyshev/SnakeGame/blob/develop/image/1688404908269.jpg" width=30% height=30%>
 ## Инструментарий
 
 ### Компилятор 
@@ -49,6 +50,8 @@ STM32 CubeMX
 - Дисплей - 2.8 TFT SPI 240x320 display (ILI9341)
 - Кнопки - К1116КП2 (на основе датчиков Холла)
 - Зарядка - TP4056 charge module with protection
+  
+<img src="https://github.com/sergey12malyshev/SnakeGame/blob/develop/image/1688404908245.jpg" width=30% height=35%>
 
 ## gcc-arm-none-eabi
 
