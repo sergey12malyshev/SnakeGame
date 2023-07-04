@@ -71,6 +71,8 @@ UART_HandleTypeDef huart1;
 const int16_t SWversionMajor = 0;
 const int16_t SWversionMinor = 2;
 
+const int16_t forvard_Diod_mV = 820; // падение на диоде
+
 /*X0*******************
  Y0
  *
@@ -343,7 +345,7 @@ static void batteryControlProcess(void)
   }
   else
   {
-    STRING_NUM_L(voltage, 4, 190, 210, green_color, 0x0000); // Выведем напряжение
+    STRING_NUM_L(vbat2bati(voltage + forvard_Diod_mV), 3, 210, 210, green_color, 0x0000); // Выведем заряд
   }
 }
 
@@ -406,7 +408,7 @@ static void initGame(void)
   line(0, 0, 0, 199, 0xFFFF);
   STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
   STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
-  STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
+  STRING_OUT("%", 270, 210, 1, green_color, 0x0000);
   
   /* Предустановим переменные */
   up();

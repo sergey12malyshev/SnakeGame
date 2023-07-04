@@ -66,3 +66,13 @@ void beep(uint16_t time)
   HAL_Delay(time);
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 }
+
+// convert vbat [mV] to battery indicator
+uint8_t vbat2bati(int16_t vbat)
+{
+	if (vbat < 3200) return 0;
+	if (vbat < 3450) return 25;
+	if (vbat < 3700) return 50;
+	if (vbat < 4100) return 75;
+	return 100;
+}
