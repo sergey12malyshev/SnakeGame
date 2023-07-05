@@ -67,12 +67,16 @@ void beep(uint16_t time)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 }
 
-// convert vbat [mV] to battery indicator
+/* 
+Convert vbat [mV] to battery indicator
+https://lygte-info.dk/info/BatteryChargePercent%20UK.html
+*/
 uint8_t vbat2bati(int16_t vbat)
-{
-	if (vbat < 3200) return 0;
-	if (vbat < 3450) return 25;
-	if (vbat < 3700) return 50;
-	if (vbat < 4100) return 75;
-	return 100;
+{ 
+  float charge = 0.1169f*vbat - 385.54f; // y = 0,1169x - 385,54
+
+  if (charge < 0.0) charge = 0.0;
+  if (charge > 100.0) charge = 100.0;
+
+  return (uint8_t)charge;
 }
