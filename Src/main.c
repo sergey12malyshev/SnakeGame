@@ -103,9 +103,9 @@ int8_t changeY = -1;
 
 int16_t score = 0, oldScore = 0;
 /* https://colorscheme.ru/color-converter.html */
-uint16_t green_color = COLOR(17, 255, 0);
-uint16_t b_color = COLOR(255, 255, 255);
-uint16_t orange_color = COLOR(255, 187, 0);
+const uint16_t green_color = COLOR(17, 255, 0);
+const uint16_t white_color = COLOR(255, 255, 255);
+const uint16_t orange_color = COLOR(255, 187, 0);
 uint8_t timeCount = 0;
 
 /* Параметры еды: */
@@ -198,18 +198,21 @@ static void screenUnderVoltageError(void)
 
 static void batterySumbolShow(void)
 {
-  const uint16_t colorRed = COLOR(255, 0, 0);
-  line(205, 205, 290, 205, colorRed);
-  line(205, 236, 290, 236, colorRed);
-  line(205, 205, 205, 236, colorRed);
+  const uint8_t x_min = 206;
+  const uint8_t y_min = 208;
+  const uint8_t y_max = 233;
 
-  line(290, 205, 290, 210, colorRed);
-  line(290, 231, 290, 236, colorRed);
+  line(x_min, y_min, 290, y_min, green_color);
+  line(x_min, y_max, 290, y_max, green_color);
+  line(x_min, y_min, x_min, y_max, green_color);
 
-  line(290, 210, 295, 210, colorRed);
-  line(290, 231, 295, 231, colorRed);
+  line(290, y_min, 290, y_min + 5, green_color);
+  line(290, y_max - 5, 290, y_max, green_color);
 
-  line(295, 210, 295, 231, colorRed);
+  line(290, y_min + 5, 295, y_min + 5, green_color);
+  line(290, y_max - 5, 295, y_max - 5, green_color);
+
+  line(295, y_max - 5, 295, y_min + 5, green_color);
 }
 
 static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
@@ -625,8 +628,8 @@ int main(void)
     buttonRightHandler();
 	
 #if DEBUG
-    STRING_NUM_L(y_snake, 3, 120, 210, b_color, 0x0000);
-    STRING_NUM_L(x_snake, 3, 195, 210, b_color, 0x0000);
+    STRING_NUM_L(y_snake, 3, 120, 210, white_color, 0x0000);
+    STRING_NUM_L(x_snake, 3, 195, 210, white_color, 0x0000);
 #else
     if(++timeCount > 66 * (15 / TIME_UPDATE)) // При уменьшении TIME_UPDATE задержка в 1 с сохранится!
     {
