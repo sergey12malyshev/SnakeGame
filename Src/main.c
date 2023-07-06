@@ -419,6 +419,31 @@ static void levelTwo(void)
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
 }
 
+static void levelThree(void)
+{
+  food1 = (food){20, 100, 4, false}; 
+  food2 = (food){240, 10, 6, false};
+  food3 = (food){100, 160, 12, false};
+  food4 = (food){280, 135, 7, false};
+
+  wals1 = (wals){140, 188, 140, 0}; 
+  wals2 = (wals){160, Y_MAX, 160, 10};
+  wals3 = (wals){180, 188, 180, 0};
+  wals4 = (wals){200, Y_MAX, 200, 10};
+
+  /* Отрисуем еду */
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
+  createFood(food4.x, food4.y, food4.size);
+
+  /* Отрисуем препятствия */
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+}
+
 static void initGame(void)
 {
   /* Отрисуем рабочее поле */
@@ -445,12 +470,14 @@ static void initGame(void)
 
   switch (level)
   {
-     case 0:
+    case 0:
       levelOne();
       break;
-     case 1:
+    case 1:
       levelTwo();
-      break; 
+      break;
+    case 2:
+      levelThree(); 
     default:
       break;
   }
@@ -467,7 +494,7 @@ static void endGame(void)
 static void levelUp(void)
 {
   level++;
-  if(level > 1)
+  if(level > 2)
   {
     level = 0;
   }
