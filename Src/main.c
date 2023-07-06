@@ -196,6 +196,22 @@ static void screenUnderVoltageError(void)
   STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, 0xFFFF, colorBg);
 }
 
+static void batterySumbolShow(void)
+{
+  const uint16_t colorRed = COLOR(255, 0, 0);
+  line(205, 205, 290, 205, colorRed);
+  line(205, 236, 290, 236, colorRed);
+  line(205, 205, 205, 236, colorRed);
+
+  line(290, 205, 290, 210, colorRed);
+  line(290, 231, 290, 236, colorRed);
+
+  line(290, 210, 295, 210, colorRed);
+  line(290, 231, 295, 231, colorRed);
+
+  line(295, 210, 295, 231, colorRed);
+}
+
 static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
   const uint16_t green = COLOR(0, 255, 0);
@@ -409,6 +425,7 @@ static void initGame(void)
   STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
   STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
   STRING_OUT("%", 270, 210, 1, green_color, 0x0000);
+  batterySumbolShow();
   
   /* Предустановим переменные */
   up();
