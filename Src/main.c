@@ -250,7 +250,7 @@ static bool checkWalls(void)
 
 static void scoreUpdate(uint16_t scoreLoc)
 {
-  STRING_NUM_L(scoreLoc, 2, 125, 210,  orange_color, 0x0000);  
+  STRING_NUM_L(scoreLoc, 2, 120, 210, white_color, 0x0000);  
 }
 
 void up()
@@ -425,8 +425,8 @@ static void initGame(void)
   LCD_Fill(0x0000);
   line(0, 201, 319, 201, 0xFFFF);
   line(0, 0, 0, 199, 0xFFFF);
-  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
-  STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
+  STRING_OUT("Score", 10, 210, 1, white_color, 0x0000);
+  STRING_NUM_L(score, 2, 125, 210, white_color, 0x0000);
   STRING_OUT("%", 270, 210, 1, green_color, 0x0000);
   batterySumbolShow();
   
