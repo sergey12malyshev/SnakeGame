@@ -69,7 +69,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 2;
+const int16_t SWversionMinor = 3;
 
 const int16_t forvard_Diod_mV = 820; // падение на диоде
 
