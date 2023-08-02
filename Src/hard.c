@@ -70,6 +70,8 @@ void beep(uint16_t time)
 /* 
 Convert vbat [mV] to battery indicator
 https://lygte-info.dk/info/BatteryChargePercent%20UK.html
+
+Смотри: SnakeGame\_pdf\SOC_vs_Voltage.xlsx
 */
 uint8_t vbat2bati(int16_t vbat)
 { 
