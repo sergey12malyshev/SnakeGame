@@ -69,7 +69,9 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 2;
+const int16_t SWversionMinor = 3;
+
+const int16_t forvard_Diod_mV = 820; // падение на диоде
 
 /*X0*******************
  Y0
@@ -101,9 +103,9 @@ int8_t changeY = -1;
 
 int16_t score = 0, oldScore = 0;
 /* https://colorscheme.ru/color-converter.html */
-uint16_t green_color = COLOR(17, 255, 0);
-uint16_t b_color = COLOR(255, 255, 255);
-uint16_t orange_color = COLOR(255, 187, 0);
+const uint16_t green_color = COLOR(17, 255, 0);
+const uint16_t white_color = COLOR(255, 255, 255);
+const uint16_t orange_color = COLOR(255, 187, 0);
 uint8_t timeCount = 0;
 
 /* Параметры еды: */
@@ -194,6 +196,25 @@ static void screenUnderVoltageError(void)
   STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, 0xFFFF, colorBg);
 }
 
+static void batterySumbolShow(void)
+{
+  const uint8_t x_min = 206;
+  const uint8_t y_min = 208;
+  const uint8_t y_max = 233;
+
+  line(x_min, y_min, 290, y_min, green_color);
+  line(x_min, y_max, 290, y_max, green_color);
+  line(x_min, y_min, x_min, y_max, green_color);
+
+  line(290, y_min, 290, y_min + 5, green_color);
+  line(290, y_max - 5, 290, y_max, green_color);
+
+  line(290, y_min + 5, 295, y_min + 5, green_color);
+  line(290, y_max - 5, 295, y_max - 5, green_color);
+
+  line(295, y_max - 5, 295, y_min + 5, green_color);
+}
+
 static void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
   const uint16_t green = COLOR(0, 255, 0);
@@ -229,7 +250,7 @@ static bool checkWalls(void)
 
 static void scoreUpdate(uint16_t scoreLoc)
 {
-  STRING_NUM_L(scoreLoc, 2, 125, 210,  orange_color, 0x0000);  
+  STRING_NUM_L(scoreLoc, 2, 120, 210, white_color, 0x0000);  
 }
 
 void up()
@@ -343,7 +364,7 @@ static void batteryControlProcess(void)
   }
   else
   {
-    STRING_NUM_L(voltage, 4, 190, 210, green_color, 0x0000); // Выведем напряжение
+    STRING_NUM_L(vbat2bati(voltage + forvard_Diod_mV), 3, 210, 210, green_color, 0x0000); // Выведем заряд
   }
 }
 
@@ -398,15 +419,41 @@ static void levelTwo(void)
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
 }
 
+static void levelThree(void)
+{
+  food1 = (food){20, 100, 4, false}; 
+  food2 = (food){240, 10, 6, false};
+  food3 = (food){100, 160, 12, false};
+  food4 = (food){280, 135, 7, false};
+
+  wals1 = (wals){140, 188, 140, 0}; 
+  wals2 = (wals){160, Y_MAX, 160, 10};
+  wals3 = (wals){180, 188, 180, 0};
+  wals4 = (wals){200, Y_MAX, 200, 10};
+
+  /* Отрисуем еду */
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
+  createFood(food4.x, food4.y, food4.size);
+
+  /* Отрисуем препятствия */
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+}
+
 static void initGame(void)
 {
   /* Отрисуем рабочее поле */
   LCD_Fill(0x0000);
   line(0, 201, 319, 201, 0xFFFF);
   line(0, 0, 0, 199, 0xFFFF);
-  STRING_OUT("Score", 15, 210, 1, orange_color, 0x0000);
-  STRING_NUM_L(score, 2, 125, 210,  orange_color, 0x0000);
-  STRING_OUT("mV", 270, 210, 1, green_color, 0x0000);
+  STRING_OUT("Score", 10, 210, 1, white_color, 0x0000);
+  STRING_NUM_L(score, 2, 125, 210, white_color, 0x0000);
+  STRING_OUT("%", 270, 210, 1, green_color, 0x0000);
+  batterySumbolShow();
   
   /* Предустановим переменные */
   up();
@@ -423,12 +470,14 @@ static void initGame(void)
 
   switch (level)
   {
-     case 0:
+    case 0:
       levelOne();
       break;
-     case 1:
+    case 1:
       levelTwo();
-      break; 
+      break;
+    case 2:
+      levelThree(); 
     default:
       break;
   }
@@ -445,7 +494,7 @@ static void endGame(void)
 static void levelUp(void)
 {
   level++;
-  if(level > 1)
+  if(level > 2)
   {
     level = 0;
   }
@@ -606,8 +655,8 @@ int main(void)
     buttonRightHandler();
 	
 #if DEBUG
-    STRING_NUM_L(y_snake, 3, 120, 210, b_color, 0x0000);
-    STRING_NUM_L(x_snake, 3, 195, 210, b_color, 0x0000);
+    STRING_NUM_L(y_snake, 3, 120, 210, white_color, 0x0000);
+    STRING_NUM_L(x_snake, 3, 195, 210, white_color, 0x0000);
 #else
     if(++timeCount > 66 * (15 / TIME_UPDATE)) // При уменьшении TIME_UPDATE задержка в 1 с сохранится!
     {

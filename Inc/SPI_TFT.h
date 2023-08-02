@@ -1,13 +1,13 @@
 /*
-ïğåäíàçíà÷åíî äëÿ ğàáîòû ñ äèñïëååì ILI9341
-áèáëèîòåêà ïğåäíàçíà÷åíà äëÿ ğàáîòû ñ HAL
-äëÿ ğàáîòû íåîáõîäèìî â Cube íàñòğîèòü ìîäóëü SPI1
-âûâîäû DC è CS íàñòğàèâàşòñÿ âíóòğè áèáëèîòåêè
+Ğ¿Ñ€ĞµĞ´Ğ½Ğ°Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¾ Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ñ Ğ´Ğ¸ÑĞ¿Ğ»ĞµĞµĞ¼ ILI9341
+Ğ±Ğ¸Ğ±Ğ»Ğ¸Ğ¾Ñ‚ĞµĞºĞ° Ğ¿Ñ€ĞµĞ´Ğ½Ğ°Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ° Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ñ HAL
+Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ğ½ĞµĞ¾Ğ±Ñ…Ğ¾Ğ´Ğ¸Ğ¼Ğ¾ Ğ² Cube Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¸Ñ‚ÑŒ Ğ¼Ğ¾Ğ´ÑƒĞ»ÑŒ SPI1
+Ğ²Ñ‹Ğ²Ğ¾Ğ´Ñ‹ DC Ğ¸ CS Ğ½Ğ°ÑÑ‚Ñ€Ğ°Ğ¸Ğ²Ğ°ÑÑ‚ÑÑ Ğ²Ğ½ÑƒÑ‚Ñ€Ğ¸ Ğ±Ğ¸Ğ±Ğ»Ğ¸Ğ¾Ñ‚ĞµĞºĞ¸
 
 
 ---
-ïîäğåäàêòèğîâàòü íàçâàíèÿ ôóíêöèé LCD_***
-ğàçîáğàòüñÿ ñ çàäåğæêàì ïîñëå îòïğàâêè ïî DMA (çàëèâêè)
+Ğ¿Ğ¾Ğ´Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ñ‚ÑŒ Ğ½Ğ°Ğ·Ğ²Ğ°Ğ½Ğ¸Ñ Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ğ¹ LCD_***
+Ñ€Ğ°Ğ·Ğ¾Ğ±Ñ€Ğ°Ñ‚ÑŒÑÑ Ñ Ğ·Ğ°Ğ´ĞµÑ€Ğ¶ĞºĞ°Ğ¼ Ğ¿Ğ¾ÑĞ»Ğµ Ğ¾Ñ‚Ğ¿Ñ€Ğ°Ğ²ĞºĞ¸ Ğ¿Ğ¾ DMA (Ğ·Ğ°Ğ»Ğ¸Ğ²ĞºĞ¸)
 ---
 */
 
@@ -18,7 +18,7 @@
 #include "stm32f1xx_hal.h"
 
 
-//âûáğàòü âûâîäû
+//Ğ²Ñ‹Ğ±Ñ€Ğ°Ñ‚ÑŒ Ğ²Ñ‹Ğ²Ğ¾Ğ´Ñ‹
 #define TFT_DC_PIN	GPIO_PIN_3
 #define TFT_DC_PORT	GPIOA
 
@@ -26,7 +26,7 @@
 #define TFT_CS_PORT	GPIOA
 
 
-// êîìàíäû äèñïëåÿ ILI9341
+// ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹ Ğ´Ğ¸ÑĞ¿Ğ»ĞµÑ ILI9341
 /* Level 1 Commands */
 #define LCD_SWRESET             0x01   /* Software Reset */
 #define LCD_READ_DISPLAY_ID     0x04   /* Read display identification information */
@@ -132,34 +132,34 @@
 static uint16_t width  = LCD_PIXEL_WIDTH, height = LCD_PIXEL_HEIGHT;
 
 
-// ïåğåâîä öâåòà RGB â uint16_t
+// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ñ†Ğ²ĞµÑ‚Ğ° RGB Ğ² uint16_t
 #define COLOR(r, g, b)\
      ((((uint16_t)b) >> 3) |\
             ((((uint16_t)g) << 3) & 0x07E0) |\
             ((((uint16_t)r) << 8) & 0xf800))
 
 
-// ôóíêöèè
-void GPIO_init (void);																																// íàñòğîéêà âûâîäîâ CS è DC
-void LCD_SendCommand(uint8_t com);																										// ïîñûëêà êîìàíäû
-void LCD_SendData(uint8_t data);																											// ïîñûëêà äàííûõ
+// Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ğ¸
+void GPIO_init (void);																																// Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ° Ğ²Ñ‹Ğ²Ğ¾Ğ´Ğ¾Ğ² CS Ğ¸ DC
+void LCD_SendCommand(uint8_t com);																										// Ğ¿Ğ¾ÑÑ‹Ğ»ĞºĞ° ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹
+void LCD_SendData(uint8_t data);																											// Ğ¿Ğ¾ÑÑ‹Ğ»ĞºĞ° Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ…
 
-void LCD_Init(void);																																	// èíèöèàëèçàöèÿ äèñïëåÿ
+void LCD_Init(void);																																	// Ğ¸Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ´Ğ¸ÑĞ¿Ğ»ĞµÑ
 
-void LCD_SetCursorPosition(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);				// óñòàíàâëèâàåì ïîçèöèş êóğñîğà è îáëàñòü îòğèñîâêè
-void LCD_Fill(uint16_t color);																												// çàêğàñèòü äèñïëåé
-void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint16_t color);	// çàêğàñèòü çàäàííóş îáëàñòü
-void LCD_DrawPixel(uint16_t x, uint16_t y, uint16_t color);														// çàæå÷ü ïèêñåëü
-void line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);				// íàğèñîâàòü ëèíèş ñ ïğîèçâîëüíûì íà÷àëîì è ïğîèçâîëüíûì êîíöîì
-void H_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, unsigned int size, unsigned int color);// íàğèñîâàòü ëèíèş çàäàâàåìîé òîëùòíû ñ ïğîèçâîëüíûì íà÷àëîì è ïğîèçâîëüíûì êîíöîì
-void line_angle (uint16_t x, uint16_t y, uint16_t r, int Angle, uint16_t size, uint16_t color);//ëèíèÿ çàäàâàåìîé òîëùèíû, ïîâåğíóòàÿ íà çàäàííûé óãîë
-void circle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);										// êğóã
-void fillCircle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);								//çàêğàøåííûé êğóã
-void arc(int x, int y, int r, int startAngle, int endAngle, int thickness, uint16_t size, unsigned int color);// äóãà
+void LCD_SetCursorPosition(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);				// ÑƒÑÑ‚Ğ°Ğ½Ğ°Ğ²Ğ»Ğ¸Ğ²Ğ°ĞµĞ¼ Ğ¿Ğ¾Ğ·Ğ¸Ñ†Ğ¸Ñ ĞºÑƒÑ€ÑĞ¾Ñ€Ğ° Ğ¸ Ğ¾Ğ±Ğ»Ğ°ÑÑ‚ÑŒ Ğ¾Ñ‚Ñ€Ğ¸ÑĞ¾Ğ²ĞºĞ¸
+void LCD_Fill(uint16_t color);																												// Ğ·Ğ°ĞºÑ€Ğ°ÑĞ¸Ñ‚ÑŒ Ğ´Ğ¸ÑĞ¿Ğ»ĞµĞ¹
+void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint16_t color);	// Ğ·Ğ°ĞºÑ€Ğ°ÑĞ¸Ñ‚ÑŒ Ğ·Ğ°Ğ´Ğ°Ğ½Ğ½ÑƒÑ Ğ¾Ğ±Ğ»Ğ°ÑÑ‚ÑŒ
+void LCD_DrawPixel(uint16_t x, uint16_t y, uint16_t color);														// Ğ·Ğ°Ğ¶ĞµÑ‡ÑŒ Ğ¿Ğ¸ĞºÑĞµĞ»ÑŒ
+void line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);				// Ğ½Ğ°Ñ€Ğ¸ÑĞ¾Ğ²Ğ°Ñ‚ÑŒ Ğ»Ğ¸Ğ½Ğ¸Ñ Ñ Ğ¿Ñ€Ğ¾Ğ¸Ğ·Ğ²Ğ¾Ğ»ÑŒĞ½Ñ‹Ğ¼ Ğ½Ğ°Ñ‡Ğ°Ğ»Ğ¾Ğ¼ Ğ¸ Ğ¿Ñ€Ğ¾Ğ¸Ğ·Ğ²Ğ¾Ğ»ÑŒĞ½Ñ‹Ğ¼ ĞºĞ¾Ğ½Ñ†Ğ¾Ğ¼
+void H_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, unsigned int size, unsigned int color);// Ğ½Ğ°Ñ€Ğ¸ÑĞ¾Ğ²Ğ°Ñ‚ÑŒ Ğ»Ğ¸Ğ½Ğ¸Ñ Ğ·Ğ°Ğ´Ğ°Ğ²Ğ°ĞµĞ¼Ğ¾Ğ¹ Ñ‚Ğ¾Ğ»Ñ‰Ñ‚Ğ½Ñ‹ Ñ Ğ¿Ñ€Ğ¾Ğ¸Ğ·Ğ²Ğ¾Ğ»ÑŒĞ½Ñ‹Ğ¼ Ğ½Ğ°Ñ‡Ğ°Ğ»Ğ¾Ğ¼ Ğ¸ Ğ¿Ñ€Ğ¾Ğ¸Ğ·Ğ²Ğ¾Ğ»ÑŒĞ½Ñ‹Ğ¼ ĞºĞ¾Ğ½Ñ†Ğ¾Ğ¼
+void line_angle (uint16_t x, uint16_t y, uint16_t r, int Angle, uint16_t size, uint16_t color);//Ğ»Ğ¸Ğ½Ğ¸Ñ Ğ·Ğ°Ğ´Ğ°Ğ²Ğ°ĞµĞ¼Ğ¾Ğ¹ Ñ‚Ğ¾Ğ»Ñ‰Ğ¸Ğ½Ñ‹, Ğ¿Ğ¾Ğ²ĞµÑ€Ğ½ÑƒÑ‚Ğ°Ñ Ğ½Ğ° Ğ·Ğ°Ğ´Ğ°Ğ½Ğ½Ñ‹Ğ¹ ÑƒĞ³Ğ¾Ğ»
+void circle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);										// ĞºÑ€ÑƒĞ³
+void fillCircle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);								//Ğ·Ğ°ĞºÑ€Ğ°ÑˆĞµĞ½Ğ½Ñ‹Ğ¹ ĞºÑ€ÑƒĞ³
+void arc(int x, int y, int r, int startAngle, int endAngle, int thickness, uint16_t size, unsigned int color);// Ğ´ÑƒĞ³Ğ°
 
-void LCD_setOrientation(uint8_t o);																										// çàäàòü ğàñïîëîæåíèå ıêğàíà
-void LCD_setVerticalScrolling(uint16_t startY, uint16_t endY);												// çàäàòü îáëàñòü âåğòèêàëüíîãî ñêğîëëèíãà
-void LCD_scroll(uint16_t v);																													// íà÷àòü ñêğîëëèíã íà çàäàííóş âåëè÷èíó îòíîñèòåëüíî çàäàííîé îáëàñòè
+void LCD_setOrientation(uint8_t o);																										// Ğ·Ğ°Ğ´Ğ°Ñ‚ÑŒ Ñ€Ğ°ÑĞ¿Ğ¾Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğµ ÑĞºÑ€Ğ°Ğ½Ğ°
+void LCD_setVerticalScrolling(uint16_t startY, uint16_t endY);												// Ğ·Ğ°Ğ´Ğ°Ñ‚ÑŒ Ğ¾Ğ±Ğ»Ğ°ÑÑ‚ÑŒ Ğ²ĞµÑ€Ñ‚Ğ¸ĞºĞ°Ğ»ÑŒĞ½Ğ¾Ğ³Ğ¾ ÑĞºÑ€Ğ¾Ğ»Ğ»Ğ¸Ğ½Ğ³Ğ°
+void LCD_scroll(uint16_t v);																													// Ğ½Ğ°Ñ‡Ğ°Ñ‚ÑŒ ÑĞºÑ€Ğ¾Ğ»Ğ»Ğ¸Ğ½Ğ³ Ğ½Ğ° Ğ·Ğ°Ğ´Ğ°Ğ½Ğ½ÑƒÑ Ğ²ĞµĞ»Ğ¸Ñ‡Ğ¸Ğ½Ñƒ Ğ¾Ñ‚Ğ½Ğ¾ÑĞ¸Ñ‚ĞµĞ»ÑŒĞ½Ğ¾ Ğ·Ğ°Ğ´Ğ°Ğ½Ğ½Ğ¾Ğ¹ Ğ¾Ğ±Ğ»Ğ°ÑÑ‚Ğ¸
 
 void simple_font_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
 void simple_font_string_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
@@ -168,9 +168,9 @@ void FONT_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t f
 void STRING_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
 void STRING_NUM (unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor);//
 void STRING_NUM_L (unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor);//
-// øğèôòû ñãåíåğèğîâàíû ïğè ïîìîùè TheDotFactory
+// ÑˆÑ€Ğ¸Ñ„Ñ‚Ñ‹ ÑĞ³ĞµĞ½ĞµÑ€Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ñ‹ Ğ¿Ñ€Ğ¸ Ğ¿Ğ¾Ğ¼Ğ¾Ñ‰Ğ¸ TheDotFactory
 
-void PIC(unsigned char const *img);// êàğòèíêà ñîõğàíåííàÿ â GMIP êàê ôàéë .ñ
+void PIC(unsigned char const *img);// ĞºĞ°Ñ€Ñ‚Ğ¸Ğ½ĞºĞ° ÑĞ¾Ñ…Ñ€Ğ°Ğ½ĞµĞ½Ğ½Ğ°Ñ Ğ² GMIP ĞºĞ°Ğº Ñ„Ğ°Ğ¹Ğ» .Ñ
 
 
 
