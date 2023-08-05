@@ -69,7 +69,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 3;
+const int16_t SWversionMinor = 4;
 
 const int16_t forvard_Diod_mV = 820; // падение на диоде
 
@@ -95,8 +95,7 @@ static uint8_t level = 0;
 const uint16_t sizeSnake = 2;
 const uint16_t colorSnake = COLOR(255, 255, 0);
 int16_t x_snake, y_snake;
-int16_t old_x = 0;
-int16_t old_y = 0;
+int16_t old_x = 0, old_y = 0;
 
 int8_t changeX = 0; // changes the direction of the snake
 int8_t changeY = -1;

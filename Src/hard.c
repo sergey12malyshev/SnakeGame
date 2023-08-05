@@ -16,10 +16,10 @@ uint16_t getADCvalueVrefint(void)
 { //internal VDA voltage
   uint16_t adcVal = 0;
 
-	HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, 100);
-	adcVal = HAL_ADC_GetValue(&hadc1);
-	HAL_ADC_Stop(&hadc1);
+  HAL_ADC_Start(&hadc1);
+  HAL_ADC_PollForConversion(&hadc1, 100);
+  adcVal = HAL_ADC_GetValue(&hadc1);
+  HAL_ADC_Stop(&hadc1);
   
   return adcVal;
 }
@@ -40,7 +40,7 @@ uint16_t getBatteryVoltage(void)
 
 bool overVoltageControl(uint16_t voltage)
 {
-  const uint16_t V_max = 3300;
+  const uint16_t V_max = 3350;
 
   if (voltage > V_max)
   {
@@ -51,7 +51,7 @@ bool overVoltageControl(uint16_t voltage)
 
 bool underVoltageControl(uint16_t voltage)
 {
-  const uint16_t V_min = 2500;
+  const uint16_t V_min = 2550;
 
   if (voltage < V_min)
   {
@@ -75,10 +75,29 @@ https://lygte-info.dk/info/BatteryChargePercent%20UK.html
 */
 uint8_t vbat2bati(int16_t vbat)
 { 
-  float charge = 0.1169f*vbat - 385.54f; // y = 0,1169x - 385,54
+  float charge;
 
-  if (charge < 0.0) charge = 0.0;
-  if (charge > 100.0) charge = 100.0;
+  if (vbat > 4200)
+  {
+    charge = 100.0f;
+  }
+  else if (vbat < 3300)
+  {
+    charge = 0.0f;
+  }
+  else
+  {
+    charge = 0.1169f*vbat - 385.54f; // y = 0,1169x - 385,54
 
+    if (charge < 0.0f) 
+    {
+      charge = 0.0f;
+    }
+    if (charge > 100.0f)
+    {
+      charge = 100.0f;
+    } 
+  }
+  
   return (uint8_t)charge;
 }
