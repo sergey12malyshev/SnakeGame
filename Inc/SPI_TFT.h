@@ -128,9 +128,10 @@
 #define LCD_PIXEL_COUNT    LCD_PIXEL_WIDTH * LCD_PIXEL_HEIGHT
 
 
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 static uint16_t width  = LCD_PIXEL_WIDTH, height = LCD_PIXEL_HEIGHT;
-
+#pragma GCC diagnostic pop
 
 // перевод цвета RGB в uint16_t
 #define COLOR(r, g, b)\
