@@ -51,12 +51,12 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
   while (1)
   {
 
-    if((HAL_GetTick() - timeCount) > 1500) // Контролируем АКБ ~ раз в 1.5 секунды
-    {
-      timeCount = HAL_GetTick();
-      batteryControlProcess(); 
-      heartBeatLedToggle();
-    } 
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 1500); // Контролируем АКБ ~ раз в 1.5 секунды
+    timeCount = HAL_GetTick();	
+
+    batteryControlProcess(); 
+    heartBeatLedToggle();
+
 
     PT_YIELD(pt);
   }
