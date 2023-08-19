@@ -73,6 +73,16 @@ void beep(uint16_t time)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 }
 
+void heartBeatLedEnable(void)
+{
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+}
+
+void heartBeatLedToggle(void)
+{
+  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+}
+
 /* 
 Convert vbat [mV] to battery indicator
 https://lygte-info.dk/info/BatteryChargePercent%20UK.html

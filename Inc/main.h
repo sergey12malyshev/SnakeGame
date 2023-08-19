@@ -47,7 +47,6 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define TIME_UPDATE       10
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

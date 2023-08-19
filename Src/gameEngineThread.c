@@ -345,11 +345,15 @@ static void levelReset(void)
  */
 static PT_THREAD(GameEngineThread(struct pt *pt))
 {
+  static uint32_t timeCountGameEngine = 0;
 
   PT_BEGIN(pt);
 
   while (1)
   {
+
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > 15);
+    timeCountGameEngine = HAL_GetTick();	
 
     old_x = x_snake;
     old_y = y_snake;

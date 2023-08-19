@@ -44,17 +44,18 @@ static void batteryControlProcess(void)
  */
 static PT_THREAD(BatteryCheckThread(struct pt *pt))
 {
-  static uint8_t timeCount = 0;
+  static uint32_t timeCount = 0;
 
   PT_BEGIN(pt);
 
   while (1)
   {
 
-    if(++timeCount > 66 * (15 / TIME_UPDATE)) // При уменьшении TIME_UPDATE задержка в 1 с сохранится!
+    if((HAL_GetTick() - timeCount) > 1500) // Контролируем АКБ ~ раз в 1.5 секунды
     {
-      timeCount = 0;
-      batteryControlProcess(); // Контролируем АКБ ~ раз в секунду
+      timeCount = HAL_GetTick();
+      batteryControlProcess(); 
+      heartBeatLedToggle();
     } 
 
     PT_YIELD(pt);

@@ -119,7 +119,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+  heartBeatLedEnable();
 
   HAL_Delay(50); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
@@ -130,7 +130,6 @@ int main(void)
   HAL_Delay(1100);
 
   initGame();
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 
@@ -141,7 +140,6 @@ int main(void)
     runGameEngineThread_pt();
     runBatteryCheckThread_pt();
 
-    HAL_Delay(TIME_UPDATE); // (развертка по Х)
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
