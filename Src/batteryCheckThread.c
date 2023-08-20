@@ -17,6 +17,23 @@ static struct pt batteryCheck_pt;
 
 const uint16_t green_color = COLOR(17, 255, 0);
 
+
+/* 
+Convert vbat [mV] to battery indicator
+https://lygte-info.dk/info/BatteryChargePercent%20UK.html
+
+Смотри: SnakeGame\_pdf\SOC_vs_Voltage.xlsx
+*/
+uint8_t getBatChargePrecent(uint16_t vbat)
+{ 
+  float charge = 0.1169f*vbat - 385.54f; // y = 0,1169x - 385,54
+
+  if (charge < 0.0) charge = 0.0;
+  if (charge > 100.0) charge = 100.0;
+
+  return (uint8_t)charge;
+}
+
 static void batteryControlProcess(void)
 {
   uint16_t voltage = getBatteryVoltage();
