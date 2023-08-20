@@ -7,9 +7,42 @@
 #include "Screens.h"
 #include "main.h"
 
+/*X0*******************
+ Y0
+ *
+ *
+ *******************/
+
 extern const int16_t SWversionMajor, SWversionMinor;
 extern const uint16_t green_color, white_color; 
 
+const uint16_t orange_color = COLOR(255, 150, 0);
+
+const unsigned char objets[][8]=
+{
+  {0x7C,0x02,0xC9,0x01,0x01,0xC9,0x02,0x7C}, // monster
+  {0x00,0x42,0xA5,0x99,0x81,0x81,0x42,0x3C}  // Pac-men
+};
+
+void createMonster(uint8_t object_number, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		unsigned char temp = objets[object_number][i];
+
+		for (unsigned char f = 0; f < 8; f++)
+		{
+			if ((temp >> f) & 0x01)
+			{
+				LCD_fillRect(x0 + i * size, y0 + f * size, size, size, fgcolor);
+			}
+			else
+			{
+				LCD_fillRect(x0 + i * size, y0 + f * size, size, size, bgcolor);
+			}
+		}
+	}
+}
 
 void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
@@ -50,6 +83,9 @@ void screenSaver(void)
   STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
   STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMinor, 1, 205, 220, 0x00FF, colorBg); 
+
+  createMonster(0, 50, 50, 5, 0x00FF, colorBg);
+  createMonster(1, 200, 150, 5, orange_color, colorBg);
 }
 
 void screenEndGame(void)

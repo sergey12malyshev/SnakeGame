@@ -24,12 +24,6 @@
 
 static struct pt gameEngine_pt;
 
-/*X0*******************
- Y0
- *
- *
- *******************/
-
 typedef enum
 {
   NONE = 0,
@@ -54,7 +48,6 @@ static int8_t changeY = -1;
 static int16_t score = 0, oldScore = 0;
 /* https://colorscheme.ru/color-converter.html */
 const uint16_t white_color = COLOR(255, 255, 255);
-//const uint16_t orange_color = COLOR(255, 187, 0);
 
 
 /* Параметры еды: */

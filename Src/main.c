@@ -131,8 +131,9 @@ int main(void)
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
-  HAL_Delay(1100);
+  HAL_Delay(500);
   soundPowerOn();
+  HAL_Delay(500);
   initGame();
 
   /* USER CODE END 2 */
