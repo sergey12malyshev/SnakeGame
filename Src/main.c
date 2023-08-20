@@ -32,6 +32,7 @@
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
+#include "Sound.h"
 
 #include "pt.h"
 #include "gameEngineThread.h"
@@ -131,7 +132,7 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
   HAL_Delay(1100);
-
+  soundPowerOn();
   initGame();
 
   /* USER CODE END 2 */

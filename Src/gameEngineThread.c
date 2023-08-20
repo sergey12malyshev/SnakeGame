@@ -8,6 +8,7 @@
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
+#include "Sound.h"
 #include "gameEngineThread.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
@@ -317,7 +318,6 @@ void initGame(void)
 
 static void endGame(void)
 {
-  beep(80);
   HAL_Delay(300);
   while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET));
   initGame();
@@ -410,6 +410,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     if ((y_snake > Y_MAX)||(x_snake > X_MAX)||(y_snake < Y_MIN)||(x_snake < X_MIN))
     {
       screenEndGame();
+      soundGameOver();
       levelReset();
       endGame();
     }
@@ -456,6 +457,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     if (score == quantityFood)
     {
       screenGameCompleted();
+      soundGameCompleted();
       levelUp();
       endGame();
     }
@@ -463,6 +465,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     if (checkWalls())
     {
       screenEndGame();
+      soundGameOver();
       levelReset();
       endGame();
     }

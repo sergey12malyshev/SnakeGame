@@ -66,13 +66,6 @@ bool underVoltageControl(uint16_t voltage)
   return false;
 }
 
-void beep(uint16_t time)
-{
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-  HAL_Delay(time);
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-}
-
 void heartBeatLedEnable(void)
 {
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);

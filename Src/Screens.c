@@ -4,6 +4,7 @@
 #include "Screens.h"
 #include "SPI_TFT.h"
 #include "hard.h"
+#include "Screens.h"
 #include "main.h"
 
 extern const int16_t SWversionMajor, SWversionMinor;
