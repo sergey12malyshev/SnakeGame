@@ -1,6 +1,6 @@
-#ifndef __GAME_ENGINE_H
-#define __GAME_ENGINE_H
+#ifndef __BATTERY_CHECK_H
+#define __BATTERY_CHECK_H
 
 void runBatteryCheckThread_pt(void);
 
-#endif /* __GAME_ENGINE_H */
+#endif /* __BATTERY_CHECK_H */

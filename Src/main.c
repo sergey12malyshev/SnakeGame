@@ -28,12 +28,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
+
+#include "pt.h"
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
-#include "pt.h"
+
 
 #define LC_INCLUDE "lc-addrlabels.h"
 /* USER CODE END Includes */
