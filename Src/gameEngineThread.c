@@ -37,12 +37,12 @@ SPACE_ENUM space = UP;
 
 static uint8_t level = 0;
 
-const uint16_t sizeSnake = 2;
-const uint16_t colorSnake = COLOR(255, 255, 0);
-static int16_t x_snake, y_snake;
+const uint16_t sizePacMan = 2;
+const uint16_t colorPacMan = COLOR(255, 255, 0);
+static int16_t x_PacMan, y_PacMan;
 static int16_t old_x = 0, old_y = 0;
 
-static int8_t changeX = 0; // changes the direction of the snake
+static int8_t changeX = 0; // changes the direction of the PacMan
 static int8_t changeY = -1;
 
 static int16_t score = 0, oldScore = 0;
@@ -85,10 +85,10 @@ static bool checkWalls(void)
 {
   bool rc = false;
 
-  rc |= (((x_snake <= (wals1.x1)) && (x_snake >= (wals1.x2))) && ((y_snake <= (wals1.y1)) && (y_snake >= (wals1.y2))));
-  rc |= (((x_snake <= (wals2.x1)) && (x_snake >= (wals2.x2))) && ((y_snake <= (wals2.y1)) && (y_snake >= (wals2.y2))));
-  rc |= (((x_snake <= (wals3.x1)) && (x_snake >= (wals3.x2))) && ((y_snake <= (wals3.y1)) && (y_snake >= (wals3.y2))));
-  rc |= (((x_snake <= (wals4.x1)) && (x_snake >= (wals4.x2))) && ((y_snake <= (wals4.y1)) && (y_snake >= (wals4.y2))));
+  rc |= (((x_PacMan <= (wals1.x1)) && (x_PacMan >= (wals1.x2))) && ((y_PacMan <= (wals1.y1)) && (y_PacMan >= (wals1.y2))));
+  rc |= (((x_PacMan <= (wals2.x1)) && (x_PacMan >= (wals2.x2))) && ((y_PacMan <= (wals2.y1)) && (y_PacMan >= (wals2.y2))));
+  rc |= (((x_PacMan <= (wals3.x1)) && (x_PacMan >= (wals3.x2))) && ((y_PacMan <= (wals3.y1)) && (y_PacMan >= (wals3.y2))));
+  rc |= (((x_PacMan <= (wals4.x1)) && (x_PacMan >= (wals4.x2))) && ((y_PacMan <= (wals4.y1)) && (y_PacMan >= (wals4.y2))));
 
   return rc;
 }
@@ -106,7 +106,7 @@ void scoreIncrement(void)
 
 static inline void up(void)
 {
-  changeX = 0; // changes the direction of the snake
+  changeX = 0; // changes the direction of the PacMan
   changeY = -1;
 }
 
@@ -285,8 +285,8 @@ void initGame(void)
   up();
   oldScore = score = 0;
   scoreUpdate(score);
-  x_snake = 215;
-  y_snake = 80;
+  x_PacMan = 215;
+  y_PacMan = 80;
   old_x = 0;
   old_y = 0;
   food1.disable = false;
@@ -332,30 +332,30 @@ static void levelReset(void)
 
 static bool foodIntakeCheck1(void)
 {
-   return (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))));
+   return (((x_PacMan <= (food1.x + food1.size)) && (x_PacMan >= (food1.x - food1.size))) && ((y_PacMan <= (food1.y + food1.size)) && (y_PacMan >= (food1.y - food1.size))));
 }
 
 static bool foodIntakeCheck2(void)
 {
-  return (((x_snake <= (food2.x + food2.size)) && (x_snake >= (food2.x - food2.size))) && ((y_snake <= (food2.y + food2.size)) && (y_snake >= (food2.y - food2.size))));
+  return (((x_PacMan <= (food2.x + food2.size)) && (x_PacMan >= (food2.x - food2.size))) && ((y_PacMan <= (food2.y + food2.size)) && (y_PacMan >= (food2.y - food2.size))));
 }
 
 static bool foodIntakeCheck3(void)
 {
-  return (((x_snake <= (food3.x + food3.size)) && (x_snake >= (food3.x - food3.size))) && ((y_snake <= (food3.y + food3.size)) && (y_snake >= (food3.y - food3.size))));
+  return (((x_PacMan <= (food3.x + food3.size)) && (x_PacMan >= (food3.x - food3.size))) && ((y_PacMan <= (food3.y + food3.size)) && (y_PacMan >= (food3.y - food3.size))));
 }
 
 static bool foodIntakeCheck4(void)
 {
-  return (((x_snake <= (food4.x + food4.size)) && (x_snake >= (food4.x - food4.size))) && ((y_snake <= (food4.y + food4.size)) && (y_snake >= (food4.y - food4.size))));
+  return (((x_PacMan <= (food4.x + food4.size)) && (x_PacMan >= (food4.x - food4.size))) && ((y_PacMan <= (food4.y + food4.size)) && (y_PacMan >= (food4.y - food4.size))));
 }  
 
-static void snakeUpdateProcess(void)
+static void PacManUpdateProcess(void)
 {
-  if (((x_snake <= (old_x + sizeSnake)) || (x_snake >= (old_x - sizeSnake))) && ((y_snake <= (old_y + sizeSnake)) && (y_snake >= (old_y - sizeSnake))))
-  { // update Snake
+  if (((x_PacMan <= (old_x + sizePacMan)) || (x_PacMan >= (old_x - sizePacMan))) && ((y_PacMan <= (old_y + sizePacMan)) && (y_PacMan >= (old_y - sizePacMan))))
+  { // update PacMan
     fillCircle(old_x, old_y, 2, 0X0000);
-    fillCircle(x_snake, y_snake, 2, colorSnake);
+    fillCircle(x_PacMan, y_PacMan, 2, colorPacMan);
   }
 } 
 
@@ -376,31 +376,31 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > 15);
     timeCountGameEngine = HAL_GetTick();	
 
-    old_x = x_snake;
-    old_y = y_snake;
+    old_x = x_PacMan;
+    old_y = y_PacMan;
 
-    y_snake = y_snake + changeY;
-    x_snake = x_snake + changeX;
+    y_PacMan = y_PacMan + changeY;
+    x_PacMan = x_PacMan + changeX;
 
 #if NO_WALS_DEATH
-    if (y_snake > Y_MAX)
+    if (y_PacMan > Y_MAX)
     {
-      y_snake = Y_MIN;
+      y_PacMan = Y_MIN;
     }
-    if (x_snake > X_MAX)
+    if (x_PacMan > X_MAX)
     {
-      x_snake = X_MIN;
+      x_PacMan = X_MIN;
     }
-    if (y_snake < Y_MIN)
+    if (y_PacMan < Y_MIN)
     {
-      y_snake = Y_MAX;
+      y_PacMan = Y_MAX;
     }
-    if (x_snake < X_MIN)
+    if (x_PacMan < X_MIN)
     {
-      x_snake = X_MAX;
+      x_PacMan = X_MAX;
     }
 #else
-    if ((y_snake > Y_MAX)||(x_snake > X_MAX)||(y_snake < Y_MIN)||(x_snake < X_MIN))
+    if ((y_PacMan > Y_MAX)||(x_PacMan > X_MAX)||(y_PacMan < Y_MIN)||(x_PacMan < X_MIN))
     {
       screenEndGame();
       soundGameOver();
@@ -409,7 +409,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
 #endif
 
-    snakeUpdateProcess();
+    PacManUpdateProcess();
 
     if (foodIntakeCheck1())
     { // food 1
@@ -464,8 +464,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
 	
 #if DEBUG
-    STRING_NUM_L(y_snake, 3, 120, 210, white_color, 0x0000);
-    STRING_NUM_L(x_snake, 3, 195, 210, white_color, 0x0000);
+    STRING_NUM_L(y_PacMan, 3, 120, 210, white_color, 0x0000);
+    STRING_NUM_L(x_PacMan, 3, 195, 210, white_color, 0x0000);
 #else
 
     if (score != oldScore)

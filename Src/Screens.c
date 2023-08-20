@@ -78,7 +78,7 @@ void screenSaver(void)
 {
   const uint16_t colorBg = COLOR(48, 207, 172);
   LCD_Fill(colorBg);
-  STRING_OUT("SNAKE GAME", 65, 100, 7, 0x00FF, colorBg);
+  STRING_OUT("PAC-MAN", 90, 110, 7, 0x00FF, colorBg);
   STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
   STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
