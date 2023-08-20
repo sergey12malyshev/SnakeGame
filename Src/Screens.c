@@ -16,7 +16,9 @@
 extern const int16_t SWversionMajor, SWversionMinor;
 extern const uint16_t green_color, white_color; 
 
-const uint16_t orange_color = COLOR(255, 150, 0);
+const uint16_t orange_color = 0xFF00;
+const uint16_t red_color = COLOR(255, 0, 0);
+const uint16_t blue_color = COLOR(42, 165, 184);
 
 const unsigned char objets[][8]=
 {
@@ -60,8 +62,7 @@ void deleteFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
   const uint16_t size = 4;
-  const uint16_t blue = COLOR(42, 165, 184);
-  H_line(x0, y0, x1, y1, size, blue);
+  H_line(x0, y0, x1, y1, size, blue_color);
 }
 
 void createWorkRegion(void)
@@ -76,15 +77,15 @@ void createWorkRegion(void)
 
 void screenSaver(void)
 {
-  const uint16_t colorBg = COLOR(48, 207, 172);
+  const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
-  STRING_OUT("PAC-MAN", 90, 110, 7, 0x00FF, colorBg);
+  STRING_OUT("PAC-MAN", 90, 110, 7, blue_color, colorBg);
   STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
   STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMinor, 1, 205, 220, 0x00FF, colorBg); 
 
-  createMonster(0, 50, 50, 5, 0x00FF, colorBg);
+  createMonster(0, 50, 50, 5, red_color, colorBg);
   createMonster(1, 200, 150, 5, orange_color, colorBg);
 }
 
@@ -105,16 +106,14 @@ void screenGameCompleted(void)
 
 void screenOverVoltageError(void)
 {
-  const uint16_t colorBg = COLOR(255, 0, 0);
-  LCD_Fill(colorBg);
-  STRING_OUT("OVERVOLTAGE!", 80, 180, 3, 0xFFFF, colorBg);
+  LCD_Fill(red_color);
+  STRING_OUT("OVERVOLTAGE!", 80, 180, 3, 0xFFFF, red_color);
 }
 
 void screenUnderVoltageError(void)
 {
-  const uint16_t colorBg = COLOR(255, 0, 0);
-  LCD_Fill(colorBg);
-  STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, 0xFFFF, colorBg);
+  LCD_Fill(red_color);
+  STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, 0xFFFF, red_color);
 }
 
 void batterySumbolShow(void)
