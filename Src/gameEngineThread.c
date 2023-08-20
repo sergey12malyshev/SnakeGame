@@ -45,7 +45,7 @@ static uint8_t level = 0;
 const uint16_t sizeSnake = 2;
 const uint16_t colorSnake = COLOR(255, 255, 0);
 static int16_t x_snake, y_snake;
-static int16_t old_x = 0 ,old_y = 0;
+static int16_t old_x = 0, old_y = 0;
 
 static int8_t changeX = 0; // changes the direction of the snake
 static int8_t changeY = -1;
@@ -337,6 +337,34 @@ static void levelReset(void)
   level = 0;
 }
 
+static bool foodIntakeCheck1(void)
+{
+   return (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))));
+}
+
+static bool foodIntakeCheck2(void)
+{
+  return (((x_snake <= (food2.x + food2.size)) && (x_snake >= (food2.x - food2.size))) && ((y_snake <= (food2.y + food2.size)) && (y_snake >= (food2.y - food2.size))));
+}
+
+static bool foodIntakeCheck3(void)
+{
+  return (((x_snake <= (food3.x + food3.size)) && (x_snake >= (food3.x - food3.size))) && ((y_snake <= (food3.y + food3.size)) && (y_snake >= (food3.y - food3.size))));
+}
+
+static bool foodIntakeCheck4(void)
+{
+  return (((x_snake <= (food4.x + food4.size)) && (x_snake >= (food4.x - food4.size))) && ((y_snake <= (food4.y + food4.size)) && (y_snake >= (food4.y - food4.size))));
+}  
+
+static void snakeUpdateProcess(void)
+{
+  if (((x_snake <= (old_x + sizeSnake)) || (x_snake >= (old_x - sizeSnake))) && ((y_snake <= (old_y + sizeSnake)) && (y_snake >= (old_y - sizeSnake))))
+  { // update Snake
+    fillCircle(old_x, old_y, 2, 0X0000);
+    fillCircle(x_snake, y_snake, 2, colorSnake);
+  }
+} 
 
 /*
  * Протопоток gameEngineThread
@@ -387,13 +415,9 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
 #endif
 
-    if (((x_snake <= (old_x + sizeSnake)) || (x_snake >= (old_x - sizeSnake))) && ((y_snake <= (old_y + sizeSnake)) && (y_snake >= (old_y - sizeSnake))))
-    {
-      fillCircle(old_x, old_y, 2, 0X0000);
-      fillCircle(x_snake, y_snake, 2, colorSnake);
-    }
+    snakeUpdateProcess();
 
-    if (((x_snake <= (food1.x + food1.size)) && (x_snake >= (food1.x - food1.size))) && ((y_snake <= (food1.y + food1.size)) && (y_snake >= (food1.y - food1.size))))
+    if (foodIntakeCheck1())
     { // food 1
       if(!food1.disable)
       {
@@ -401,8 +425,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
         deleteFood(food1.x, food1.y, food1.size);
       }
     }
-
-    if (((x_snake <= (food2.x + food2.size)) && (x_snake >= (food2.x - food2.size))) && ((y_snake <= (food2.y + food2.size)) && (y_snake >= (food2.y - food2.size))))
+      
+    if(foodIntakeCheck2()) 
     { // food 2
       if(!food2.disable)
       {
@@ -411,7 +435,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       }
     }
 
-    if (((x_snake <= (food3.x + food3.size)) && (x_snake >= (food3.x - food3.size))) && ((y_snake <= (food3.y + food3.size)) && (y_snake >= (food3.y - food3.size))))
+    if(foodIntakeCheck3()) 
     { // food 3
       if(!food3.disable)
       {
@@ -420,7 +444,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       }
     }
     
-    if (((x_snake <= (food4.x + food4.size)) && (x_snake >= (food4.x - food4.size))) && ((y_snake <= (food4.y + food4.size)) && (y_snake >= (food4.y - food4.size))))
+    if(foodIntakeCheck4()) 
     { // food 4
       if(!food4.disable)
       {
@@ -442,9 +466,6 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       levelReset();
       endGame();
     }
-
-    buttonLeftHandler();
-    buttonRightHandler();
 	
 #if DEBUG
     STRING_NUM_L(y_snake, 3, 120, 210, white_color, 0x0000);
@@ -457,6 +478,9 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       scoreUpdate(score);   // Обновляем при изменении
     }
 #endif
+
+    buttonLeftHandler();
+    buttonRightHandler();
 
     PT_YIELD(pt);
   }

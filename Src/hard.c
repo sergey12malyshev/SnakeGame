@@ -16,10 +16,10 @@ uint16_t getADCvalueVrefint(void)
 { //internal VDA voltage
   uint16_t adcVal = 0;
 
-	HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, 100);
-	adcVal = HAL_ADC_GetValue(&hadc1);
-	HAL_ADC_Stop(&hadc1);
+  HAL_ADC_Start(&hadc1);
+  HAL_ADC_PollForConversion(&hadc1, 100);
+  adcVal = HAL_ADC_GetValue(&hadc1);
+  HAL_ADC_Stop(&hadc1);
   
   return adcVal;
 }
