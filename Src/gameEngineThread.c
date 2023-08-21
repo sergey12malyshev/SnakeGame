@@ -405,7 +405,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
       monster1.y = 50U;
-      monster2.x = 210U;
+      monster2.x = 215U;
       createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
       createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
       i = 0U;
@@ -415,7 +415,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
       monster1.y = 60U;
-      monster2.x = 200U;
+      monster2.x = 210U;
       createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
       createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
     }
