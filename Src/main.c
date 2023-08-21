@@ -69,7 +69,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 4;
+const int16_t SWversionMinor = 5;
 
 /* USER CODE END PV */
 
@@ -131,9 +131,9 @@ int main(void)
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
-  HAL_Delay(500);
+  HAL_Delay(300);
   soundPowerOn();
-  HAL_Delay(500);
+  HAL_Delay(1500);
   initGame();
 
   /* USER CODE END 2 */

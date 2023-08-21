@@ -27,7 +27,7 @@ const unsigned char objets[][8]=
 };
 
 void createMonster(uint8_t object_number, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
-{
+{ // медленный алгоритм вывода
 	for (int i = 0; i < 8; i++)
 	{
 		unsigned char temp = objets[object_number][i];
@@ -87,6 +87,7 @@ void screenSaver(void)
 
   createMonster(0, 50, 50, 5, red_color, colorBg);
   createMonster(1, 200, 150, 5, orange_color, colorBg);
+  createMonster(0, 195, 45, 5, 0x0000, COLOR(0, 0, 255));
 }
 
 void screenEndGame(void)

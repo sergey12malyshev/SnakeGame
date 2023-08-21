@@ -80,6 +80,18 @@ wals wals2 = {0};
 wals wals3 = {0};
 wals wals4 = {0};
 
+typedef struct
+{
+  uint8_t type;
+  int16_t x;
+  int16_t y;
+  int8_t size;
+  uint16_t color;
+} monster;
+
+monster monster1 = {0}; 
+monster monster2 = {0};
+
 
 static bool checkWalls(void)
 {
@@ -212,6 +224,9 @@ static void levelOne(void)
   wals2 = (wals){165, Y_MAX, 165, 110};
   wals3 = (wals){165, 90, 165, Y_MIN};
   wals4 = (wals){250, 90, 250, Y_MIN};
+
+  monster1 = (monster){0, 50, 50, 3, COLOR(255, 0, 0)};
+  monster2 = (monster){0, 180, 50, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -367,6 +382,7 @@ static void PacManUpdateProcess(void)
 static PT_THREAD(GameEngineThread(struct pt *pt))
 {
   static uint32_t timeCountGameEngine = 0;
+  static uint8_t i;
 
   PT_BEGIN(pt);
 
@@ -381,6 +397,28 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
     y_PacMan = y_PacMan + changeY;
     x_PacMan = x_PacMan + changeX;
+
+    i++;
+    if (i == 90U)
+    {
+      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, 0x0000, 0x0000);//CLEAR
+      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, 0x0000);//CLEAR
+      monster1.y = 50U;
+      monster2.x = 210U;
+      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
+      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
+      i = 0U;
+    }
+    else if(i == 45U)
+    {
+      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, 0x0000, 0x0000);//CLEAR
+      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, 0x0000);//CLEAR
+      monster1.y = 60U;
+      monster2.x = 200U;
+      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
+      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
+    }
+
 
 #if NO_WALS_DEATH
     if (y_PacMan > Y_MAX)
