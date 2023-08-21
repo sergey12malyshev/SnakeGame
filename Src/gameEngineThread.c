@@ -398,11 +398,12 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     y_PacMan = y_PacMan + changeY;
     x_PacMan = x_PacMan + changeX;
 
+    // Захардкодили монстров
     i++;
     if (i == 90U)
     {
-      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, 0x0000, 0x0000);//CLEAR
-      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, 0x0000);//CLEAR
+      disableMonster(monster1.x, monster1.y, monster1.size);
+      disableMonster(monster2.x, monster2.y, monster2.size);
       monster1.y = 50U;
       monster2.x = 210U;
       createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
@@ -411,8 +412,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
     else if(i == 45U)
     {
-      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, 0x0000, 0x0000);//CLEAR
-      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, 0x0000);//CLEAR
+      disableMonster(monster1.x, monster1.y, monster1.size);
+      disableMonster(monster2.x, monster2.y, monster2.size);
       monster1.y = 60U;
       monster2.x = 200U;
       createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);

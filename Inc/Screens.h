@@ -12,5 +12,6 @@ void screenOverVoltageError(void);
 void screenUnderVoltageError(void);
 void batterySumbolShow(void);
 void createMonster(uint8_t object_number, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);
+void disableMonster(uint16_t x0, uint16_t y0, uint16_t size);
 
 #endif /* __Screens_H */

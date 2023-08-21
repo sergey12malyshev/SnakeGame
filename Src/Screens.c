@@ -46,6 +46,20 @@ void createMonster(uint8_t object_number, uint16_t x0, uint16_t y0, uint16_t siz
 	}
 }
 
+void disableMonster(uint16_t x0, uint16_t y0, uint16_t size)
+{ // медленный алгоритм закрашивания
+
+  uint16_t bgcolor = 0x0000;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (unsigned char f = 0; f < 8; f++)
+		{
+			LCD_fillRect(x0 + i * size, y0 + f * size, size, size, bgcolor);
+		}
+	}
+}
+
 void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
   const uint16_t green = COLOR(0, 255, 0);
