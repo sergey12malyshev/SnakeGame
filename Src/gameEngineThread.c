@@ -226,7 +226,7 @@ static void levelOne(void)
   wals4 = (wals){250, 90, 250, Y_MIN};
 
   monster1 = (monster){0, 50, 50, 3, COLOR(255, 0, 0)};
-  monster2 = (monster){0, 180, 50, 3, COLOR(0, 0, 255)};
+  monster2 = (monster){0, 210, 50, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -239,6 +239,10 @@ static void levelOne(void)
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
 }
 
 static void levelTwo(void)
@@ -365,6 +369,21 @@ static bool foodIntakeCheck4(void)
   return (((x_PacMan <= (food4.x + food4.size)) && (x_PacMan >= (food4.x - food4.size))) && ((y_PacMan <= (food4.y + food4.size)) && (y_PacMan >= (food4.y - food4.size))));
 }  
 
+static bool monsterCheck1(void)
+{
+#if 0
+  uint8_t realSize = monster1.size*4U;
+  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= (monster1.x - realSize))) && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= (monster1.y - realSize))));
+#endif
+}
+static bool monsterCheck2(void)
+{
+#if 0
+  uint8_t realSize = monster1.size*4U;
+  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= (monster2.x - realSize))) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= (monster2.y - realSize))));
+#endif
+}
+
 static void PacManUpdateProcess(void)
 {
   if (((x_PacMan <= (old_x + sizePacMan)) || (x_PacMan >= (old_x - sizePacMan))) && ((y_PacMan <= (old_y + sizePacMan)) && (y_PacMan >= (old_y - sizePacMan))))
@@ -398,7 +417,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     y_PacMan = y_PacMan + changeY;
     x_PacMan = x_PacMan + changeX;
 
-    // Захардкодили монстров
+    // Захардкодили перемещение монстров
     i++;
     if (i == 90U)
     {
@@ -494,7 +513,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       endGame();
     }
 
-    if (checkWalls())
+    if (checkWalls() || monsterCheck1() || monsterCheck2())
     {
       screenEndGame();
       soundGameOver();
