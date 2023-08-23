@@ -5,7 +5,7 @@ Pac-Man game project on STM32 controller and ILI9341 display
 
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
 
- <img src="https://github.com/sergey12malyshev/SnakeGame/blob/develop/image/1688404908254.jpg" width=30% height=35%> <img src="https://github.com/sergey12malyshev/SnakeGame/blob/develop/image/1688404908269.jpg" width=30% height=30%>
+ <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908254.jpg" width=30% height=35%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=30% height=30%>
 ## Инструментарий
 
 ### Компилятор 
@@ -24,7 +24,7 @@ https://github.com/xpack-dev-tools/windows-build-tools-xpack/releases/
 
 Подробная статья: https://habr.com/ru/articles/673522/
 ### Редактор кода
-*VS Code* файл SnakeGame.code-workspace
+*VS Code* файл Pac-ManGame.code-workspace
 
 ### Статический анализатор кода
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
@@ -51,7 +51,7 @@ STM32 CubeMX
 - Кнопки - К1116КП2 (на основе датчиков Холла)
 - Зарядка - TP4056 charge module with protection
   
-<img src="https://github.com/sergey12malyshev/SnakeGame/blob/develop/image/1688404908245.jpg" width=30% height=35%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=35%>
 
 ## gcc-arm-none-eabi
 
