@@ -69,7 +69,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 5;
+const int16_t SWversionMinor = 6;
 
 /* USER CODE END PV */
 

@@ -226,7 +226,7 @@ static void levelOne(void)
   wals4 = (wals){250, 90, 250, Y_MIN};
 
   monster1 = (monster){0, 50, 50, 3, COLOR(255, 0, 0)};
-  monster2 = (monster){0, 210, 50, 3, COLOR(0, 0, 255)};
+  monster2 = (monster){0, 210, 30, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -257,6 +257,8 @@ static void levelTwo(void)
   wals3 = (wals){185, 120, 185, 5};
   wals4 = (wals){255, 160, 255, 40};
 
+  monster1 = (monster){0, 50, 15, 3, COLOR(255, 0, 0)};
+  monster2 = (monster){0, 210, 165, 3, COLOR(0, 0, 255)};
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
   createFood(food2.x, food2.y, food2.size);
@@ -281,6 +283,9 @@ static void levelThree(void)
   wals2 = (wals){160, Y_MAX, 160, 10};
   wals3 = (wals){180, 188, 180, 0};
   wals4 = (wals){200, Y_MAX, 200, 10};
+
+  monster1 = (monster){0, 50, 100, 3, COLOR(255, 0, 0)};
+  monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -371,16 +376,16 @@ static bool foodIntakeCheck4(void)
 
 static bool monsterCheck1(void)
 {
-#if 0
-  uint8_t realSize = monster1.size*4U;
-  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= (monster1.x - realSize))) && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= (monster1.y - realSize))));
+#if 1
+  uint8_t realSize = monster1.size*8U;
+  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= monster1.x)) && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= monster1.y)));
 #endif
 }
 static bool monsterCheck2(void)
 {
-#if 0
-  uint8_t realSize = monster1.size*4U;
-  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= (monster2.x - realSize))) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= (monster2.y - realSize))));
+#if 1
+  uint8_t realSize = monster1.size*8U;
+  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
 #endif
 }
 
@@ -423,8 +428,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     {
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
-      monster1.y = 50U;
-      monster2.x = 215U;
+      monster1.y += 10U;
+      monster2.x += 5U;
       createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
       createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
       i = 0U;
@@ -433,8 +438,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     {
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
-      monster1.y = 60U;
-      monster2.x = 210U;
+      monster1.y -= 10U;
+      monster2.x -= 5U;
       createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
       createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
     }
