@@ -129,7 +129,7 @@
 
 
 
-static uint16_t width  = LCD_PIXEL_WIDTH, height = LCD_PIXEL_HEIGHT;
+__attribute__((unused)) static uint16_t width  = LCD_PIXEL_WIDTH, height = LCD_PIXEL_HEIGHT;
 
 
 // перевод цвета RGB в uint16_t

@@ -16,10 +16,10 @@ uint16_t getADCvalueVrefint(void)
 { //internal VDA voltage
   uint16_t adcVal = 0;
 
-	HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, 100);
-	adcVal = HAL_ADC_GetValue(&hadc1);
-	HAL_ADC_Stop(&hadc1);
+  HAL_ADC_Start(&hadc1);
+  HAL_ADC_PollForConversion(&hadc1, 100);
+  adcVal = HAL_ADC_GetValue(&hadc1);
+  HAL_ADC_Stop(&hadc1);
   
   return adcVal;
 }
@@ -36,6 +36,12 @@ uint16_t getBatteryVoltage(void)
   } 
   
   return voltage_mV;
+}
+
+uint16_t getForvardDiodVoltage(void)
+{
+  const uint16_t forvard_Diod_mV = 820; // падение на диоде
+  return forvard_Diod_mV;
 }
 
 bool overVoltageControl(uint16_t voltage)
@@ -60,25 +66,13 @@ bool underVoltageControl(uint16_t voltage)
   return false;
 }
 
-void beep(uint16_t time)
+void heartBeatLedEnable(void)
 {
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-  HAL_Delay(time);
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 }
 
-/* 
-Convert vbat [mV] to battery indicator
-https://lygte-info.dk/info/BatteryChargePercent%20UK.html
-
-Смотри: SnakeGame\_pdf\SOC_vs_Voltage.xlsx
-*/
-uint8_t vbat2bati(int16_t vbat)
-{ 
-  float charge = 0.1169f*vbat - 385.54f; // y = 0,1169x - 385,54
-
-  if (charge < 0.0) charge = 0.0;
-  if (charge > 100.0) charge = 100.0;
-
-  return (uint8_t)charge;
+void heartBeatLedToggle(void)
+{
+  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 }
+
