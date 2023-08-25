@@ -163,54 +163,27 @@ static void direction(void)
   }
 }
 
-static void buttonRightHandler(void)
+static void pollingButton(void)
 {
-  static bool flagBut2 = false;
-
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) && !flagBut2)
-  { // обработчик нажатия
-    HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
+  if (buttonRightHandler())
+  {
+    space--;
+    if (space == 0)
     {
-      flagBut2 = true;
-      space--;
-      if (space == 0)
-      {
-        space = RIGHT;
-      }
-      direction();
+      space = RIGHT;
     }
+    direction();
   }
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET) && flagBut2)
-  { // обработчик отпускания
-    flagBut2 = false;
+  if (buttonLeftHandler())
+  {
+    space++;
+    if (space >= 5)
+    {
+      space = UP;
+    }
+    direction();
   }
 }
-
-static void buttonLeftHandler(void)
-{
-  static bool flagBut1 = false;
-
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET) && !flagBut1)
-  { // обработчик нажатия
-    HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET)
-    {
-      flagBut1 = true;
-      space++;
-      if (space >= 5)
-      {
-        space = UP;
-      }
-      direction();
-    }
-  }
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) && flagBut1)
-  { // обработчик отпускания
-    flagBut1 = false;
-  }
-}
-
 
 static void levelOne(void)
 {
@@ -538,8 +511,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
 #endif
 
-    buttonLeftHandler();
-    buttonRightHandler();
+    pollingButton();
 
     PT_YIELD(pt);
   }

@@ -76,3 +76,49 @@ void heartBeatLedToggle(void)
   HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 }
 
+
+bool buttonLeftHandler(void)
+{
+  static bool flagBut1 = false;
+  bool rc = false;
+
+  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET) && !flagBut1)
+  { // обработчик нажатия
+    HAL_Delay(20);
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET)
+    {
+      flagBut1 = true;
+      rc = true;
+    }
+  }
+  
+  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) && flagBut1)
+  { // обработчик отпускания
+    flagBut1 = false;
+  }
+  
+  return rc;
+}
+
+bool buttonRightHandler(void)
+{
+  static bool flagBut1 = false;
+  bool rc = false;
+
+  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) && !flagBut1)
+  { // обработчик нажатия
+    HAL_Delay(20);
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
+    {
+      flagBut1 = true;
+      rc = true;
+    }
+  }
+  
+  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET) && flagBut1)
+  { // обработчик отпускания
+    flagBut1 = false;
+  }
+  
+  return rc;
+}

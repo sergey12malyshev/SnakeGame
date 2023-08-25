@@ -52,52 +52,6 @@ static void InfoScreen(void)
   STRING_OUT("<", 10, 210, 1, 0x00FF, green_color);
 }
 
-static bool buttonLeftHandler(void)
-{
-  static bool flagBut1 = false;
-  bool rc = false;
-
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET) && !flagBut1)
-  { // обработчик нажатия
-    HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET)
-    {
-      flagBut1 = true;
-      rc = true;
-    }
-  }
-  
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) && flagBut1)
-  { // обработчик отпускания
-    flagBut1 = false;
-  }
-  
-  return rc;
-}
-
-static bool buttonRightHandler(void)
-{
-  static bool flagBut1 = false;
-  bool rc = false;
-
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) && !flagBut1)
-  { // обработчик нажатия
-    HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
-    {
-      flagBut1 = true;
-      rc = true;
-    }
-  }
-  
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET) && flagBut1)
-  { // обработчик отпускания
-    flagBut1 = false;
-  }
-  
-  return rc;
-}
-
 void mainMenu(void)
 {
   uint8_t count = 0;  
