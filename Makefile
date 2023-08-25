@@ -62,7 +62,8 @@ Src/Screens.c \
 Src/sound.c \
 gameEngineThread.c \
 batteryCheckThread.c \
-SPI_TFT.c
+SPI_TFT.c \
+Menu.c
 
 # ASM sources
 ASM_SOURCES =  \
