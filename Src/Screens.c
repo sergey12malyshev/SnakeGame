@@ -109,14 +109,15 @@ void screenEndGame(void)
   const uint16_t colorBg = COLOR(242, 65, 98);
   LCD_Fill(colorBg);
   STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, colorBg);
-  STRING_OUT("press button >", 5, 210, 1, 0x00FF, green_color);
+  STRING_OUT(">", 290, 210, 1, 0x00FF, green_color);
 }
 
 void screenGameCompleted(void)
 {
   const uint16_t colorBg = COLOR(43, 217, 46);
   LCD_Fill(colorBg);
-  STRING_OUT("Good game!", 100, 180, 3, 0x00FF, colorBg);
+  STRING_OUT("Next Level!", 100, 140, 3, 0x00FF, colorBg);
+  STRING_OUT(">", 290, 210, 1, 0x00FF, green_color);
 }
 
 void screenOverVoltageError(void)
