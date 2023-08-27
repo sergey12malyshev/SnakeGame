@@ -6,12 +6,13 @@ Pac-Man game project on STM32 controller and ILI9341 display
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
 
  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908254.jpg" width=30% height=35%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=30% height=30%>
-## Инструментарий
+## Tools
 
-### Компилятор 
+### Compiler
 *GCC* (gcc-arm-none-eabi) version 5.4.1 20160919
 
-### Настройка системы сборки в WINDOWS10
+### Setting up the build system in WINDOWS10 
+
 1. Скачать GNU Arm Embedded Toolchain 
 https://developer.arm.com/downloads/-/gnu-rm#:~:text=The%20GNU%20Arm%20Embedded%20Toolchain,Arm%20Cortex%2DR%20processor%20families
 or
@@ -23,25 +24,29 @@ https://github.com/xpack-dev-tools/windows-build-tools-xpack/releases/
 3. Прописать пути в PATH к утилитам
 
 Подробная статья: https://habr.com/ru/articles/673522/
-### Редактор кода
+
+### RTOS
+Prototreads AD v1.4
+
+### Code editor
 *VS Code* файл Pac-ManGame.code-workspace
 
-### Статический анализатор кода
+### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
 
 Запустить RunStaticAnalysisCODE.cmd
 
 Возможен вывод результата анализа в файл
 
-## Сборка 
+## Build (Сборка) 
 Для сборки **makeProject.bat**
 
 Для очистки **makeClean.bat**
 
-## Прошивка ПО
+## Programm (Прошивка ПО)
 Запустить **programFlash.bat**
 
-## Настройка периферии
+## Peripheral setup
 STM32 CubeMX
 
 (Установленны галочки *Enable Full Assert* и *Set All Free Pins as Analog*)
@@ -52,6 +57,9 @@ STM32 CubeMX
 - Зарядка - TP4056 charge module with protection
   
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=35%>
+
+## Case
+К проекту добавлены модели корпуса
 
 ## gcc-arm-none-eabi
 

@@ -8,4 +8,6 @@ bool overVoltageControl(uint16_t voltage);
 bool underVoltageControl(uint16_t voltage);
 void heartBeatLedEnable(void);
 void heartBeatLedToggle(void);
+bool buttonLeftHandler(void);
+bool buttonRightHandler(void);
 #endif /* __HARD_H */

@@ -37,6 +37,7 @@
 #include "pt.h"
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
+#include "Menu.h"
 
 
 #define LC_INCLUDE "lc-addrlabels.h"
@@ -69,7 +70,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 6;
+const int16_t SWversionMinor = 8;
 
 /* USER CODE END PV */
 
@@ -134,8 +135,7 @@ int main(void)
   HAL_Delay(300);
   soundPowerOn();
   HAL_Delay(1500);
-  initGame();
-
+  mainMenu();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -146,6 +146,7 @@ int main(void)
     runBatteryCheckThread_pt();
 
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

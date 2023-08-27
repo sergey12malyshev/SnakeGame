@@ -10,6 +10,7 @@
 #include "Screens.h"
 #include "Sound.h"
 #include "gameEngineThread.h"
+#include "colors.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -38,7 +39,6 @@ SPACE_ENUM space = UP;
 static uint8_t level = 0;
 
 const uint16_t sizePacMan = 2;
-const uint16_t colorPacMan = COLOR(255, 255, 0);
 static int16_t x_PacMan, y_PacMan;
 static int16_t old_x = 0, old_y = 0;
 
@@ -47,8 +47,6 @@ static int8_t changeY = -1;
 
 static int16_t score = 0, oldScore = 0;
 /* https://colorscheme.ru/color-converter.html */
-const uint16_t white_color = COLOR(255, 255, 255);
-
 
 /* Параметры еды: */
 const uint8_t quantityFood = 4;
@@ -107,7 +105,7 @@ static bool checkWalls(void)
 
 static void scoreUpdate(uint16_t scoreLoc)
 {
-  STRING_NUM_L(scoreLoc, 2, 120, 210, white_color, 0x0000);  
+  STRING_NUM_L(scoreLoc, 2, 120, 210, getWhite(), getBlack());  
 }
 
 void scoreIncrement(void)
@@ -163,59 +161,31 @@ static void direction(void)
   }
 }
 
-static void buttonRightHandler(void)
+static void pollingButton(void)
 {
-  static bool flagBut2 = false;
-
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) && !flagBut2)
-  { // обработчик нажатия
-    HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
+  if (buttonRightHandler())
+  {
+    space--;
+    if (space == 0)
     {
-      flagBut2 = true;
-      space--;
-      if (space == 0)
-      {
-        space = RIGHT;
-      }
-      direction();
+      space = RIGHT;
     }
+    direction();
   }
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET) && flagBut2)
-  { // обработчик отпускания
-    flagBut2 = false;
+  if (buttonLeftHandler())
+  {
+    space++;
+    if (space >= 5)
+    {
+      space = UP;
+    }
+    direction();
   }
 }
-
-static void buttonLeftHandler(void)
-{
-  static bool flagBut1 = false;
-
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET) && !flagBut1)
-  { // обработчик нажатия
-    HAL_Delay(20);
-    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET)
-    {
-      flagBut1 = true;
-      space++;
-      if (space >= 5)
-      {
-        space = UP;
-      }
-      direction();
-    }
-  }
-  if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) && flagBut1)
-  { // обработчик отпускания
-    flagBut1 = false;
-  }
-}
-
 
 static void levelOne(void)
 {
-  food tmp1 = {50, 100, 11, false}; 
-  food1 = tmp1;
+  food1 = (food){50, 100, 11, false}; 
   food2 = (food){280, 25, 8, false};  //Составной литерал C99 http://zonakoda.ru/sostavnye-literaly-v-c99.html
   food3 = (food){125, 175, 9, false};
   food4 = (food){235, 180, 12, false};
@@ -241,8 +211,8 @@ static void levelOne(void)
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
 
   /* Отрисуем монстов */
-  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
-  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
 }
 
 static void levelTwo(void)
@@ -257,8 +227,8 @@ static void levelTwo(void)
   wals3 = (wals){185, 120, 185, 5};
   wals4 = (wals){255, 160, 255, 40};
 
-  monster1 = (monster){0, 50, 15, 3, COLOR(255, 0, 0)};
-  monster2 = (monster){0, 210, 165, 3, COLOR(0, 0, 255)};
+  monster1 = (monster){0, 50, 15, 3, COLOR(55, 55, 255)};
+  monster2 = (monster){0, 210, 165, 3, COLOR(222, 0, 230)};
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
   createFood(food2.x, food2.y, food2.size);
@@ -284,7 +254,7 @@ static void levelThree(void)
   wals3 = (wals){180, 188, 180, 0};
   wals4 = (wals){200, Y_MAX, 200, 10};
 
-  monster1 = (monster){0, 50, 100, 3, COLOR(255, 0, 0)};
+  monster1 = (monster){0, 50, 100, 3, COLOR(23, 150, 108)};
   monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
@@ -304,13 +274,12 @@ void initGame(void)
 {
   /* Отрисуем рабочее поле */
   createWorkRegion();
-  //STRING_NUM_L(score, 2, 125, 210, white_color, 0x0000);
   /* Предустановим переменные */
   up();
   oldScore = score = 0;
   scoreUpdate(score);
   x_PacMan = 215;
-  y_PacMan = 80;
+  y_PacMan = 145;
   old_x = 0;
   old_y = 0;
   food1.disable = false;
@@ -393,8 +362,8 @@ static void PacManUpdateProcess(void)
 {
   if (((x_PacMan <= (old_x + sizePacMan)) || (x_PacMan >= (old_x - sizePacMan))) && ((y_PacMan <= (old_y + sizePacMan)) && (y_PacMan >= (old_y - sizePacMan))))
   { // update PacMan
-    fillCircle(old_x, old_y, 2, 0X0000);
-    fillCircle(x_PacMan, y_PacMan, 2, colorPacMan);
+    fillCircle(old_x, old_y, 2, getBlack());
+    fillCircle(x_PacMan, y_PacMan, 2, getYellow());
   }
 } 
 
@@ -430,8 +399,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       disableMonster(monster2.x, monster2.y, monster2.size);
       monster1.y += 10U;
       monster2.x += 5U;
-      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
-      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
+      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
       i = 0U;
     }
     else if(i == 45U)
@@ -440,10 +409,9 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       disableMonster(monster2.x, monster2.y, monster2.size);
       monster1.y -= 10U;
       monster2.x -= 5U;
-      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, 0x0000);
-      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, 0x0000, monster2.color);
+      createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+      createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
     }
-
 
 #if NO_WALS_DEATH
     if (y_PacMan > Y_MAX)
@@ -527,8 +495,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
 	
 #if DEBUG
-    STRING_NUM_L(y_PacMan, 3, 120, 210, white_color, 0x0000);
-    STRING_NUM_L(x_PacMan, 3, 195, 210, white_color, 0x0000);
+    STRING_NUM_L(y_PacMan, 3, 120, 210, getWhite(), getBlack());
+    STRING_NUM_L(x_PacMan, 3, 195, 210, getWhite(), getBlack());
 #else
 
     if (score != oldScore)
@@ -538,8 +506,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
     }
 #endif
 
-    buttonLeftHandler();
-    buttonRightHandler();
+    pollingButton();
 
     PT_YIELD(pt);
   }
