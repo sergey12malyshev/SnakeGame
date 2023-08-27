@@ -9,14 +9,12 @@
 #include "hard.h"
 #include "Screens.h"
 #include "batteryCheckThread.h"
+#include "colors.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
 static struct pt batteryCheck_pt;
-
-const uint16_t green_color = COLOR(17, 255, 0);
-
 
 /* 
 Convert vbat [mV] to battery indicator
@@ -50,7 +48,7 @@ static void batteryControlProcess(void)
   }
   else
   {
-    STRING_NUM_L(getBatChargePrecent(voltage + getForvardDiodVoltage()), 3, 210, 210, green_color, 0x0000); // Выведем заряд
+    STRING_NUM_L(getBatChargePrecent(voltage + getForvardDiodVoltage()), 3, 210, 210, getGreen(), getBlack()); // Выведем заряд
   }
 }
 
@@ -67,13 +65,11 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
 
   while (1)
   {
-
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 1500); // Контролируем АКБ ~ раз в 1.5 секунды
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 1500U); // Контролируем АКБ ~ раз в 1.5 секунды
     timeCount = HAL_GetTick();	
 
     batteryControlProcess(); 
     heartBeatLedToggle();
-
 
     PT_YIELD(pt);
   }
