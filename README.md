@@ -58,6 +58,9 @@ STM32 CubeMX
   
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=35%>
 
+## Case
+К проекту добавлены модели корпуса
+
 ## gcc-arm-none-eabi
 
 Магическое название компилятора gcc-arm-none-eabi означает следующее:
