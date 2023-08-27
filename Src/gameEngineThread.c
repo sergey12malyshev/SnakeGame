@@ -227,8 +227,8 @@ static void levelTwo(void)
   wals3 = (wals){185, 120, 185, 5};
   wals4 = (wals){255, 160, 255, 40};
 
-  monster1 = (monster){0, 50, 15, 3, COLOR(255, 0, 0)};
-  monster2 = (monster){0, 210, 165, 3, COLOR(0, 0, 255)};
+  monster1 = (monster){0, 50, 15, 3, COLOR(55, 55, 255)};
+  monster2 = (monster){0, 210, 165, 3, COLOR(222, 0, 230)};
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
   createFood(food2.x, food2.y, food2.size);
@@ -254,7 +254,7 @@ static void levelThree(void)
   wals3 = (wals){180, 188, 180, 0};
   wals4 = (wals){200, Y_MAX, 200, 10};
 
-  monster1 = (monster){0, 50, 100, 3, COLOR(255, 0, 0)};
+  monster1 = (monster){0, 50, 100, 3, COLOR(23, 150, 108)};
   monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
