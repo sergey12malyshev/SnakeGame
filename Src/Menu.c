@@ -45,14 +45,17 @@ static void InfoScreen(void)
 {
   const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
-  STRING_OUT("PAC-MAN game", 5, 20, 5, getWhite(), colorBg);
-  STRING_OUT("sergey12malyshev", 5, 60, 1, getWhite(), colorBg);
-  STRING_OUT("2023", 5, 100, 1, getWhite(), colorBg);
-  uint8_t start = 5;
-  STRING_OUT("Ver.", start, 140, 5, getWhite(), colorBg);
-  STRING_NUM_L(SWversionMajor, 1, start+80+15, 140, getWhite(), colorBg);
-  STRING_OUT(".", start+80+15+15, 140, 4, getWhite(), colorBg);
-  STRING_NUM_L(SWversionMinor, 1,  start+80+15+10+20, 140, getWhite(), colorBg);
+  STRING_OUT("PAC-MAN game", 25, 20, 5, getWhite(), colorBg);
+
+  uint8_t start_x = 5, start_y = 65;
+  STRING_OUT("Ver.", start_x, start_y, 5, getWhite(), colorBg);
+  STRING_NUM_L(SWversionMajor, 1, start_x+80+15, start_y, getWhite(), colorBg);
+  STRING_OUT(".", start_x+80+15+15, start_y, 4, getWhite(), colorBg);
+  STRING_NUM_L(SWversionMinor, 1,  start_x+80+15+10+20, start_y, getWhite(), colorBg);
+
+  STRING_OUT("sergey12malyshev", 5, 120, 1, getWhite(), colorBg);
+  STRING_OUT(__DATE__, start_x, 165, 5, getWhite(), colorBg);
+  STRING_OUT(__TIME__, start_x+100, 200, 5, getWhite(), colorBg);
 
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
 }
