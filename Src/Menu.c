@@ -54,7 +54,7 @@ static void InfoScreen(void)
   STRING_NUM_L(SWversionMinor, 1,  start_x+80+15+10+20, start_y, getWhite(), colorBg);
 
   STRING_OUT("sergey12malyshev", 5, 120, 1, getWhite(), colorBg);
-  STRING_OUT(__DATE__, start_x, 165, 5, getWhite(), colorBg);
+  STRING_OUT(__DATE__, start_x, 165, 5, getWhite(), colorBg);   //https://spec-zone.ru/gcc~9_cpp/standard-predefined-macros
   STRING_OUT(__TIME__, start_x+100, 200, 5, getWhite(), colorBg);
 
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
