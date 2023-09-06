@@ -10,8 +10,6 @@
 #include "Menu.h"
 #include "colors.h"
 
-extern const int16_t SWversionMajor, SWversionMinor;
-
 static void screenMainMenu(void)
 {
   const uint16_t colorBg = 0x0000;
@@ -43,6 +41,8 @@ static void choiceInfo(void)
 
 static void InfoScreen(void)
 {
+  
+  extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
   STRING_OUT("PAC-MAN game", 25, 20, 5, getWhite(), colorBg);

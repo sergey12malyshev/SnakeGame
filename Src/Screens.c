@@ -14,8 +14,6 @@
  *
  *******************/
 
-extern const int16_t SWversionMajor, SWversionMinor;
-
 const unsigned char objets[][8]=
 {
   {0x7C,0x02,0xC9,0x01,0x01,0xC9,0x02,0x7C}, // monster
@@ -82,6 +80,7 @@ void createWorkRegion(void)
 
 void screenSaver(void)
 {
+  extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = getBlack();
   LCD_Fill(colorBg);
   STRING_OUT("PAC-MAN", 90, 110, 10, getBlue(), colorBg);

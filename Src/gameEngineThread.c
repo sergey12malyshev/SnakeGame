@@ -345,17 +345,13 @@ static bool foodIntakeCheck4(void)
 
 static bool monsterCheck1(void)
 {
-#if 1
   uint8_t realSize = monster1.size*8U;
   return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= monster1.x)) && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= monster1.y)));
-#endif
 }
 static bool monsterCheck2(void)
 {
-#if 1
   uint8_t realSize = monster1.size*8U;
   return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
-#endif
 }
 
 static void PacManUpdateProcess(void)
