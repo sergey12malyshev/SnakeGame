@@ -5,9 +5,9 @@ Pac-Man game project on STM32 controller and ILI9341 display
 
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
 
- <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/db08b1eb-7112-4140-b000-8f4098d6f0e6.jpg" width=29% height=29%>   <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/b2e6b7b9-78c3-4203-983a-548b8aa62c95.jpg" width=23% height=23%>
+ <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/db08b1eb-7112-4140-b000-8f4098d6f0e6.jpg" width=26% height=26%>   <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/b94825aa-9aec-4773-a235-eaeea46141b8.jpg" width=20% height=20%>
 
- <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=30%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=28% height=28%>
+ <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=26% height=26%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
  
 ## Tools
 
