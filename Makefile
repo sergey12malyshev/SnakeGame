@@ -62,6 +62,7 @@ Src/Screens.c \
 Src/sound.c \
 gameEngineThread.c \
 batteryCheckThread.c \
+monitorThread.c \
 SPI_TFT.c \
 Menu.c
 
