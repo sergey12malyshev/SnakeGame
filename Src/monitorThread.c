@@ -6,6 +6,7 @@
 #include "main.h"
 #include "hard.h"
 #include "monitorThread.h"
+#include "Sound.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -20,6 +21,7 @@ static struct pt batteryCheck_pt;
 extern UART_HandleTypeDef huart1;
 
 /*
+  UART CLI 115200 Baud
   PA10 - RX
   PA9 - TX
 */
@@ -31,7 +33,7 @@ typedef enum
   R,
   TEST,
   ADC,
-  VOLTAGE,
+  BAT,
   INFO
 }COMAND;
 
@@ -44,9 +46,9 @@ static uint8_t backspace_str[] = " \b";
 static uint8_t mon_comand[] = "Enter monitor command:\r\n\
 HELP - see existing commands\r\n\
 RST - restart\r\n\
-TEST - run test\r\n\
-ADC - show ADC chanel\r\n\
-VOLTAGE - show out voltage (0.01V)\r\n\
+TEST - run sound test\r\n\
+ADC - show ADC chanel bat\r\n\
+BAT - show bat voltage (0.01V)\r\n\
 INFO - read about project\r\n\
 >";
 static uint8_t symbol_term[] = ">";
@@ -171,9 +173,9 @@ static void monitor(void)
         monitorTest = ADC;
         sendUART_OK();
       }
-      else if (mon_strcmp(input_mon_buff, "VOLTAGE"))
+      else if (mon_strcmp(input_mon_buff, "BAT"))
       {
-        monitorTest = VOLTAGE;
+        monitorTest = BAT;
         sendUART_OK();
       }
       else if (mon_strcmp(input_mon_buff, "RST"))
@@ -254,13 +256,15 @@ static void monitor_out_test(void)
       sendUART((uint8_t *)str);
       resetTest();
       break;
-    case VOLTAGE:
+    case BAT:
       sprintf((char *)str, "%d\r\n", getBatteryVoltage());
       sendUART((uint8_t *)str);
       resetTest();
       break;
     case TEST:
-      sendUART((uint8_t *)"\r\nTEST Ok\r\n");
+      soundGameOver();
+      soundGameCompleted();
+      sendUART((uint8_t *)"TEST Ok\r\n");
       resetTest();
       break;
     default:;
