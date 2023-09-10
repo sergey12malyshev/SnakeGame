@@ -5,7 +5,8 @@ Pac-Man game project on STM32 controller and ILI9341 display
 
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
 
- <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908254.jpg" width=30% height=35%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=30% height=30%>
+ <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/db08b1eb-7112-4140-b000-8f4098d6f0e6.jpg" width=32% height=32%>   <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/b2e6b7b9-78c3-4203-983a-548b8aa62c95.jpg" width=25% height=25%>
+ 
 ## Tools
 
 ### Compiler
@@ -48,6 +49,7 @@ Cppcheck 2.10 https://cppcheck.sourceforge.io/
 
 ## Peripheral setup
 STM32 CubeMX
+(Установленны галочки *Enable Full Assert* и *Set All Free Pins as Analog*)
 
 ## Command Line Interface
 
@@ -57,14 +59,13 @@ Connect: PA10 - RX / PA9 - TX
 
 Enter *help* command
 
-(Установленны галочки *Enable Full Assert* и *Set All Free Pins as Analog*)
 ## Hardware
 - МК - STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
 - Дисплей - 2.8 TFT SPI 240x320 display (ILI9341)
 - Кнопки - К1116КП2 (на основе датчиков Холла)
 - Зарядка - TP4056 charge module with protection
   
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=35%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=32% height=35%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=30% height=30%>
 
 ## Case
 К проекту добавлены модели корпуса
