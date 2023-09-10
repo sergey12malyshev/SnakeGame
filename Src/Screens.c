@@ -74,7 +74,6 @@ void createWorkRegion(void)
   line(0, 201, 319, 201, getWhite());
   line(0, 0, 0, 199, getWhite());
   STRING_OUT("Score", 10, 210, 1, getWhite(), getBlack());
-  STRING_OUT("%", 270, 210, 1, getGreen(), getBlack());
   batterySumbolShow();
 }
 
@@ -139,4 +138,5 @@ void batterySumbolShow(void)
   line(290, y_max - 5, 295, y_max - 5, getGreen());
 
   line(295, y_max - 5, 295, y_min + 5, getGreen());
+  STRING_OUT("%", 270, 210, 1, getGreen(), getBlack());
 }

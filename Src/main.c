@@ -37,6 +37,7 @@
 #include "pt.h"
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
+#include "monitorThread.h"
 #include "Menu.h"
 
 
@@ -70,7 +71,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 8;
+const int16_t SWversionMinor = 9;
 
 /* USER CODE END PV */
 
@@ -125,25 +126,37 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   heartBeatLedEnable();
+  UART_receve_IT();
 
-  HAL_Delay(50); // Добавим задержку, для исключения дребезга питания
+  HAL_Delay(100); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
-  HAL_Delay(300);
+  sendUART_hello();
+  resetTest();
+  HAL_Delay(250);
   soundPowerOn();
   HAL_Delay(1500);
-  mainMenu();
+
+  screenMainMenu();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
-    runGameEngineThread_pt();
+  { 
+    if (getMenuState())
+    {
+      setMenuState(mainMenu());
+    }
+    else
+    {
+      runGameEngineThread_pt();
+    }
     runBatteryCheckThread_pt();
+    runMonitorTread_pt();
 
     /* USER CODE END WHILE */
 
@@ -299,7 +312,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
+  huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;

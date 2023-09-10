@@ -10,7 +10,19 @@
 #include "Menu.h"
 #include "colors.h"
 
-static void screenMainMenu(void)
+static bool menuEnabled = true;
+
+bool getMenuState(void)
+{
+  return menuEnabled;
+}
+
+void setMenuState(const bool state)
+{
+  menuEnabled = state;
+}
+
+void screenMainMenu(void)
 {
   const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
@@ -41,7 +53,6 @@ static void choiceInfo(void)
 
 static void InfoScreen(void)
 {
-  
   extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
@@ -60,56 +71,52 @@ static void InfoScreen(void)
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
 }
 
-void mainMenu(void)
+bool mainMenu(void)
 {
-  uint8_t count = 0;  
-  screenMainMenu();
+  static uint8_t count = 0;  
 
-  while(true)
-  {
     if (buttonLeftHandler())
     {
-        beep(0);
-        count++;
-        if (count > 1) count = 0;
+      beep(0);
+      count++;
+      if (count > 1) count = 0;
 
-        switch (count)
-        {
-          case 0:  
-            choiceStart();
-            break;
-          case 1: 
-            choiceInfo(); 
-            break;
+      switch (count)
+      {
+        case 0:  
+          choiceStart();
+          break;
+        case 1: 
+          choiceInfo(); 
+          break;
         
-          default:
-            break;
-        }
+        default:
+          break;
+      }
     }
     
     if (buttonRightHandler())
     {   
-        beep(0);
+      beep(0);
 
-        switch (count)
-        {
-          case 0:  
-              initGame();
-              return;
-            break;
-          case 1: 
-              InfoScreen();
-              while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
-              screenMainMenu();
-              count = 0; 
-            break;
+      switch (count)
+      {
+        case 0:  
+          initGame();
+          return false;
+        case 1: 
+          InfoScreen();
+          while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
+          screenMainMenu();
+          count = 0; 
+          break;
         
-          default:
-            break;
-        }
-
+        default:
+          break;
+      }
     }
-  }
+  
+  return true;
 }
 
 

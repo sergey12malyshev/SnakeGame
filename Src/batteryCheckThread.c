@@ -10,6 +10,7 @@
 #include "Screens.h"
 #include "batteryCheckThread.h"
 #include "colors.h"
+#include "menu.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -48,7 +49,10 @@ static void batteryControlProcess(void)
   }
   else
   {
-    STRING_NUM_L(getBatChargePrecent(voltage + getForvardDiodVoltage()), 3, 210, 210, getGreen(), getBlack()); // Выведем заряд
+    if(!getMenuState())
+    {
+      STRING_NUM_L(getBatChargePrecent(voltage + getForvardDiodVoltage()), 3, 210, 210, getGreen(), getBlack()); // Выведем заряд
+    } 
   }
 }
 
@@ -67,7 +71,8 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
   {
     PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 1500U); // Контролируем АКБ ~ раз в 1.5 секунды
     timeCount = HAL_GetTick();	
-
+    
+    ADC_conversionRun();
     batteryControlProcess(); 
     heartBeatLedToggle();
 

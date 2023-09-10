@@ -3,7 +3,7 @@
 #include "hard.h"
 
 extern ADC_HandleTypeDef hadc1;
-
+static uint16_t adcValue = 0;
 /*
 Standard operating voltage STM32: 2 - 3.6 V
 Standard operating voltage li-ion battery: 3 - 4.2 V
@@ -12,16 +12,18 @@ Standart forward drop silicon diodes: 0.6 - 0.7 V
 ----------------------------------------------------
 Total: Voltage control STM32: 2.5 V - 3.3V
 */
-uint16_t getADCvalueVrefint(void)
-{ //internal VDA voltage
-  uint16_t adcVal = 0;
 
+void ADC_conversionRun(void)
+{
   HAL_ADC_Start(&hadc1);
   HAL_ADC_PollForConversion(&hadc1, 100);
-  adcVal = HAL_ADC_GetValue(&hadc1);
+  adcValue = HAL_ADC_GetValue(&hadc1);
   HAL_ADC_Stop(&hadc1);
-  
-  return adcVal;
+}
+
+uint16_t getADCvalueVrefint(void)
+{ //internal VDA voltage
+  return adcValue;
 }
 
 uint16_t getBatteryVoltage(void)
@@ -30,7 +32,7 @@ uint16_t getBatteryVoltage(void)
   const uint16_t adcData =  getADCvalueVrefint();
   uint16_t voltage_mV = 0;
 
-  if(adcData > 75) // защита от переполнения voltage_mV
+  if(adcData > 75U) // защита от переполнения voltage_mV
   {
     voltage_mV = (Vrefint * 4095) / adcData; 
   } 
