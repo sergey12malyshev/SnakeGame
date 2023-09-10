@@ -68,7 +68,9 @@ Enter *help* command
 - Зарядка - TP4056 charge module with protection
 - 
 ## Case
-К проекту добавлены модели корпуса
+К проекту добавлены модели корпуса в формате .stl
+
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Case%20model/Case.jpg" width=15% height=15%>
 
 ## gcc-arm-none-eabi
 
