@@ -49,6 +49,14 @@ Cppcheck 2.10 https://cppcheck.sourceforge.io/
 ## Peripheral setup
 STM32 CubeMX
 
+## Command Line Interface
+
+UART 115200 Baud rate
+
+Connect: PA10 - RX / PA9 - TX
+
+Enter *help* command
+
 (Установленны галочки *Enable Full Assert* и *Set All Free Pins as Analog*)
 ## Hardware
 - МК - STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
