@@ -12,7 +12,9 @@
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-static struct pt batteryCheck_pt;
+static struct pt monitorCheck_pt;
+
+#define MONITOR_ENABLED  true
 
 #define LOCAL_ECHO_EN  1U
 #define SIZE_BUFF  12U
@@ -305,5 +307,7 @@ static PT_THREAD(monitorTread(struct pt *pt))
 
 void runMonitorTread_pt(void)
 {
-  monitorTread(&batteryCheck_pt);
+#if MONITOR_ENABLED
+  monitorTread(&monitorCheck_pt);
+#endif
 }
