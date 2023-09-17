@@ -30,6 +30,7 @@ void screenMainMenu(void)
   STRING_OUT("MENU", 95, 15, 10, getGreen(), colorBg);
   STRING_OUT("START", 90, 70, 7, colorBg, getWhite());
   STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 170, 7, getWhite(), colorBg);
 
   STRING_OUT("^", 10, 210, 1, 0x00FF, getGreen());
   STRING_OUT(">", 290, 210, 1, 0x00FF, getGreen());
@@ -41,6 +42,7 @@ static void choiceStart(void)
 
   STRING_OUT("START", 90, 70, 7, colorBg, getWhite());
   STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 170, 7, getWhite(), colorBg);
 }
 
 static void choiceInfo(void)
@@ -49,6 +51,16 @@ static void choiceInfo(void)
 
   STRING_OUT("START", 90, 70, 7, getWhite(), colorBg);
   STRING_OUT("INFO", 90, 120, 7, colorBg, getWhite());
+  STRING_OUT("SETTINGS", 90, 170, 7, getWhite(), colorBg);
+}
+
+static void choiceSettings(void)
+{
+  const uint16_t colorBg = 0x0000;
+
+  STRING_OUT("START", 90, 70, 7, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 170, 7, colorBg, getWhite());
 }
 
 static void InfoScreen(void)
@@ -56,7 +68,7 @@ static void InfoScreen(void)
   extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
-  STRING_OUT("PAC-MAN game", 25, 20, 5, getWhite(), colorBg);
+  STRING_OUT("PAC-MAN game", 25, 20, 5, getOrange(), colorBg);
 
   uint8_t start_x = 5, start_y = 65;
   STRING_OUT("Ver.", start_x, start_y, 5, getWhite(), colorBg);
@@ -71,25 +83,40 @@ static void InfoScreen(void)
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
 }
 
+static void settingsScreen(void)
+{
+  const uint16_t colorBg = 0x0000;
+  LCD_Fill(colorBg);
+  STRING_OUT("Settings", 65, 20, 5, getWhite(), colorBg);
+
+  STRING_OUT("No settings!", 25 , 80, 5, getWhite(), colorBg);
+
+  STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
+}
+
 bool mainMenu(void)
 {
   static uint8_t count = 0;  
+  enum MENU_ITEMS {START = 0, INFO, SETTINGS};
+
 
     if (buttonLeftHandler())
     {
       beep(0);
       count++;
-      if (count > 1) count = 0;
+      if (count > 2) count = 0;
 
       switch (count)
       {
-        case 0:  
+        case START:  
           choiceStart();
           break;
-        case 1: 
+        case INFO: 
           choiceInfo(); 
           break;
-        
+        case SETTINGS: 
+          choiceSettings(); 
+          break; 
         default:
           break;
       }
@@ -101,16 +128,21 @@ bool mainMenu(void)
 
       switch (count)
       {
-        case 0:  
+        case START:  
           initGame();
           return false;
-        case 1: 
+        case INFO: 
           InfoScreen();
           while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
           screenMainMenu();
           count = 0; 
           break;
-        
+        case SETTINGS: 
+          settingsScreen();
+          while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
+          screenMainMenu();
+          count = 0; 
+          break; 
         default:
           break;
       }

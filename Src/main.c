@@ -134,10 +134,10 @@ int main(void)
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
-  sendUART_hello();
   resetTest();
   HAL_Delay(250);
   soundPowerOn();
+  sendUART_hello();
   HAL_Delay(1500);
 
   screenMainMenu();
