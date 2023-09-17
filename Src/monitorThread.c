@@ -6,6 +6,7 @@
 #include "main.h"
 #include "hard.h"
 #include "monitorThread.h"
+#include "batteryCheckThread.h"
 #include "Sound.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
@@ -249,6 +250,8 @@ static void monitor(void)
 
 static void monitor_out_test(void)
 {
+  uint16_t batVolt;
+
   switch (monitorTest)
   {
     case ADC:
@@ -257,7 +260,10 @@ static void monitor_out_test(void)
       resetTest();
       break;
     case BAT:
-      sprintf((char *)str, "%d\r\n", getBatteryVoltage());
+      batVolt = getBatteryVoltage();
+      sprintf((char *)str, "Battery voltage, mV: %d\r\n", batVolt);
+      sendUART((uint8_t *)str);
+      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVolt + getForvardDiodVoltage()));
       sendUART((uint8_t *)str);
       resetTest();
       break;
