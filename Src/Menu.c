@@ -12,6 +12,8 @@
 
 static bool menuEnabled = true;
 
+uint8_t speedGame = 40;
+
 bool getMenuState(void)
 {
   return menuEnabled;
@@ -89,9 +91,17 @@ static void settingsScreen(void)
   LCD_Fill(colorBg);
   STRING_OUT("Settings", 65, 20, 5, getWhite(), colorBg);
 
-  STRING_OUT("No settings!", 25 , 80, 5, getWhite(), colorBg);
+  STRING_OUT("Speed:", 25 , 80, 5, getWhite(), colorBg);
+  STRING_NUM_L(speedGame, 2, 155, 80, getOrange(), colorBg);
 
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
+  STRING_OUT("^", 290, 210, 1, 0x00FF, getGreen());
+}
+
+static void speedUpdate(uint8_t speedGameLoc)
+{
+  const uint16_t colorBg = 0x0000;
+  STRING_NUM_L(speedGameLoc, 2, 155, 80, getOrange(), colorBg);
 }
 
 bool mainMenu(void)
@@ -139,7 +149,14 @@ bool mainMenu(void)
           break;
         case SETTINGS: 
           settingsScreen();
-          while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
+          while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET))
+          {
+            if(buttonRightHandler())
+            {
+              speedGame += 5;
+              speedUpdate(speedGame);
+            }
+          }
           screenMainMenu();
           count = START; 
           break; 

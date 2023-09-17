@@ -49,7 +49,7 @@ HELP - see existing commands\r\n\
 RST - restart\r\n\
 TEST - run sound test\r\n\
 ADC - show ADC chanel bat\r\n\
-BAT - show bat voltage (0.01V)\r\n\
+BAT - show bat voltage (0.01V) and stat. charge\r\n\
 INFO - read about project\r\n\
 >";
 static uint8_t symbol_term[] = ">";
