@@ -12,7 +12,7 @@
 
 static bool menuEnabled = true;
 
-uint8_t speedGame = 40;
+uint8_t speedGame = 20;
 
 bool getMenuState(void)
 {
@@ -104,6 +104,11 @@ static void speedUpdate(uint8_t speedGameLoc)
   STRING_NUM_L(speedGameLoc, 2, 155, 80, getOrange(), colorBg);
 }
 
+uint8_t getSpeedGame(void)
+{
+  return speedGame;
+}
+
 bool mainMenu(void)
 {
   static uint8_t count = 0;  
@@ -154,7 +159,11 @@ bool mainMenu(void)
             if(buttonRightHandler())
             {
               speedGame += 5;
+              if(speedGame > 40) speedGame = 5;
               speedUpdate(speedGame);
+              /*
+               Добавить запись во flash
+              */
             }
           }
           screenMainMenu();

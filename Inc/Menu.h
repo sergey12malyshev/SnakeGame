@@ -6,5 +6,6 @@ void setMenuState(const bool state);
 
 bool mainMenu(void);
 void screenMainMenu(void);
+uint8_t getSpeedGame(void);
 
 #endif /* __MENU_H */
