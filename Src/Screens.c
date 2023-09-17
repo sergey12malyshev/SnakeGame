@@ -87,7 +87,7 @@ void screenSaver(void)
   STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
   STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
-  STRING_NUM_L(SWversionMinor, 1, 205, 220, 0x00FF, colorBg); 
+  STRING_NUM_L(SWversionMinor, 2, 205, 220, 0x00FF, colorBg); 
 
   createMonster(0, 50, 50, 5, getRed(), colorBg);
   createMonster(1, 200, 150, 5, getOrange(), colorBg);

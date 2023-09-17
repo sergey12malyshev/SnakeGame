@@ -74,7 +74,7 @@ static void InfoScreen(void)
   STRING_OUT("Ver.", start_x, start_y, 5, getWhite(), colorBg);
   STRING_NUM_L(SWversionMajor, 1, start_x+80+15, start_y, getWhite(), colorBg);
   STRING_OUT(".", start_x+80+15+15, start_y, 4, getWhite(), colorBg);
-  STRING_NUM_L(SWversionMinor, 1,  start_x+80+15+10+20, start_y, getWhite(), colorBg);
+  STRING_NUM_L(SWversionMinor, 2,  start_x+80+15+10+20, start_y, getWhite(), colorBg);
 
   STRING_OUT("sergey12malyshev", 5, 120, 1, getWhite(), colorBg);
   STRING_OUT(__DATE__, start_x, 165, 5, getWhite(), colorBg);   //https://spec-zone.ru/gcc~9_cpp/standard-predefined-macros
