@@ -104,7 +104,7 @@ bool mainMenu(void)
     {
       beep(0);
       count++;
-      if (count > 2) count = 0;
+      if (count > 2) count = START;
 
       switch (count)
       {
@@ -135,13 +135,13 @@ bool mainMenu(void)
           InfoScreen();
           while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
           screenMainMenu();
-          count = 0; 
+          count = START; 
           break;
         case SETTINGS: 
           settingsScreen();
           while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
           screenMainMenu();
-          count = 0; 
+          count = START; 
           break; 
         default:
           break;

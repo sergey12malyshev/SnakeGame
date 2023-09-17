@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include "main.h"
+#include "Menu.h"
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
@@ -305,8 +306,21 @@ void initGame(void)
 static void endGame(void)
 {
   HAL_Delay(300);
-  while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET));
-  initGame();
+
+  while(true)
+  {
+    if (buttonLeftHandler())
+    {
+      screenMainMenu();
+      setMenuState(true);
+      break;
+    }
+    if (buttonRightHandler())
+    {
+      initGame();
+      break;
+    }
+  }
 }
 
 static void levelUp(void)

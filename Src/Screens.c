@@ -100,6 +100,9 @@ void screenEndGame(void)
   LCD_Fill(colorBg);
   STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, colorBg);
   STRING_OUT(">", 290, 210, 1, 0x00FF, getGreen());
+  STRING_OUT("Go", 235, 210, 1, 0x00FF, colorBg);
+  STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
+  STRING_OUT("Menu", 40, 210, 1, 0x00FF, colorBg);
 }
 
 void screenGameCompleted(void)
