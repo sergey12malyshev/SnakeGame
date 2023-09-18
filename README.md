@@ -1,6 +1,8 @@
 # Pac-ManGame 
 Pac-Man game project on STM32 controller and ILI9341 display
 
+*Be sure to check the BOOT0 output status on the debug board!*
+
 Проект игры Pac-Man на контроллере STM32 и дисплее ILI9341
 
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
@@ -16,20 +18,22 @@ Pac-Man game project on STM32 controller and ILI9341 display
 
 ### Setting up the build system in WINDOWS10 
 
-1. Скачать GNU Arm Embedded Toolchain 
+1. Download GNU Arm Embedded Toolchain 
 https://developer.arm.com/downloads/-/gnu-rm#:~:text=The%20GNU%20Arm%20Embedded%20Toolchain,Arm%20Cortex%2DR%20processor%20families
 or
 https://launchpad.net/gcc-arm-embedded/+download
 
-2. Скачать Windows Build Tools binaries (Make, cp, rm, echo, sh...)
+2. Download Windows Build Tools binaries (Make, cp, rm, echo, sh...)
 https://github.com/xpack-dev-tools/windows-build-tools-xpack/releases/
 
-3. Прописать пути в PATH к утилитам
+3. Add paths to the PATH environment variable in Windows
 
 Подробная статья: https://habr.com/ru/articles/673522/
 
 ### RTOS
 Prototreads AD v1.4
+
+https://dunkels.com/adam/pt/
 
 ### Code editor
 *VS Code* файл Pac-ManGame.code-workspace
