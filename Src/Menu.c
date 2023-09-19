@@ -12,7 +12,7 @@
 
 static bool menuEnabled = true;
 
-uint8_t speedGame = 20;
+uint8_t speedGame = 35;
 
 bool getMenuState(void)
 {
@@ -159,7 +159,7 @@ bool mainMenu(void)
             if(buttonRightHandler())
             {
               speedGame += 5;
-              if(speedGame > 40) speedGame = 5;
+              if(speedGame > 50) speedGame = 5;
               speedUpdate(speedGame);
               /*
                Добавить запись во flash

@@ -49,6 +49,7 @@ static uint8_t backspace_str[] = " \b";
 static uint8_t mon_comand[] = "Enter monitor command:\r\n\
 HELP - see existing commands\r\n\
 RST - restart\r\n\
+STOP - stop game process\r\n\
 TEST - run sound test\r\n\
 ADC - show ADC chanel bat\r\n\
 BAT - show bat voltage (0.01V) and stat. charge\r\n\
@@ -170,6 +171,10 @@ static void monitor(void)
       else if (mon_strcmp(input_mon_buff, "TEST"))
       {
         monitorTest = TEST;
+      }
+      else if (mon_strcmp(input_mon_buff, "STOP"))
+      {
+        while(1);
       }
        else if (mon_strcmp(input_mon_buff, "ADC"))
       {

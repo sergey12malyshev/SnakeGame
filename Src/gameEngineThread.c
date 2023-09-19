@@ -42,6 +42,7 @@ SPACE_ENUM space = UP;
 static uint8_t level = 0;
 
 const uint16_t sizePacMan = 2;
+uint16_t borderPacman = 6; // sizePacMan * 8BIT/2
 static int16_t x_PacMan, y_PacMan;
 static int16_t old_x = 0, old_y = 0;
 
@@ -99,10 +100,10 @@ static bool checkWalls(void)
 {
   bool rc = false;
 
-  rc |= (((x_PacMan >= (wals1.x1)) && (x_PacMan <= (wals1.x2 + wals1.size))) && ((y_PacMan <= (wals1.y1)) && (y_PacMan >= (wals1.y2))));
-  rc |= (((x_PacMan >= (wals2.x1)) && (x_PacMan <= (wals2.x2 + wals2.size))) && ((y_PacMan <= (wals2.y1)) && (y_PacMan >= (wals2.y2))));
-  rc |= (((x_PacMan >= (wals3.x1)) && (x_PacMan <= (wals3.x2 + wals3.size))) && ((y_PacMan <= (wals3.y1)) && (y_PacMan >= (wals3.y2))));
-  rc |= (((x_PacMan >= (wals4.x1)) && (x_PacMan <= (wals4.x2 + wals4.size))) && ((y_PacMan <= (wals4.y1)) && (y_PacMan >= (wals4.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals1.x1)) && (x_PacMan - borderPacman <= (wals1.x2 + wals1.size))) && ((y_PacMan - borderPacman <= (wals1.y1)) && (y_PacMan + borderPacman >= (wals1.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals2.x1)) && (x_PacMan - borderPacman <= (wals2.x2 + wals2.size))) && ((y_PacMan - borderPacman <= (wals2.y1)) && (y_PacMan + borderPacman >= (wals2.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals3.x1)) && (x_PacMan - borderPacman <= (wals3.x2 + wals3.size))) && ((y_PacMan - borderPacman <= (wals3.y1)) && (y_PacMan + borderPacman >= (wals3.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals4.x1)) && (x_PacMan - borderPacman <= (wals4.x2 + wals4.size))) && ((y_PacMan - borderPacman <= (wals4.y1)) && (y_PacMan + borderPacman >= (wals4.y2))));
 
   return rc;
 }
@@ -146,22 +147,22 @@ static void direction(void)
 {
   switch (space)
   {
-  case UP:
-    up();
-    break;
-  case LEFT:
-    left();
-    break;
-  case DOWN:
-    down();
-    break;
-  case RIGHT:
-    right();
-    break;
+    case UP:
+      up();
+      break;
+    case LEFT:
+      left();
+      break;
+    case DOWN:
+      down();
+      break;
+    case RIGHT:
+      right();
+      break;
 
-  default:
-    space = UP;
-    break;
+    default:
+      space = UP;
+      break;
   }
 }
 
@@ -194,9 +195,9 @@ static void levelOne(void)
   food3 = (food){125, 175, 9, false};
   food4 = (food){235, 180, 12, false};
 
-  wals1 = (wals){80, 180, 80, 20, WALS_SIZE}; 
-  wals2 = (wals){165, Y_MAX, 165, 110, WALS_SIZE};
-  wals3 = (wals){165, 90, 165, Y_MIN, WALS_SIZE};
+  wals1 = (wals){80, 175, 80, 25, WALS_SIZE}; 
+  wals2 = (wals){165, Y_MAX, 165, 115, WALS_SIZE};
+  wals3 = (wals){165, 85, 165, Y_MIN, WALS_SIZE};
   wals4 = (wals){250, 90, 250, Y_MIN, WALS_SIZE};
 
   monster1 = (monster){0, 50, 50, 3, COLOR(255, 0, 0)};
@@ -226,7 +227,7 @@ static void levelTwo(void)
   food3 = (food){100, 160, 12, false};
   food4 = (food){280, 135, 7, false};
 
-  wals1 = (wals){40, 180, 40, 20, WALS_SIZE}; 
+  wals1 = (wals){40, 175, 40, 25, WALS_SIZE}; 
   wals2 = (wals){150, Y_MAX, 150, 110, WALS_SIZE};
   wals3 = (wals){185, 120, 185, 5, WALS_SIZE};
   wals4 = (wals){255, 160, 255, 40, WALS_SIZE};
@@ -250,15 +251,15 @@ static void levelThree(void)
 {
   food1 = (food){20, 100, 4, false}; 
   food2 = (food){240, 10, 6, false};
-  food3 = (food){100, 160, 12, false};
+  food3 = (food){90, 160, 12, false};
   food4 = (food){280, 135, 7, false};
 
-  wals1 = (wals){140, 188, 140, 0, WALS_SIZE}; 
-  wals2 = (wals){160, Y_MAX, 160, 10, WALS_SIZE};
-  wals3 = (wals){180, 188, 180, 0, WALS_SIZE};
-  wals4 = (wals){200, Y_MAX, 200, 10, WALS_SIZE};
+  wals1 = (wals){110, 178, 110, 0, WALS_SIZE}; 
+  wals2 = (wals){140, Y_MAX, 140, 20, WALS_SIZE};
+  wals3 = (wals){170, 178, 170, 0, WALS_SIZE};
+  wals4 = (wals){200, Y_MAX, 200, 20, WALS_SIZE};
 
-  monster1 = (monster){0, 50, 100, 3, COLOR(23, 150, 108)};
+  monster1 = (monster){0, 35, 100, 5, COLOR(23, 150, 108)};
   monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
@@ -399,7 +400,6 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
   while (1)
   {
-
     PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > getSpeedGame());
     timeCountGameEngine = HAL_GetTick();	
 
@@ -449,7 +449,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       x_PacMan = X_MAX;
     }
 #else
-    if ((y_PacMan > Y_MAX)||(x_PacMan > X_MAX)||(y_PacMan < Y_MIN)||(x_PacMan < X_MIN))
+    if ((y_PacMan + borderPacman > Y_MAX)||(x_PacMan + borderPacman > X_MAX)||(y_PacMan - borderPacman < Y_MIN)||(x_PacMan - borderPacman < X_MIN))
     {
       screenEndGame();
       soundGameOver();
