@@ -42,7 +42,7 @@ SPACE_ENUM space = UP;
 static uint8_t level = 0;
 
 const uint16_t sizePacMan = 2;
-uint16_t borderPacman = 6; // sizePacMan * 8BIT/2
+uint16_t borderPacman = 4; // sizePacMan * 8BIT/2
 static int16_t x_PacMan, y_PacMan;
 static int16_t old_x = 0, old_y = 0;
 
