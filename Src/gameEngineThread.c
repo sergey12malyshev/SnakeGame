@@ -24,6 +24,8 @@
 #define Y_MIN 0U
 #define Y_MAX 198U
 
+#define WALS_SIZE 5U
+
 static struct pt gameEngine_pt;
 
 typedef enum
@@ -72,6 +74,7 @@ typedef struct
   uint8_t y1;
   uint8_t x2;
   uint8_t y2;
+  uint8_t size;
 } wals;
 
 wals wals1 = {0}; 
@@ -96,10 +99,10 @@ static bool checkWalls(void)
 {
   bool rc = false;
 
-  rc |= (((x_PacMan <= (wals1.x1)) && (x_PacMan >= (wals1.x2))) && ((y_PacMan <= (wals1.y1)) && (y_PacMan >= (wals1.y2))));
-  rc |= (((x_PacMan <= (wals2.x1)) && (x_PacMan >= (wals2.x2))) && ((y_PacMan <= (wals2.y1)) && (y_PacMan >= (wals2.y2))));
-  rc |= (((x_PacMan <= (wals3.x1)) && (x_PacMan >= (wals3.x2))) && ((y_PacMan <= (wals3.y1)) && (y_PacMan >= (wals3.y2))));
-  rc |= (((x_PacMan <= (wals4.x1)) && (x_PacMan >= (wals4.x2))) && ((y_PacMan <= (wals4.y1)) && (y_PacMan >= (wals4.y2))));
+  rc |= (((x_PacMan >= (wals1.x1)) && (x_PacMan <= (wals1.x2 + wals1.size))) && ((y_PacMan <= (wals1.y1)) && (y_PacMan >= (wals1.y2))));
+  rc |= (((x_PacMan >= (wals2.x1)) && (x_PacMan <= (wals2.x2 + wals2.size))) && ((y_PacMan <= (wals2.y1)) && (y_PacMan >= (wals2.y2))));
+  rc |= (((x_PacMan >= (wals3.x1)) && (x_PacMan <= (wals3.x2 + wals3.size))) && ((y_PacMan <= (wals3.y1)) && (y_PacMan >= (wals3.y2))));
+  rc |= (((x_PacMan >= (wals4.x1)) && (x_PacMan <= (wals4.x2 + wals4.size))) && ((y_PacMan <= (wals4.y1)) && (y_PacMan >= (wals4.y2))));
 
   return rc;
 }
@@ -118,24 +121,24 @@ void scoreIncrement(void)
 static inline void up(void)
 {
   changeX = 0; // changes the direction of the PacMan
-  changeY = -1;
+  changeY = -1*sizePacMan;
 }
 
 static inline void down(void)
 {
   changeX = 0;
-  changeY = 1;
+  changeY = 1*sizePacMan;
 }
 
 static inline void left(void)
 {
-  changeX = -1;
+  changeX = -1*sizePacMan;
   changeY = 0;
 }
 
 static inline void right(void)
 {
-  changeX = 1;
+  changeX = 1*sizePacMan;
   changeY = 0;
 }
 
@@ -191,10 +194,10 @@ static void levelOne(void)
   food3 = (food){125, 175, 9, false};
   food4 = (food){235, 180, 12, false};
 
-  wals1 = (wals){80, 180, 80, 20}; 
-  wals2 = (wals){165, Y_MAX, 165, 110};
-  wals3 = (wals){165, 90, 165, Y_MIN};
-  wals4 = (wals){250, 90, 250, Y_MIN};
+  wals1 = (wals){80, 180, 80, 20, WALS_SIZE}; 
+  wals2 = (wals){165, Y_MAX, 165, 110, WALS_SIZE};
+  wals3 = (wals){165, 90, 165, Y_MIN, WALS_SIZE};
+  wals4 = (wals){250, 90, 250, Y_MIN, WALS_SIZE};
 
   monster1 = (monster){0, 50, 50, 3, COLOR(255, 0, 0)};
   monster2 = (monster){0, 210, 30, 3, COLOR(0, 0, 255)};
@@ -206,10 +209,10 @@ static void levelOne(void)
   createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals2.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals3.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals4.size); 
 
   /* Отрисуем монстов */
   createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
@@ -223,10 +226,10 @@ static void levelTwo(void)
   food3 = (food){100, 160, 12, false};
   food4 = (food){280, 135, 7, false};
 
-  wals1 = (wals){40, 180, 40, 20}; 
-  wals2 = (wals){150, Y_MAX, 150, 110};
-  wals3 = (wals){185, 120, 185, 5};
-  wals4 = (wals){255, 160, 255, 40};
+  wals1 = (wals){40, 180, 40, 20, WALS_SIZE}; 
+  wals2 = (wals){150, Y_MAX, 150, 110, WALS_SIZE};
+  wals3 = (wals){185, 120, 185, 5, WALS_SIZE};
+  wals4 = (wals){255, 160, 255, 40, WALS_SIZE};
 
   monster1 = (monster){0, 50, 15, 3, COLOR(55, 55, 255)};
   monster2 = (monster){0, 210, 165, 3, COLOR(222, 0, 230)};
@@ -237,10 +240,10 @@ static void levelTwo(void)
   createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals2.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals3.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals4.size); 
 }
 
 static void levelThree(void)
@@ -250,10 +253,10 @@ static void levelThree(void)
   food3 = (food){100, 160, 12, false};
   food4 = (food){280, 135, 7, false};
 
-  wals1 = (wals){140, 188, 140, 0}; 
-  wals2 = (wals){160, Y_MAX, 160, 10};
-  wals3 = (wals){180, 188, 180, 0};
-  wals4 = (wals){200, Y_MAX, 200, 10};
+  wals1 = (wals){140, 188, 140, 0, WALS_SIZE}; 
+  wals2 = (wals){160, Y_MAX, 160, 10, WALS_SIZE};
+  wals3 = (wals){180, 188, 180, 0, WALS_SIZE};
+  wals4 = (wals){200, Y_MAX, 200, 10, WALS_SIZE};
 
   monster1 = (monster){0, 50, 100, 3, COLOR(23, 150, 108)};
   monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
@@ -265,10 +268,10 @@ static void levelThree(void)
   createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals1.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals1.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals1.size); 
 }
 
 void initGame(void)
@@ -370,10 +373,15 @@ static bool monsterCheck2(void)
 
 static void PacManUpdateProcess(void)
 {
-  if (((x_PacMan <= (old_x + sizePacMan)) || (x_PacMan >= (old_x - sizePacMan))) && ((y_PacMan <= (old_y + sizePacMan)) && (y_PacMan >= (old_y - sizePacMan))))
+  if (((x_PacMan <= (old_x - sizePacMan)) || (x_PacMan >= (old_x + sizePacMan))) || ((y_PacMan <= (old_y - sizePacMan)) || (y_PacMan >= (old_y + sizePacMan))))
   { // update PacMan
+#if 0
     fillCircle(old_x, old_y, 2, getBlack());
     fillCircle(x_PacMan, y_PacMan, 2, getYellow());
+#else
+    disablePacman(old_x, old_y);
+    createPacman(x_PacMan, y_PacMan, changeX, changeY);
+#endif
   }
 } 
 

@@ -16,8 +16,12 @@
 
 const unsigned char objets[][8]=
 {
-  {0x7C,0x02,0xC9,0x01,0x01,0xC9,0x02,0x7C}, // monster
-  {0x00,0x42,0xA5,0x99,0x81,0x81,0x42,0x3C}  // Pac-men
+  {0x7C,0x02,0xC9,0x01,0x01,0xC9,0x02,0x7C},  // monster
+  {0x00,0x42,0xA5,0x99,0x81,0x81,0x42,0x3C},  // Pac-men 1
+  {0x00,0x42,0xE7,0xFF,0xFB,0xFF,0x7E,0x3C},  // Pac-men Left
+  {0x3C,0x7E,0xFF,0xFB,0xFF,0xE7,0x42,0x00},  // Pac-men Right
+  {0x3C,0x7E,0x7C,0xF8,0xF8,0xEC,0x7E,0x3C},  // Pac-men Up
+  {0x3C,0x7E,0x3F,0x1F,0x1F,0x37,0x7E,0x3C},  // Pac-men Down
 };
 
 void createMonster(uint8_t object_number, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
@@ -51,6 +55,45 @@ void disableMonster(uint16_t x0, uint16_t y0, uint16_t size)
 	}
 }
 
+void createPacman(uint16_t x0, uint16_t y0, int8_t direction_x, int8_t direction_y)
+{
+  const uint8_t size = 2;
+  x0 -= 4; // отрисуем со смещением к центру
+  y0 -= 4;
+
+  if(direction_x == 0)
+  {
+    if(direction_y < 0)
+    {
+      createMonster(4U, x0, y0, size, getYellow(), getBlack());
+    }
+    else
+    {
+      createMonster(5U, x0, y0, size, getYellow(), getBlack());
+    }
+  }
+  else
+  {
+    if(direction_x < 0)
+    {
+      createMonster(2U, x0, y0, size, getYellow(), getBlack());
+    }
+    else
+    {
+      createMonster(3U, x0, y0, size, getYellow(), getBlack());
+    }
+  }
+}
+
+void disablePacman(uint16_t x0, uint16_t y0)
+{
+  const uint8_t size = 2;
+  x0 -= 4; // отрисуем со смещением к центру
+  y0 -= 4;
+
+  disableMonster(x0, y0, size);
+}
+
 void createFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
 {
   fillCircle(x0, y0, sizeFood, getGreen());
@@ -62,9 +105,8 @@ void deleteFood(uint16_t x0, uint16_t y0, const uint16_t sizeFood)
   scoreIncrement();
 }
 
-void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
+void createWalls(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t size)
 {
-  const uint16_t size = 4;
   H_line(x0, y0, x1, y1, size, getBlue());
 }
 
