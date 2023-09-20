@@ -4,24 +4,28 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "gameEngineThread.h"
+#include "monitorThread.h"
 #include "main.h"
+#include "Menu.h"
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
 #include "Sound.h"
-#include "gameEngineThread.h"
 #include "colors.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-#define DEBUG              false
+#define DEBUG              false       // Enable debug mode
 #define NO_WALS_DEATH      false
 
 #define X_MIN 1U
 #define X_MAX 319U
 #define Y_MIN 0U
 #define Y_MAX 198U
+
+#define WALS_SIZE 5U
 
 static struct pt gameEngine_pt;
 
@@ -39,6 +43,7 @@ SPACE_ENUM space = UP;
 static uint8_t level = 0;
 
 const uint16_t sizePacMan = 2;
+uint16_t borderPacman = 4; // sizePacMan * 8BIT/2
 static int16_t x_PacMan, y_PacMan;
 static int16_t old_x = 0, old_y = 0;
 
@@ -71,6 +76,7 @@ typedef struct
   uint8_t y1;
   uint8_t x2;
   uint8_t y2;
+  uint8_t size;
 } wals;
 
 wals wals1 = {0}; 
@@ -95,10 +101,10 @@ static bool checkWalls(void)
 {
   bool rc = false;
 
-  rc |= (((x_PacMan <= (wals1.x1)) && (x_PacMan >= (wals1.x2))) && ((y_PacMan <= (wals1.y1)) && (y_PacMan >= (wals1.y2))));
-  rc |= (((x_PacMan <= (wals2.x1)) && (x_PacMan >= (wals2.x2))) && ((y_PacMan <= (wals2.y1)) && (y_PacMan >= (wals2.y2))));
-  rc |= (((x_PacMan <= (wals3.x1)) && (x_PacMan >= (wals3.x2))) && ((y_PacMan <= (wals3.y1)) && (y_PacMan >= (wals3.y2))));
-  rc |= (((x_PacMan <= (wals4.x1)) && (x_PacMan >= (wals4.x2))) && ((y_PacMan <= (wals4.y1)) && (y_PacMan >= (wals4.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals1.x1)) && (x_PacMan - borderPacman <= (wals1.x2 + wals1.size))) && ((y_PacMan - borderPacman <= (wals1.y1)) && (y_PacMan + borderPacman >= (wals1.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals2.x1)) && (x_PacMan - borderPacman <= (wals2.x2 + wals2.size))) && ((y_PacMan - borderPacman <= (wals2.y1)) && (y_PacMan + borderPacman >= (wals2.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals3.x1)) && (x_PacMan - borderPacman <= (wals3.x2 + wals3.size))) && ((y_PacMan - borderPacman <= (wals3.y1)) && (y_PacMan + borderPacman >= (wals3.y2))));
+  rc |= (((x_PacMan + borderPacman >= (wals4.x1)) && (x_PacMan - borderPacman <= (wals4.x2 + wals4.size))) && ((y_PacMan - borderPacman <= (wals4.y1)) && (y_PacMan + borderPacman >= (wals4.y2))));
 
   return rc;
 }
@@ -117,24 +123,24 @@ void scoreIncrement(void)
 static inline void up(void)
 {
   changeX = 0; // changes the direction of the PacMan
-  changeY = -1;
+  changeY = -1*sizePacMan;
 }
 
 static inline void down(void)
 {
   changeX = 0;
-  changeY = 1;
+  changeY = 1*sizePacMan;
 }
 
 static inline void left(void)
 {
-  changeX = -1;
+  changeX = -1*sizePacMan;
   changeY = 0;
 }
 
 static inline void right(void)
 {
-  changeX = 1;
+  changeX = 1*sizePacMan;
   changeY = 0;
 }
 
@@ -142,22 +148,22 @@ static void direction(void)
 {
   switch (space)
   {
-  case UP:
-    up();
-    break;
-  case LEFT:
-    left();
-    break;
-  case DOWN:
-    down();
-    break;
-  case RIGHT:
-    right();
-    break;
+    case UP:
+      up();
+      break;
+    case LEFT:
+      left();
+      break;
+    case DOWN:
+      down();
+      break;
+    case RIGHT:
+      right();
+      break;
 
-  default:
-    space = UP;
-    break;
+    default:
+      space = UP;
+      break;
   }
 }
 
@@ -190,10 +196,10 @@ static void levelOne(void)
   food3 = (food){125, 175, 9, false};
   food4 = (food){235, 180, 12, false};
 
-  wals1 = (wals){80, 180, 80, 20}; 
-  wals2 = (wals){165, Y_MAX, 165, 110};
-  wals3 = (wals){165, 90, 165, Y_MIN};
-  wals4 = (wals){250, 90, 250, Y_MIN};
+  wals1 = (wals){80, 175, 80, 25, WALS_SIZE}; 
+  wals2 = (wals){165, Y_MAX, 165, 115, WALS_SIZE};
+  wals3 = (wals){165, 85, 165, Y_MIN, WALS_SIZE};
+  wals4 = (wals){250, 90, 250, Y_MIN, WALS_SIZE};
 
   monster1 = (monster){0, 50, 50, 3, COLOR(255, 0, 0)};
   monster2 = (monster){0, 210, 30, 3, COLOR(0, 0, 255)};
@@ -205,10 +211,10 @@ static void levelOne(void)
   createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals2.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals3.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals4.size); 
 
   /* Отрисуем монстов */
   createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
@@ -217,15 +223,15 @@ static void levelOne(void)
 
 static void levelTwo(void)
 {
-  food1 = (food){20, 100, 4, false}; 
+  food1 = (food){20, 100, 6, false}; 
   food2 = (food){200, 10, 6, false};
   food3 = (food){100, 160, 12, false};
-  food4 = (food){280, 135, 7, false};
+  food4 = (food){280, 135, 8, false};
 
-  wals1 = (wals){40, 180, 40, 20}; 
-  wals2 = (wals){150, Y_MAX, 150, 110};
-  wals3 = (wals){185, 120, 185, 5};
-  wals4 = (wals){255, 160, 255, 40};
+  wals1 = (wals){40, 175, 40, 25, WALS_SIZE}; 
+  wals2 = (wals){150, Y_MAX, 150, 110, WALS_SIZE};
+  wals3 = (wals){185, 120, 185, 5, WALS_SIZE};
+  wals4 = (wals){255, 160, 255, 40, WALS_SIZE};
 
   monster1 = (monster){0, 50, 15, 3, COLOR(55, 55, 255)};
   monster2 = (monster){0, 210, 165, 3, COLOR(222, 0, 230)};
@@ -236,26 +242,26 @@ static void levelTwo(void)
   createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals2.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals3.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals4.size); 
 }
 
 static void levelThree(void)
 {
-  food1 = (food){20, 100, 4, false}; 
+  food1 = (food){20, 100, 6, false}; 
   food2 = (food){240, 10, 6, false};
-  food3 = (food){100, 160, 12, false};
-  food4 = (food){280, 135, 7, false};
+  food3 = (food){90, 160, 12, false};
+  food4 = (food){280, 135, 8, false};
 
-  wals1 = (wals){140, 188, 140, 0}; 
-  wals2 = (wals){160, Y_MAX, 160, 10};
-  wals3 = (wals){180, 188, 180, 0};
-  wals4 = (wals){200, Y_MAX, 200, 10};
+  wals1 = (wals){110, 178, 110, 0, WALS_SIZE}; 
+  wals2 = (wals){140, Y_MAX, 140, 20, WALS_SIZE};
+  wals3 = (wals){170, 178, 170, 0, WALS_SIZE};
+  wals4 = (wals){200, Y_MAX, 200, 20, WALS_SIZE};
 
-  monster1 = (monster){0, 50, 100, 3, COLOR(23, 150, 108)};
-  monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
+  monster1 = (monster){0, 35, 100, 5, COLOR(23, 150, 108)};
+  monster2 = (monster){0, 235, 45, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -264,10 +270,10 @@ static void levelThree(void)
   createFood(food4.x, food4.y, food4.size);
 
   /* Отрисуем препятствия */
-  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2);
-  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2);
-  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2);
-  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2); 
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals1.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals1.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals1.size); 
 }
 
 void initGame(void)
@@ -305,8 +311,31 @@ void initGame(void)
 static void endGame(void)
 {
   HAL_Delay(300);
-  while ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_SET));
-  initGame();
+
+  while(true)
+  {
+    if (buttonLeftHandler())
+    {
+      screenMainMenu();
+      setMenuState(true);
+      break;
+    }
+    if (buttonRightHandler())
+    {
+      initGame();
+      break;
+    }
+  }
+}
+
+void levelSet(uint8_t l)
+{
+  level = l;
+}
+
+static void levelReset(void)
+{
+  levelSet(0);
 }
 
 static void levelUp(void)
@@ -314,13 +343,8 @@ static void levelUp(void)
   level++;
   if(level > 2)
   {
-    level = 0;
+    levelReset();
   }
-}
-
-static void levelReset(void)
-{
-  level = 0;
 }
 
 static bool foodIntakeCheck1(void)
@@ -350,18 +374,52 @@ static bool monsterCheck1(void)
 }
 static bool monsterCheck2(void)
 {
-  uint8_t realSize = monster1.size*8U;
+  uint8_t realSize = monster2.size*8U;
   return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
 }
 
 static void PacManUpdateProcess(void)
 {
-  if (((x_PacMan <= (old_x + sizePacMan)) || (x_PacMan >= (old_x - sizePacMan))) && ((y_PacMan <= (old_y + sizePacMan)) && (y_PacMan >= (old_y - sizePacMan))))
+  if (((x_PacMan <= (old_x - sizePacMan)) || (x_PacMan >= (old_x + sizePacMan))) || ((y_PacMan <= (old_y - sizePacMan)) || (y_PacMan >= (old_y + sizePacMan))))
   { // update PacMan
+#if 0
     fillCircle(old_x, old_y, 2, getBlack());
     fillCircle(x_PacMan, y_PacMan, 2, getYellow());
+#else
+    disablePacman(old_x, old_y);
+    createPacman(x_PacMan, y_PacMan, changeX, changeY);
+#endif
   }
 } 
+
+__attribute__((unused))static void debugStatus(void)
+{
+  uint8_t str[20]= {0};
+  sprintf((char *)str, "Xpac:%d\r\n", x_PacMan);
+  sendUART((uint8_t *)str);
+  sprintf((char *)str, "Ypac:%d\r\n", y_PacMan);
+  sendUART((uint8_t *)str);
+  sprintf((char *)str, "Xm2:%d\r\n", monster2.x);
+  sendUART((uint8_t *)str);
+  sprintf((char *)str, "Ym2:%d\r\n", monster2.y);
+  sendUART((uint8_t *)str);
+
+  if (monsterCheck1())
+  {
+    sendUART((uint8_t *)"M1!");
+  }
+  if (monsterCheck2())
+  {
+    sendUART((uint8_t *)"M2!");
+  }
+  if (checkWalls())
+  {
+    sendUART((uint8_t *)"Wals!");
+  }
+
+  fillCircle(x_PacMan, y_PacMan, 2, getRed());
+  while(!buttonRightHandler());
+}
 
 /*
  * Протопоток gameEngineThread
@@ -377,8 +435,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
   while (1)
   {
-
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > 15);
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > getSpeedGame());
     timeCountGameEngine = HAL_GetTick();	
 
     old_x = x_PacMan;
@@ -427,7 +484,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       x_PacMan = X_MAX;
     }
 #else
-    if ((y_PacMan > Y_MAX)||(x_PacMan > X_MAX)||(y_PacMan < Y_MIN)||(x_PacMan < X_MIN))
+    if ((y_PacMan + borderPacman > Y_MAX)||(x_PacMan + borderPacman > X_MAX)||(y_PacMan - borderPacman < Y_MIN)||(x_PacMan - borderPacman < X_MIN))
     {
       screenEndGame();
       soundGameOver();
@@ -484,23 +541,20 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
     if (checkWalls() || monsterCheck1() || monsterCheck2())
     {
+  #if DEBUG
+      debugStatus();
+  #endif
       screenEndGame();
       soundGameOver();
       levelReset();
       endGame();
     }
 	
-#if DEBUG
-    STRING_NUM_L(y_PacMan, 3, 120, 210, getWhite(), getBlack());
-    STRING_NUM_L(x_PacMan, 3, 195, 210, getWhite(), getBlack());
-#else
-
     if (score != oldScore)
     {
       oldScore = score;
       scoreUpdate(score);   // Обновляем при изменении
     }
-#endif
 
     pollingButton();
 

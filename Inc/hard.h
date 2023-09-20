@@ -4,9 +4,7 @@
 void ADC_conversionRun(void);
 uint16_t getADCvalueVrefint(void);
 uint16_t getBatteryVoltage(void);
-uint16_t getForvardDiodVoltage(void);
-bool overVoltageControl(uint16_t voltage);
-bool underVoltageControl(uint16_t voltage);
+uint16_t getSystemVoltage(void);
 void heartBeatLedEnable(void);
 void heartBeatLedToggle(void);
 bool buttonLeftHandler(void);

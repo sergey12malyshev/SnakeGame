@@ -1,13 +1,15 @@
 # Pac-ManGame 
 Pac-Man game project on STM32 controller and ILI9341 display
 
+*Be sure to check the BOOT0 output status on the debug board!*
+
 Проект игры Pac-Man на контроллере STM32 и дисплее ILI9341
 
 *Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
 
- <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/db08b1eb-7112-4140-b000-8f4098d6f0e6.jpg" width=29% height=29%>   <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/b2e6b7b9-78c3-4203-983a-548b8aa62c95.jpg" width=23% height=23%>
+ <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/db08b1eb-7112-4140-b000-8f4098d6f0e6.jpg" width=26% height=26%>   <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/b94825aa-9aec-4773-a235-eaeea46141b8.jpg" width=20% height=20%>
 
- <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=30%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=28% height=28%>
+ <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=26% height=26%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
  
 ## Tools
 
@@ -16,20 +18,22 @@ Pac-Man game project on STM32 controller and ILI9341 display
 
 ### Setting up the build system in WINDOWS10 
 
-1. Скачать GNU Arm Embedded Toolchain 
+1. Download GNU Arm Embedded Toolchain 
 https://developer.arm.com/downloads/-/gnu-rm#:~:text=The%20GNU%20Arm%20Embedded%20Toolchain,Arm%20Cortex%2DR%20processor%20families
 or
 https://launchpad.net/gcc-arm-embedded/+download
 
-2. Скачать Windows Build Tools binaries (Make, cp, rm, echo, sh...)
+2. Download Windows Build Tools binaries (Make, cp, rm, echo, sh...)
 https://github.com/xpack-dev-tools/windows-build-tools-xpack/releases/
 
-3. Прописать пути в PATH к утилитам
+3. Add paths to the PATH environment variable in Windows
 
 Подробная статья: https://habr.com/ru/articles/673522/
 
 ### RTOS
 Prototreads AD v1.4
+
+https://dunkels.com/adam/pt/
 
 ### Code editor
 *VS Code* файл Pac-ManGame.code-workspace
@@ -62,13 +66,20 @@ Connect: PA10 - RX / PA9 - TX
 Enter *help* command
 
 ## Hardware
-- МК - STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
-- Дисплей - 2.8 TFT SPI 240x320 display (ILI9341)
-- Кнопки - К1116КП2 (на основе датчиков Холла)
-- Зарядка - TP4056 charge module with protection
-- 
+- black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
+- 2.8 TFT SPI 240x320 display (ILI9341)
+- Button К1116КП2 (на основе датчиков Холла)
+- TP4056 charge module with protection
+- Battery 18650 li-ion
+- Printed circuit board for soldering double-sided 7*9cm
+  
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>
+*See Altium directory
+
 ## Case
-К проекту добавлены модели корпуса
+К проекту добавлены модели корпуса в формате .stl
+
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Case%20model/Case.jpg" width=15% height=15%>
 
 ## gcc-arm-none-eabi
 

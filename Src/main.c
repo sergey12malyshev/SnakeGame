@@ -71,7 +71,7 @@ UART_HandleTypeDef huart1;
 /* Private variables ---------------------------------------------------------*/
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 9;
+const int16_t SWversionMinor = 12;
 
 /* USER CODE END PV */
 
@@ -128,16 +128,16 @@ int main(void)
   heartBeatLedEnable();
   UART_receve_IT();
 
-  HAL_Delay(100); // Добавим задержку, для исключения дребезга питания
+  HAL_Delay(250); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
-  sendUART_hello();
   resetTest();
-  HAL_Delay(250);
+  HAL_Delay(150);
   soundPowerOn();
+  sendUART_hello();
   HAL_Delay(1500);
 
   screenMainMenu();
@@ -364,6 +364,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, DC_Pin|CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
@@ -373,13 +376,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA0 PA1 PA2 PA3
-                           PA4 PA8 PA11 PA12
-                           PA15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_8|GPIO_PIN_11|GPIO_PIN_12
-                          |GPIO_PIN_15;
+  /*Configure GPIO pins : PA0 PA1 PA2 PA8
+                           PA11 PA12 PA15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_8
+                          |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : DC_Pin CS_Pin */
+  GPIO_InitStruct.Pin = DC_Pin|CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB0 LED_Pin */

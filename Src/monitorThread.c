@@ -6,12 +6,16 @@
 #include "main.h"
 #include "hard.h"
 #include "monitorThread.h"
+#include "batteryCheckThread.h"
+#include "gameEngineThread.h"
 #include "Sound.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-static struct pt batteryCheck_pt;
+static struct pt monitorCheck_pt;
+
+#define MONITOR_ENABLED  true
 
 #define LOCAL_ECHO_EN  1U
 #define SIZE_BUFF  12U
@@ -46,9 +50,12 @@ static uint8_t backspace_str[] = " \b";
 static uint8_t mon_comand[] = "Enter monitor command:\r\n\
 HELP - see existing commands\r\n\
 RST - restart\r\n\
+STOP - stop game process\r\n\
 TEST - run sound test\r\n\
 ADC - show ADC chanel bat\r\n\
-BAT - show bat voltage (0.01V)\r\n\
+BAT - show bat voltage (0.01V) and stat. charge\r\n\
+LV2 - set level 3\r\n\
+LV3 - set level 3\r\n\
 INFO - read about project\r\n\
 >";
 static uint8_t symbol_term[] = ">";
@@ -168,6 +175,10 @@ static void monitor(void)
       {
         monitorTest = TEST;
       }
+      else if (mon_strcmp(input_mon_buff, "STOP"))
+      {
+        while(1);
+      }
        else if (mon_strcmp(input_mon_buff, "ADC"))
       {
         monitorTest = ADC;
@@ -194,6 +205,18 @@ static void monitor(void)
         sendUART((uint8_t *)__DATE__);
         sendUART_r_n();
         sendUART((uint8_t *)__TIME__);
+      }
+      else if (mon_strcmp(input_mon_buff, "LV3"))
+      {
+        levelSet(2);
+        initGame();
+        sendUART_OK();
+      }
+      else if (mon_strcmp(input_mon_buff, "LV2"))
+      {
+        levelSet(1);
+        initGame();
+        sendUART_OK();
       }
       else
       {
@@ -249,6 +272,8 @@ static void monitor(void)
 
 static void monitor_out_test(void)
 {
+  uint16_t batVolt;
+
   switch (monitorTest)
   {
     case ADC:
@@ -257,7 +282,12 @@ static void monitor_out_test(void)
       resetTest();
       break;
     case BAT:
-      sprintf((char *)str, "%d\r\n", getBatteryVoltage());
+      batVolt = getBatteryVoltage();
+      sprintf((char *)str, "Battery voltage, mV: %d\r\n", batVolt);
+      sendUART((uint8_t *)str);
+      sprintf((char *)str, "System voltage, %%: %d\r\n", getSystemVoltage());
+      sendUART((uint8_t *)str);
+      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVolt));
       sendUART((uint8_t *)str);
       resetTest();
       break;
@@ -299,5 +329,7 @@ static PT_THREAD(monitorTread(struct pt *pt))
 
 void runMonitorTread_pt(void)
 {
-  monitorTread(&batteryCheck_pt);
+#if MONITOR_ENABLED
+  monitorTread(&monitorCheck_pt);
+#endif
 }

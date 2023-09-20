@@ -57,6 +57,10 @@ void scoreIncrement();
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define DC_Pin GPIO_PIN_3
+#define DC_GPIO_Port GPIOA
+#define CS_Pin GPIO_PIN_4
+#define CS_GPIO_Port GPIOA
 #define LED_Pin GPIO_PIN_12
 #define LED_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
