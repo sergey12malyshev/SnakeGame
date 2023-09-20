@@ -66,11 +66,16 @@ Connect: PA10 - RX / PA9 - TX
 Enter *help* command
 
 ## Hardware
-- МК - STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
-- Дисплей - 2.8 TFT SPI 240x320 display (ILI9341)
-- Кнопки - К1116КП2 (на основе датчиков Холла)
-- Зарядка - TP4056 charge module with protection
-- 
+- black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
+- 2.8 TFT SPI 240x320 display (ILI9341)
+- Button К1116КП2 (на основе датчиков Холла)
+- TP4056 charge module with protection
+- Battery 18650 li-ion
+- Printed circuit board for soldering double-sided 7*9cm
+  
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>
+*See Altium directory
+
 ## Case
 К проекту добавлены модели корпуса в формате .stl
 
