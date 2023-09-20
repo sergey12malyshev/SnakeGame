@@ -285,7 +285,9 @@ static void monitor_out_test(void)
       batVolt = getBatteryVoltage();
       sprintf((char *)str, "Battery voltage, mV: %d\r\n", batVolt);
       sendUART((uint8_t *)str);
-      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVolt + getForvardDiodVoltage()));
+      sprintf((char *)str, "System voltage, %%: %d\r\n", getSystemVoltage());
+      sendUART((uint8_t *)str);
+      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVolt));
       sendUART((uint8_t *)str);
       resetTest();
       break;

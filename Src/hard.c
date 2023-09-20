@@ -4,14 +4,6 @@
 
 extern ADC_HandleTypeDef hadc1;
 static uint16_t adcValue = 0;
-/*
-Standard operating voltage STM32: 2 - 3.6 V
-Standard operating voltage li-ion battery: 3 - 4.2 V
-Standard operating voltage ili9341: 2.5 - 3.3V 
-Standart forward drop silicon diodes: 0.6 - 0.7 V
-----------------------------------------------------
-Total: Voltage control STM32: 2.5 V - 3.3V
-*/
 
 void ADC_conversionRun(void)
 {
@@ -26,7 +18,7 @@ uint16_t getADCvalueVrefint(void)
   return adcValue;
 }
 
-uint16_t getBatteryVoltage(void)
+uint16_t getSystemVoltage(void)
 {
   const uint16_t Vrefint = 1200;
   const uint16_t adcData =  getADCvalueVrefint();
@@ -40,32 +32,14 @@ uint16_t getBatteryVoltage(void)
   return voltage_mV;
 }
 
-uint16_t getForvardDiodVoltage(void)
+uint16_t getBatteryVoltage(void)
 {
-  const uint16_t forvard_Diod_mV = 820; // падение на диоде
-  return forvard_Diod_mV;
-}
+  const uint16_t forvard_Diod_mV = 825; // падение на диоде
+  const uint16_t forvard_PMOS_mV = 95; // падение на PMOS
 
-bool overVoltageControl(uint16_t voltage)
-{
-  const uint16_t V_max = 3300;
+  uint16_t voltage_mV = getSystemVoltage() + forvard_Diod_mV + forvard_PMOS_mV;
 
-  if (voltage > V_max)
-  {
-    return true;
-  }
-  return false;
-}
-
-bool underVoltageControl(uint16_t voltage)
-{
-  const uint16_t V_min = 2500;
-
-  if (voltage < V_min)
-  {
-    return true;
-  }
-  return false;
+  return voltage_mV;
 }
 
 void heartBeatLedEnable(void)

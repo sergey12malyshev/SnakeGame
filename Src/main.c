@@ -128,14 +128,14 @@ int main(void)
   heartBeatLedEnable();
   UART_receve_IT();
 
-  HAL_Delay(100); // Добавим задержку, для исключения дребезга питания
+  HAL_Delay(250); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
   
   HAL_ADCEx_Calibration_Start(&hadc1);
   screenSaver();
   resetTest();
-  HAL_Delay(250);
+  HAL_Delay(150);
   soundPowerOn();
   sendUART_hello();
   HAL_Delay(1500);
