@@ -7,6 +7,7 @@
 #include "hard.h"
 #include "monitorThread.h"
 #include "batteryCheckThread.h"
+#include "gameEngineThread.h"
 #include "Sound.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
@@ -53,6 +54,8 @@ STOP - stop game process\r\n\
 TEST - run sound test\r\n\
 ADC - show ADC chanel bat\r\n\
 BAT - show bat voltage (0.01V) and stat. charge\r\n\
+LV2 - set level 3\r\n\
+LV3 - set level 3\r\n\
 INFO - read about project\r\n\
 >";
 static uint8_t symbol_term[] = ">";
@@ -202,6 +205,18 @@ static void monitor(void)
         sendUART((uint8_t *)__DATE__);
         sendUART_r_n();
         sendUART((uint8_t *)__TIME__);
+      }
+      else if (mon_strcmp(input_mon_buff, "LV3"))
+      {
+        levelSet(2);
+        initGame();
+        sendUART_OK();
+      }
+      else if (mon_strcmp(input_mon_buff, "LV2"))
+      {
+        levelSet(1);
+        initGame();
+        sendUART_OK();
       }
       else
       {

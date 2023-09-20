@@ -4,19 +4,20 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "gameEngineThread.h"
+#include "monitorThread.h"
 #include "main.h"
 #include "Menu.h"
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
 #include "Sound.h"
-#include "gameEngineThread.h"
 #include "colors.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-#define DEBUG              false
+#define DEBUG              false       // Enable debug mode
 #define NO_WALS_DEATH      false
 
 #define X_MIN 1U
@@ -222,10 +223,10 @@ static void levelOne(void)
 
 static void levelTwo(void)
 {
-  food1 = (food){20, 100, 4, false}; 
+  food1 = (food){20, 100, 6, false}; 
   food2 = (food){200, 10, 6, false};
   food3 = (food){100, 160, 12, false};
-  food4 = (food){280, 135, 7, false};
+  food4 = (food){280, 135, 8, false};
 
   wals1 = (wals){40, 175, 40, 25, WALS_SIZE}; 
   wals2 = (wals){150, Y_MAX, 150, 110, WALS_SIZE};
@@ -249,10 +250,10 @@ static void levelTwo(void)
 
 static void levelThree(void)
 {
-  food1 = (food){20, 100, 4, false}; 
+  food1 = (food){20, 100, 6, false}; 
   food2 = (food){240, 10, 6, false};
   food3 = (food){90, 160, 12, false};
-  food4 = (food){280, 135, 7, false};
+  food4 = (food){280, 135, 8, false};
 
   wals1 = (wals){110, 178, 110, 0, WALS_SIZE}; 
   wals2 = (wals){140, Y_MAX, 140, 20, WALS_SIZE};
@@ -260,7 +261,7 @@ static void levelThree(void)
   wals4 = (wals){200, Y_MAX, 200, 20, WALS_SIZE};
 
   monster1 = (monster){0, 35, 100, 5, COLOR(23, 150, 108)};
-  monster2 = (monster){0, 220, 40, 3, COLOR(0, 0, 255)};
+  monster2 = (monster){0, 235, 45, 3, COLOR(0, 0, 255)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -327,18 +328,23 @@ static void endGame(void)
   }
 }
 
+void levelSet(uint8_t l)
+{
+  level = l;
+}
+
+static void levelReset(void)
+{
+  levelSet(0);
+}
+
 static void levelUp(void)
 {
   level++;
   if(level > 2)
   {
-    level = 0;
+    levelReset();
   }
-}
-
-static void levelReset(void)
-{
-  level = 0;
 }
 
 static bool foodIntakeCheck1(void)
@@ -368,7 +374,7 @@ static bool monsterCheck1(void)
 }
 static bool monsterCheck2(void)
 {
-  uint8_t realSize = monster1.size*8U;
+  uint8_t realSize = monster2.size*8U;
   return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
 }
 
@@ -385,6 +391,35 @@ static void PacManUpdateProcess(void)
 #endif
   }
 } 
+
+__attribute__((unused))static void debugStatus(void)
+{
+  uint8_t str[20]= {0};
+  sprintf((char *)str, "Xpac:%d\r\n", x_PacMan);
+  sendUART((uint8_t *)str);
+  sprintf((char *)str, "Ypac:%d\r\n", y_PacMan);
+  sendUART((uint8_t *)str);
+  sprintf((char *)str, "Xm2:%d\r\n", monster2.x);
+  sendUART((uint8_t *)str);
+  sprintf((char *)str, "Ym2:%d\r\n", monster2.y);
+  sendUART((uint8_t *)str);
+
+  if (monsterCheck1())
+  {
+    sendUART((uint8_t *)"M1!");
+  }
+  if (monsterCheck2())
+  {
+    sendUART((uint8_t *)"M2!");
+  }
+  if (checkWalls())
+  {
+    sendUART((uint8_t *)"Wals!");
+  }
+
+  fillCircle(x_PacMan, y_PacMan, 2, getRed());
+  while(!buttonRightHandler());
+}
 
 /*
  * Протопоток gameEngineThread
@@ -506,23 +541,20 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
     if (checkWalls() || monsterCheck1() || monsterCheck2())
     {
+  #if DEBUG
+      debugStatus();
+  #endif
       screenEndGame();
       soundGameOver();
       levelReset();
       endGame();
     }
 	
-#if DEBUG
-    STRING_NUM_L(y_PacMan, 3, 120, 210, getWhite(), getBlack());
-    STRING_NUM_L(x_PacMan, 3, 195, 210, getWhite(), getBlack());
-#else
-
     if (score != oldScore)
     {
       oldScore = score;
       scoreUpdate(score);   // Обновляем при изменении
     }
-#endif
 
     pollingButton();
 

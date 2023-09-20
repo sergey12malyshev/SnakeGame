@@ -58,8 +58,8 @@ void disableMonster(uint16_t x0, uint16_t y0, uint16_t size)
 void createPacman(uint16_t x0, uint16_t y0, int8_t direction_x, int8_t direction_y)
 {
   const uint8_t size = 2;
-  x0 -= 4; // отрисуем со смещением к центру
-  y0 -= 4;
+  x0 -= 6; // отрисуем со смещением к центру
+  y0 -= 6;
 
   if(direction_x == 0)
   {
@@ -88,8 +88,8 @@ void createPacman(uint16_t x0, uint16_t y0, int8_t direction_x, int8_t direction
 void disablePacman(uint16_t x0, uint16_t y0)
 {
   const uint8_t size = 2;
-  x0 -= 4; // отрисуем со смещением к центру
-  y0 -= 4;
+  x0 -= 6; // отрисуем со смещением к центру
+  y0 -= 6;
 
   disableMonster(x0, y0, size);
 }
