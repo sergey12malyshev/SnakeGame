@@ -50,7 +50,7 @@ static int16_t old_x = 0, old_y = 0;
 static int8_t changeX = 0; // changes the direction of the PacMan
 static int8_t changeY = -1;
 
-static int16_t score = 0, oldScore = 0;
+static int8_t score, mainScore, oldMainScore;
 /* https://colorscheme.ru/color-converter.html */
 
 /* Параметры еды: */
@@ -117,6 +117,7 @@ static void scoreUpdate(uint16_t scoreLoc)
 void scoreIncrement(void)
 {
   score += 1;
+  mainScore +=1;
   beep(10);
 }
 
@@ -282,8 +283,8 @@ void initGame(void)
   createWorkRegion();
   /* Предустановим переменные */
   up();
-  oldScore = score = 0;
-  scoreUpdate(score);
+  score = 0;
+  scoreUpdate(mainScore);
   x_PacMan = 215;
   y_PacMan = 145;
   old_x = 0;
@@ -335,6 +336,7 @@ void levelSet(uint8_t l)
 
 static void levelReset(void)
 {
+  mainScore = oldMainScore = 0;
   levelSet(0);
 }
 
@@ -343,44 +345,69 @@ static void levelUp(void)
   level++;
   if(level > 2)
   {
-    levelReset();
+    levelSet(0);
   }
 }
 
 static bool foodIntakeCheck1(void)
 {
-   return (((x_PacMan <= (food1.x + food1.size)) && (x_PacMan >= (food1.x - food1.size))) && ((y_PacMan <= (food1.y + food1.size)) && (y_PacMan >= (food1.y - food1.size))));
+  bool condition1 = (x_PacMan <= food1.x + food1.size);
+  bool condition2 = (x_PacMan >= food1.x - food1.size);
+  bool condition3 = (y_PacMan <= food1.y + food1.size);
+  bool condition4 = (y_PacMan >= food1.y - food1.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }
 
 static bool foodIntakeCheck2(void)
 {
-  return (((x_PacMan <= (food2.x + food2.size)) && (x_PacMan >= (food2.x - food2.size))) && ((y_PacMan <= (food2.y + food2.size)) && (y_PacMan >= (food2.y - food2.size))));
+  bool condition1 = (x_PacMan <= food2.x + food2.size);
+  bool condition2 = (x_PacMan >= food2.x - food2.size);
+  bool condition3 = (y_PacMan <= food2.y + food2.size);
+  bool condition4 = (y_PacMan >= food2.y - food2.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }
 
 static bool foodIntakeCheck3(void)
 {
-  return (((x_PacMan <= (food3.x + food3.size)) && (x_PacMan >= (food3.x - food3.size))) && ((y_PacMan <= (food3.y + food3.size)) && (y_PacMan >= (food3.y - food3.size))));
+  bool condition1 = (x_PacMan <= food3.x + food3.size);
+  bool condition2 = (x_PacMan >= food3.x - food3.size);
+  bool condition3 = (y_PacMan <= food3.y + food3.size);
+  bool condition4 = (y_PacMan >= food3.y - food3.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }
 
 static bool foodIntakeCheck4(void)
 {
-  return (((x_PacMan <= (food4.x + food4.size)) && (x_PacMan >= (food4.x - food4.size))) && ((y_PacMan <= (food4.y + food4.size)) && (y_PacMan >= (food4.y - food4.size))));
+  bool condition1 = (x_PacMan <= food4.x + food4.size);
+  bool condition2 = (x_PacMan >= food4.x - food4.size);
+  bool condition3 = (y_PacMan <= food4.y + food4.size);
+  bool condition4 = (y_PacMan >= food4.y - food4.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }  
 
 static bool monsterCheck1(void)
 {
   uint8_t realSize = monster1.size*8U;
-  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= monster1.x)) && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= monster1.y)));
+
+  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= monster1.x)) \
+    && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= monster1.y)));
 }
 static bool monsterCheck2(void)
 {
   uint8_t realSize = monster2.size*8U;
-  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
+
+  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) \
+    && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
 }
 
 static void PacManUpdateProcess(void)
 {
-  if (((x_PacMan <= (old_x - sizePacMan)) || (x_PacMan >= (old_x + sizePacMan))) || ((y_PacMan <= (old_y - sizePacMan)) || (y_PacMan >= (old_y + sizePacMan))))
+  if (((x_PacMan <= (old_x - sizePacMan)) || (x_PacMan >= (old_x + sizePacMan))) \
+    || ((y_PacMan <= (old_y - sizePacMan)) || (y_PacMan >= (old_y + sizePacMan))))
   { // update PacMan
 #if 0
     fillCircle(old_x, old_y, 2, getBlack());
@@ -484,7 +511,8 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       x_PacMan = X_MAX;
     }
 #else
-    if ((y_PacMan + borderPacman > Y_MAX)||(x_PacMan + borderPacman > X_MAX)||(y_PacMan - borderPacman < Y_MIN)||(x_PacMan - borderPacman < X_MIN))
+    if ((y_PacMan + borderPacman > Y_MAX)||(x_PacMan + borderPacman > X_MAX) \
+      ||(y_PacMan - borderPacman < Y_MIN)||(x_PacMan - borderPacman < X_MIN))
     {
       screenEndGame();
       soundGameOver();
@@ -550,10 +578,10 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       endGame();
     }
 	
-    if (score != oldScore)
+    if (mainScore != oldMainScore)
     {
-      oldScore = score;
-      scoreUpdate(score);   // Обновляем при изменении
+      oldMainScore = mainScore;
+      scoreUpdate(mainScore);   // Обновляем при изменении
     }
 
     pollingButton();
