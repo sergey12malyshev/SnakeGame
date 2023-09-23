@@ -198,7 +198,7 @@ static void levelOne(void)
   food4 = (food){235, 180, 12, false};
 
   wals1 = (wals){80, 175, 80, 25, WALS_SIZE}; 
-  wals2 = (wals){165, Y_MAX, 165, 115, WALS_SIZE};
+  wals2 = (wals){165, Y_MAX - 2, 165, 115, WALS_SIZE};
   wals3 = (wals){165, 85, 165, Y_MIN, WALS_SIZE};
   wals4 = (wals){250, 90, 250, Y_MIN, WALS_SIZE};
 
@@ -230,7 +230,7 @@ static void levelTwo(void)
   food4 = (food){280, 135, 8, false};
 
   wals1 = (wals){40, 175, 40, 25, WALS_SIZE}; 
-  wals2 = (wals){150, Y_MAX, 150, 110, WALS_SIZE};
+  wals2 = (wals){150, Y_MAX - 2, 150, 110, WALS_SIZE};
   wals3 = (wals){185, 120, 185, 5, WALS_SIZE};
   wals4 = (wals){255, 160, 255, 40, WALS_SIZE};
 
@@ -257,9 +257,9 @@ static void levelThree(void)
   food4 = (food){280, 135, 8, false};
 
   wals1 = (wals){110, 178, 110, 0, WALS_SIZE}; 
-  wals2 = (wals){140, Y_MAX, 140, 20, WALS_SIZE};
+  wals2 = (wals){140, Y_MAX - 2, 140, 20, WALS_SIZE};
   wals3 = (wals){170, 178, 170, 0, WALS_SIZE};
-  wals4 = (wals){200, Y_MAX, 200, 20, WALS_SIZE};
+  wals4 = (wals){200, Y_MAX - 2, 200, 20, WALS_SIZE};
 
   monster1 = (monster){0, 35, 100, 5, COLOR(23, 150, 108)};
   monster2 = (monster){0, 235, 45, 3, COLOR(0, 0, 255)};
@@ -473,7 +473,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
     // Захардкодили перемещение монстров
     i++;
-    if (i == 90U)
+    if (i == 70U)
     {
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
@@ -483,7 +483,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
       i = 0U;
     }
-    else if(i == 45U)
+    else if(i == 35U)
     {
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);

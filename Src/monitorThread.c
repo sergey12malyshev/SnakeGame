@@ -283,7 +283,7 @@ static void monitor_out_test(void)
       break;
     case BAT:
       batVoltFilt = getBatteryVoltageFilter();
-      sprintf((char *)str, "System voltage, mV %%: %d\r\n", getSystemVoltage());
+      sprintf((char *)str, "System voltage, mV: %d\r\n", getSystemVoltage());
       sendUART((uint8_t *)str);
       sprintf((char *)str, "Battery voltage, mV: %d\r\n", getBatteryVoltage());
       sendUART((uint8_t *)str);

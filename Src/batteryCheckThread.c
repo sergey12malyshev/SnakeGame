@@ -100,7 +100,7 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
     batteryVoltageFilterProcess();
     systemControlProcess(); 
 
-    if(++timeCount2 > 10)
+    if(++timeCount2 > 5) // Каждую секунду проверяем заряд
     {
       timeCount2 = 0;
       heartBeatLedToggle();
