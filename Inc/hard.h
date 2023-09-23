@@ -5,6 +5,8 @@ void ADC_conversionRun(void);
 uint16_t getADCvalueVrefint(void);
 uint16_t getBatteryVoltage(void);
 uint16_t getSystemVoltage(void);
+void batteryVoltageFilterProcess(void);
+uint16_t getBatteryVoltageFilter(void);
 void heartBeatLedEnable(void);
 void heartBeatLedToggle(void);
 bool buttonLeftHandler(void);

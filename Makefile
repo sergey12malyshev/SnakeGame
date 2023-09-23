@@ -64,7 +64,8 @@ gameEngineThread.c \
 batteryCheckThread.c \
 monitorThread.c \
 SPI_TFT.c \
-Menu.c
+Menu.c \
+filter.c
 
 # ASM sources
 ASM_SOURCES =  \

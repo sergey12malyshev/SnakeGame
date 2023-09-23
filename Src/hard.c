@@ -1,9 +1,10 @@
 #include <stdbool.h>
 #include "main.h"
 #include "hard.h"
+#include "filter.h"
 
 extern ADC_HandleTypeDef hadc1;
-static uint16_t adcValue = 0;
+static uint16_t adcValue = 0, batVoltageFilt = 0;
 
 void ADC_conversionRun(void)
 {
@@ -40,6 +41,16 @@ uint16_t getBatteryVoltage(void)
   uint16_t voltage_mV = getSystemVoltage() + forvard_Diod_mV + forvard_PMOS_mV;
 
   return voltage_mV;
+}
+
+void batteryVoltageFilterProcess(void)
+{
+  batVoltageFilt = expRunningAverageFilter(getBatteryVoltage());
+}
+
+uint16_t getBatteryVoltageFilter(void)
+{
+  return batVoltageFilt;
 }
 
 void heartBeatLedEnable(void)
