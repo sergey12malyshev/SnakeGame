@@ -247,6 +247,10 @@ static void levelTwo(void)
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals2.size);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals3.size);
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals4.size); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
 }
 
 static void levelThree(void)
@@ -275,6 +279,10 @@ static void levelThree(void)
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals1.size);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals1.size);
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals1.size); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
 }
 
 void initGame(void)

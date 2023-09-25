@@ -106,7 +106,7 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
       heartBeatLedToggle();
       if(!getMenuState())
       {
-        STRING_NUM_L(getBatChargePrecent(getBatteryVoltageFilter()), 3, 210, 210, getGreen(), getBlack()); // Выведем заряд раз в две секунды
+        STRING_NUM_L(getBatChargePrecent(getBatteryVoltageFilter()), 3, 210, 210, getGreen(), getBlack());
       } 
     }
 
