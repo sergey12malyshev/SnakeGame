@@ -282,6 +282,7 @@ void initGame(void)
   /* Отрисуем рабочее поле */
   createWorkRegion();
   /* Предустановим переменные */
+  space = UP;
   up();
   score = 0;
   scoreUpdate(mainScore);
