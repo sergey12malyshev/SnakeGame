@@ -205,7 +205,7 @@ static void levelZero(void)
   wals4 = (wals){250, 80, 250, 40, WALS_SIZE};
 
   monster1 = (monster){0, 30, 95, 4, COLOR(150, 15, 130)};
-  monster2 = (monster){0, 270, 40, 3, COLOR(250, 10, 10)};
+  monster2 = (monster){0, 270, 40, 3, COLOR(250, 0, 0)};
 
   /* Отрисуем еду */
   createFood(food1.x, food1.y, food1.size);
@@ -557,11 +557,12 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       x_PacMan = X_MAX;
     }
 #else
-    if ((y_PacMan + borderPacman > Y_MAX)||(x_PacMan + borderPacman > X_MAX) \
-      ||(y_PacMan - borderPacman < Y_MIN)||(x_PacMan - borderPacman < X_MIN))
+    if ((y_PacMan + borderPacman >= Y_MAX)||(x_PacMan + borderPacman >= X_MAX) \
+      ||(y_PacMan - borderPacman <= Y_MIN)||(x_PacMan - borderPacman <= X_MIN))
     {
-      screenEndGame();
+      stringGameOver();
       soundGameOver();
+      screenEndGame();
       levelReset();
       endGame();
     }
@@ -618,8 +619,9 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
   #if DEBUG
       debugStatus();
   #endif
-      screenEndGame();
+      stringGameOver();
       soundGameOver();
+      screenEndGame();
       levelReset();
       endGame();
     }

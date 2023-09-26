@@ -136,6 +136,11 @@ void screenSaver(void)
   createMonster(0, 195, 45, 5, getBlack(), COLOR(0, 0, 255));
 }
 
+void stringGameOver(void)
+{
+  STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, getBlack());
+}
+
 void screenEndGame(void)
 {
   const uint16_t colorBg = COLOR(242, 65, 98);
