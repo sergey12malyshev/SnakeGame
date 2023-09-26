@@ -25,6 +25,7 @@
 #define Y_MIN 0U
 #define Y_MAX 198U
 
+#define LEVEL_MAX 3U
 #define WALS_SIZE 5U
 
 static struct pt gameEngine_pt;
@@ -190,6 +191,39 @@ static void pollingButton(void)
   }
 }
 
+static void levelZero(void)
+{
+  food1 = (food){25, 45, 6, false}; 
+  food2 = (food){240, 10, 6, false};
+  food3 = (food){90, 105, 12, false};
+  food4 = (food){280, 135, 8, false};
+
+
+  wals1 = (wals){70, 40, 250, 40, WALS_SIZE}; 
+  wals2 = (wals){70, Y_MAX - 40, 250, Y_MAX - 40, WALS_SIZE}; 
+  wals3 = (wals){250, Y_MAX - 40, 250, 118, WALS_SIZE};
+  wals4 = (wals){250, 80, 250, 40, WALS_SIZE};
+
+  monster1 = (monster){0, 30, 95, 4, COLOR(150, 15, 130)};
+  monster2 = (monster){0, 270, 40, 3, COLOR(250, 10, 10)};
+
+  /* Отрисуем еду */
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
+  createFood(food4.x, food4.y, food4.size);
+
+  /* Отрисуем препятствия */
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals1.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals1.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals1.size); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
+}
+
 static void levelOne(void)
 {
   food1 = (food){50, 100, 11, false}; 
@@ -306,12 +340,15 @@ void initGame(void)
   switch (level)
   {
     case 0:
-      levelOne();
+      levelZero();
       break;
     case 1:
-      levelTwo();
+      levelOne();
       break;
     case 2:
+      levelTwo();
+      break;
+    case LEVEL_MAX:
       levelThree(); 
     default:
       break;
@@ -352,7 +389,7 @@ static void levelReset(void)
 static void levelUp(void)
 {
   level++;
-  if(level > 2)
+  if(level > LEVEL_MAX)
   {
     levelSet(0);
   }
