@@ -3,10 +3,6 @@ Pac-Man game project on STM32 controller and ILI9341 display
 
 *Be sure to check the BOOT0 output status on the debug board!*
 
-Проект игры Pac-Man на контроллере STM32 и дисплее ILI9341
-
-*Обязательно проверять состояние вывода BOOT0 на отладочной плате!*
-
  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/db08b1eb-7112-4140-b000-8f4098d6f0e6.jpg" width=26% height=26%>   <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/b94825aa-9aec-4773-a235-eaeea46141b8.jpg" width=20% height=20%>
 
  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=26% height=26%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
@@ -36,19 +32,19 @@ Prototreads AD v1.4
 https://dunkels.com/adam/pt/
 
 ### Code editor
-*VS Code* файл Pac-ManGame.code-workspace
+*VS Code* file Pac-ManGame.code-workspace
 
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
 
-Запустить RunStaticAnalysisCODE.cmd
+RunStaticAnalysisCODE.cmd
 
 Возможен вывод результата анализа в файл
 
 ## Build (Сборка) 
-Для сборки **makeProject.bat**
+To make the project, run **makeProject.bat**
 
-Для очистки **makeClean.bat**
+To clean the project, run **makeClean.bat**
 
 ## Programm (Прошивка ПО)
 Запустить **programFlash.bat**
@@ -66,18 +62,20 @@ Connect: PA10 - RX / PA9 - TX
 Enter *help* command
 
 ## Hardware
-- black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
+- Black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
 - 2.8 TFT SPI 240x320 display (ILI9341)
-- Button К1116КП2 (на основе датчиков Холла)
+- Buttons К1116КП2 (Hall effect sensor) or classic buttons
 - TP4056 charge module with protection
 - Battery 18650 li-ion
+- Active buzzer
 - Printed circuit board for soldering double-sided 7*9cm
+- P-MOSFET
   
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>
 *See Altium directory
 
 ## Case
-К проекту добавлены модели корпуса в формате .stl
+Case models have been added to the project in the format .stl
 
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Case%20model/Case.jpg" width=15% height=15%>
 
