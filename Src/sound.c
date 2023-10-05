@@ -13,7 +13,7 @@ void beep(uint16_t time)
 
 void soundGameOver(void)
 {
-  for(uint8_t i = 0; i < 60; i++)
+  for(uint8_t i = 0; i < 90; i++)
   {
     beep(1);
     HAL_Delay(2);

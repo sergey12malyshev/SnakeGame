@@ -272,7 +272,7 @@ static void monitor(void)
 
 static void monitor_out_test(void)
 {
-  uint16_t batVolt;
+  uint16_t batVoltFilt = 0;
 
   switch (monitorTest)
   {
@@ -282,12 +282,14 @@ static void monitor_out_test(void)
       resetTest();
       break;
     case BAT:
-      batVolt = getBatteryVoltage();
-      sprintf((char *)str, "Battery voltage, mV: %d\r\n", batVolt);
+      batVoltFilt = getBatteryVoltageFilter();
+      sprintf((char *)str, "System voltage, mV: %d\r\n", getSystemVoltage());
       sendUART((uint8_t *)str);
-      sprintf((char *)str, "System voltage, %%: %d\r\n", getSystemVoltage());
+      sprintf((char *)str, "Battery voltage, mV: %d\r\n", getBatteryVoltage());
       sendUART((uint8_t *)str);
-      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVolt));
+      sprintf((char *)str, "Battery filter voltage, mV: %d\r\n", batVoltFilt);
+      sendUART((uint8_t *)str);
+      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVoltFilt));
       sendUART((uint8_t *)str);
       resetTest();
       break;

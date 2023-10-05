@@ -25,6 +25,7 @@
 #define Y_MIN 0U
 #define Y_MAX 198U
 
+#define LEVEL_MAX 3U
 #define WALS_SIZE 5U
 
 static struct pt gameEngine_pt;
@@ -43,14 +44,14 @@ SPACE_ENUM space = UP;
 static uint8_t level = 0;
 
 const uint16_t sizePacMan = 2;
-uint16_t borderPacman = 4; // sizePacMan * 8BIT/2
+uint16_t borderPacman = 6; // sizePacMan * 8BIT/2
 static int16_t x_PacMan, y_PacMan;
 static int16_t old_x = 0, old_y = 0;
 
 static int8_t changeX = 0; // changes the direction of the PacMan
 static int8_t changeY = -1;
 
-static int16_t score = 0, oldScore = 0;
+static int8_t score, mainScore, oldMainScore;
 /* https://colorscheme.ru/color-converter.html */
 
 /* Параметры еды: */
@@ -117,6 +118,7 @@ static void scoreUpdate(uint16_t scoreLoc)
 void scoreIncrement(void)
 {
   score += 1;
+  mainScore +=1;
   beep(10);
 }
 
@@ -189,6 +191,39 @@ static void pollingButton(void)
   }
 }
 
+static void levelZero(void)
+{
+  food1 = (food){25, 45, 6, false}; 
+  food2 = (food){240, 10, 6, false};
+  food3 = (food){90, 105, 12, false};
+  food4 = (food){280, 135, 8, false};
+
+
+  wals1 = (wals){70, 40, 250, 40, WALS_SIZE}; 
+  wals2 = (wals){70, Y_MAX - 40, 250, Y_MAX - 40, WALS_SIZE}; 
+  wals3 = (wals){250, Y_MAX - 40, 250, 118, WALS_SIZE};
+  wals4 = (wals){250, 80, 250, 40, WALS_SIZE};
+
+  monster1 = (monster){0, 30, 95, 4, COLOR(150, 15, 130)};
+  monster2 = (monster){0, 270, 40, 3, COLOR(250, 0, 0)};
+
+  /* Отрисуем еду */
+  createFood(food1.x, food1.y, food1.size);
+  createFood(food2.x, food2.y, food2.size);
+  createFood(food3.x, food3.y, food3.size);
+  createFood(food4.x, food4.y, food4.size);
+
+  /* Отрисуем препятствия */
+  createWalls(wals1.x1, wals1.y1, wals1.x2, wals1.y2, wals1.size);
+  createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals1.size);
+  createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals1.size);
+  createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals1.size); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
+}
+
 static void levelOne(void)
 {
   food1 = (food){50, 100, 11, false}; 
@@ -197,7 +232,7 @@ static void levelOne(void)
   food4 = (food){235, 180, 12, false};
 
   wals1 = (wals){80, 175, 80, 25, WALS_SIZE}; 
-  wals2 = (wals){165, Y_MAX, 165, 115, WALS_SIZE};
+  wals2 = (wals){165, Y_MAX - 2, 165, 115, WALS_SIZE};
   wals3 = (wals){165, 85, 165, Y_MIN, WALS_SIZE};
   wals4 = (wals){250, 90, 250, Y_MIN, WALS_SIZE};
 
@@ -229,7 +264,7 @@ static void levelTwo(void)
   food4 = (food){280, 135, 8, false};
 
   wals1 = (wals){40, 175, 40, 25, WALS_SIZE}; 
-  wals2 = (wals){150, Y_MAX, 150, 110, WALS_SIZE};
+  wals2 = (wals){150, Y_MAX - 2, 150, 110, WALS_SIZE};
   wals3 = (wals){185, 120, 185, 5, WALS_SIZE};
   wals4 = (wals){255, 160, 255, 40, WALS_SIZE};
 
@@ -246,6 +281,10 @@ static void levelTwo(void)
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals2.size);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals3.size);
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals4.size); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
 }
 
 static void levelThree(void)
@@ -256,9 +295,9 @@ static void levelThree(void)
   food4 = (food){280, 135, 8, false};
 
   wals1 = (wals){110, 178, 110, 0, WALS_SIZE}; 
-  wals2 = (wals){140, Y_MAX, 140, 20, WALS_SIZE};
+  wals2 = (wals){140, Y_MAX - 2, 140, 20, WALS_SIZE};
   wals3 = (wals){170, 178, 170, 0, WALS_SIZE};
-  wals4 = (wals){200, Y_MAX, 200, 20, WALS_SIZE};
+  wals4 = (wals){200, Y_MAX - 2, 200, 20, WALS_SIZE};
 
   monster1 = (monster){0, 35, 100, 5, COLOR(23, 150, 108)};
   monster2 = (monster){0, 235, 45, 3, COLOR(0, 0, 255)};
@@ -274,6 +313,10 @@ static void levelThree(void)
   createWalls(wals2.x1, wals2.y1, wals2.x2, wals2.y2, wals1.size);
   createWalls(wals3.x1, wals3.y1, wals3.x2, wals3.y2, wals1.size);
   createWalls(wals4.x1, wals4.y1, wals4.x2, wals4.y2, wals1.size); 
+
+  /* Отрисуем монстов */
+  createMonster(monster1.type, monster1.x, monster1.y, monster1.size, monster1.color, getBlack());
+  createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
 }
 
 void initGame(void)
@@ -281,9 +324,10 @@ void initGame(void)
   /* Отрисуем рабочее поле */
   createWorkRegion();
   /* Предустановим переменные */
+  space = UP;
   up();
-  oldScore = score = 0;
-  scoreUpdate(score);
+  score = 0;
+  scoreUpdate(mainScore);
   x_PacMan = 215;
   y_PacMan = 145;
   old_x = 0;
@@ -296,12 +340,15 @@ void initGame(void)
   switch (level)
   {
     case 0:
-      levelOne();
+      levelZero();
       break;
     case 1:
-      levelTwo();
+      levelOne();
       break;
     case 2:
+      levelTwo();
+      break;
+    case LEVEL_MAX:
       levelThree(); 
     default:
       break;
@@ -335,52 +382,78 @@ void levelSet(uint8_t l)
 
 static void levelReset(void)
 {
+  mainScore = oldMainScore = 0;
   levelSet(0);
 }
 
 static void levelUp(void)
 {
   level++;
-  if(level > 2)
+  if(level > LEVEL_MAX)
   {
-    levelReset();
+    levelSet(0);
   }
 }
 
 static bool foodIntakeCheck1(void)
 {
-   return (((x_PacMan <= (food1.x + food1.size)) && (x_PacMan >= (food1.x - food1.size))) && ((y_PacMan <= (food1.y + food1.size)) && (y_PacMan >= (food1.y - food1.size))));
+  bool condition1 = (x_PacMan <= food1.x + food1.size);
+  bool condition2 = (x_PacMan >= food1.x - food1.size);
+  bool condition3 = (y_PacMan <= food1.y + food1.size);
+  bool condition4 = (y_PacMan >= food1.y - food1.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }
 
 static bool foodIntakeCheck2(void)
 {
-  return (((x_PacMan <= (food2.x + food2.size)) && (x_PacMan >= (food2.x - food2.size))) && ((y_PacMan <= (food2.y + food2.size)) && (y_PacMan >= (food2.y - food2.size))));
+  bool condition1 = (x_PacMan <= food2.x + food2.size);
+  bool condition2 = (x_PacMan >= food2.x - food2.size);
+  bool condition3 = (y_PacMan <= food2.y + food2.size);
+  bool condition4 = (y_PacMan >= food2.y - food2.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }
 
 static bool foodIntakeCheck3(void)
 {
-  return (((x_PacMan <= (food3.x + food3.size)) && (x_PacMan >= (food3.x - food3.size))) && ((y_PacMan <= (food3.y + food3.size)) && (y_PacMan >= (food3.y - food3.size))));
+  bool condition1 = (x_PacMan <= food3.x + food3.size);
+  bool condition2 = (x_PacMan >= food3.x - food3.size);
+  bool condition3 = (y_PacMan <= food3.y + food3.size);
+  bool condition4 = (y_PacMan >= food3.y - food3.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }
 
 static bool foodIntakeCheck4(void)
 {
-  return (((x_PacMan <= (food4.x + food4.size)) && (x_PacMan >= (food4.x - food4.size))) && ((y_PacMan <= (food4.y + food4.size)) && (y_PacMan >= (food4.y - food4.size))));
+  bool condition1 = (x_PacMan <= food4.x + food4.size);
+  bool condition2 = (x_PacMan >= food4.x - food4.size);
+  bool condition3 = (y_PacMan <= food4.y + food4.size);
+  bool condition4 = (y_PacMan >= food4.y - food4.size);
+
+  return condition1 && condition2 && condition3 && condition4;
 }  
 
 static bool monsterCheck1(void)
 {
   uint8_t realSize = monster1.size*8U;
-  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= monster1.x)) && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= monster1.y)));
+
+  return (((x_PacMan <= (monster1.x + realSize)) && (x_PacMan >= monster1.x)) \
+    && ((y_PacMan <= (monster1.y + realSize)) && (y_PacMan >= monster1.y)));
 }
 static bool monsterCheck2(void)
 {
   uint8_t realSize = monster2.size*8U;
-  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
+
+  return (((x_PacMan <= (monster2.x + realSize)) && (x_PacMan >= monster2.x)) \
+    && ((y_PacMan <= (monster2.y + realSize)) && (y_PacMan >= monster2.y)));
 }
 
 static void PacManUpdateProcess(void)
 {
-  if (((x_PacMan <= (old_x - sizePacMan)) || (x_PacMan >= (old_x + sizePacMan))) || ((y_PacMan <= (old_y - sizePacMan)) || (y_PacMan >= (old_y + sizePacMan))))
+  if (((x_PacMan <= (old_x - sizePacMan)) || (x_PacMan >= (old_x + sizePacMan))) \
+    || ((y_PacMan <= (old_y - sizePacMan)) || (y_PacMan >= (old_y + sizePacMan))))
   { // update PacMan
 #if 0
     fillCircle(old_x, old_y, 2, getBlack());
@@ -446,7 +519,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
     // Захардкодили перемещение монстров
     i++;
-    if (i == 90U)
+    if (i == 70U)
     {
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
@@ -456,7 +529,7 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       createMonster(monster2.type, monster2.x, monster2.y, monster2.size, getBlack(), monster2.color);
       i = 0U;
     }
-    else if(i == 45U)
+    else if(i == 35U)
     {
       disableMonster(monster1.x, monster1.y, monster1.size);
       disableMonster(monster2.x, monster2.y, monster2.size);
@@ -484,10 +557,12 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
       x_PacMan = X_MAX;
     }
 #else
-    if ((y_PacMan + borderPacman > Y_MAX)||(x_PacMan + borderPacman > X_MAX)||(y_PacMan - borderPacman < Y_MIN)||(x_PacMan - borderPacman < X_MIN))
+    if ((y_PacMan + borderPacman >= Y_MAX)||(x_PacMan + borderPacman >= X_MAX) \
+      ||(y_PacMan - borderPacman <= Y_MIN)||(x_PacMan - borderPacman <= X_MIN))
     {
-      screenEndGame();
+      stringGameOver();
       soundGameOver();
+      screenEndGame();
       levelReset();
       endGame();
     }
@@ -544,16 +619,17 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
   #if DEBUG
       debugStatus();
   #endif
-      screenEndGame();
+      stringGameOver();
       soundGameOver();
+      screenEndGame();
       levelReset();
       endGame();
     }
 	
-    if (score != oldScore)
+    if (mainScore != oldMainScore)
     {
-      oldScore = score;
-      scoreUpdate(score);   // Обновляем при изменении
+      oldMainScore = mainScore;
+      scoreUpdate(mainScore);   // Обновляем при изменении
     }
 
     pollingButton();
