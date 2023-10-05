@@ -35,7 +35,7 @@ https://dunkels.com/adam/pt/
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
 
-RunStaticAnalysisCODE.cmd
+Run **RunStaticAnalysisCODE.cmd**
 
 Возможен вывод результата анализа в файл
 
@@ -59,6 +59,8 @@ Connect: PA10 - RX / PA9 - TX
 
 Enter *help* command
 
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/ShellScreen.jpg" width=20% height=20%>
+
 ## Hardware
 - Black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
 - 2.8 TFT SPI 240x320 display (ILI9341)
@@ -69,12 +71,12 @@ Enter *help* command
 - Printed circuit board for soldering double-sided 7*9cm
 - P-MOSFET
   
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908245.jpg" width=30% height=30%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
 
 *See Altium directory
 
 ## Case
-Case models have been added to the project in the format .stl
+Case models have been added to the project in the format **.stl**
 
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Case%20model/Case.jpg" width=15% height=15%>
 
