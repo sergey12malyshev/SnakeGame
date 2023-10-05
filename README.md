@@ -93,3 +93,9 @@ none - компилятор не вносит никакого дополнит�
 eabi - код соответствует спецификации EABI.
 
 https://tuxotronic.org/post/arm-none-eabi/
+
+
+## About repo
+
+Work in the repository is carried out through the Git-flow branching model
+
