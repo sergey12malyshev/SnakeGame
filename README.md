@@ -1,9 +1,7 @@
 # Pac-ManGame 
 Pac-Man game project on STM32 controller and ILI9341 display
 
-*Be sure to check the BOOT0 output status on the debug board!*
-
- <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Screen2.jpg" width=29% height=29%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Top2.jpeg" width=25% height=25%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/top3.jpeg" width=24% height=24%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Screen2.jpg" width=29% height=29%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Top2.jpeg" width=25% height=25%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/top3.jpeg" width=24% height=24%>
  
 ## Tools
 
@@ -74,6 +72,8 @@ Enter *help* command
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
 
 *See Altium directory
+
+*Be sure to check the BOOT0 output status on the debug board!*
 
 ## Case
 Case models have been added to the project in the format **.stl**
