@@ -447,6 +447,10 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    uint8_t str[25] = {0};
+
+    sprintf((char *)str, "Wrong parameters value: file %s on line %lu\r\n", file, line);
+    sendUART((uint8_t *)str);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
