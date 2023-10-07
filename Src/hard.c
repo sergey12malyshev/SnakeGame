@@ -6,12 +6,17 @@
 extern ADC_HandleTypeDef hadc1;
 static uint16_t adcValue = 0, batVoltageFilt = 0;
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if(hadc->Instance == ADC1) //check if the interrupt comes from ACD1
+  {
+    adcValue = HAL_ADC_GetValue(&hadc1);
+  }
+}
+
 void ADC_conversionRun(void)
 {
-  HAL_ADC_Start(&hadc1);
-  HAL_ADC_PollForConversion(&hadc1, 100);
-  adcValue = HAL_ADC_GetValue(&hadc1);
-  HAL_ADC_Stop(&hadc1);
+  HAL_ADC_Start_IT(&hadc1);
 }
 
 uint16_t getADCvalueVrefint(void)

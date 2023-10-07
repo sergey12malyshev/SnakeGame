@@ -93,17 +93,17 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 200U); // Запускаем преобразования ~ раз в 200 мс
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 50U); // Запускаем преобразования ~ раз в 50 мс
     timeCount = HAL_GetTick();	
     
     ADC_conversionRun();
     batteryVoltageFilterProcess();
-    systemControlProcess(); 
 
-    if(++timeCount2 > 5) // Каждую секунду проверяем заряд
+    if(++timeCount2 > 20) // Каждую секунду выводим заряд и контролируем системное напряжние
     {
       timeCount2 = 0;
       heartBeatLedToggle();
+      systemControlProcess(); 
       if(!getMenuState())
       {
         STRING_NUM_L(getBatChargePrecent(getBatteryVoltageFilter()), 3, 210, 210, getGreen(), getBlack());
