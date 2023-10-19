@@ -11,6 +11,7 @@
 #include "batteryCheckThread.h"
 #include "colors.h"
 #include "menu.h"
+#include "sound.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -45,23 +46,25 @@ uint8_t getBatChargePrecent(uint16_t vbat)
 bool overVoltageControl(uint16_t voltage)
 {
   const uint16_t V_max = 3300; //max V ili9341
+  bool rc = false;
 
   if (voltage > V_max)
   {
-    return true;
+    rc = true;
   }
-  return false;
+  return rc;
 }
 
 bool underVoltageControl(uint16_t voltage)
 {
   const uint16_t V_min = 2500; //min V ili9341
+  bool rc = false;
 
   if (voltage < V_min)
   {
-    return true;
+    rc = true;;
   }
-  return false;
+  return rc;
 }
 
 static void systemControlProcess(void)
@@ -71,12 +74,14 @@ static void systemControlProcess(void)
   if(overVoltageControl(voltage))
   {
     screenOverVoltageError();
-    while (true);
+    beep(1000);
+    while (true) WDT_CLEAR;
   }
   else if(underVoltageControl(voltage))
   {
     screenUnderVoltageError();
-    while (true);
+    beep(1000);
+    while (true) WDT_CLEAR;
   }
 }
 

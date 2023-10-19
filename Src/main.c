@@ -33,6 +33,7 @@
 #include "hard.h"
 #include "Screens.h"
 #include "Sound.h"
+#include "filter.h"
 
 #include "pt.h"
 #include "gameEngineThread.h"
@@ -143,6 +144,7 @@ int main(void)
   HAL_ADC_Start_IT(&hadc1);
   
   HAL_Delay(1500);
+  setDefaultValueFilter(3200U);
 
   screenMainMenu();
   /* USER CODE END 2 */

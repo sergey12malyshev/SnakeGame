@@ -357,10 +357,12 @@ void initGame(void)
 
 static void endGame(void)
 {
+  WDT_CLEAR;
   HAL_Delay(300);
 
   while(true)
   {
+    WDT_CLEAR;
     if (buttonLeftHandler())
     {
       screenMainMenu();
@@ -491,7 +493,7 @@ __attribute__((unused))static void debugStatus(void)
   }
 
   fillCircle(x_PacMan, y_PacMan, 2, getRed());
-  while(!buttonRightHandler());
+  while(!buttonRightHandler()) WDT_CLEAR;
 }
 
 /*

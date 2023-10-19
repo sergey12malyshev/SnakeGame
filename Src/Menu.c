@@ -148,7 +148,7 @@ bool mainMenu(void)
           return false;
         case INFO: 
           InfoScreen();
-          while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET));
+          while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET)) WDT_CLEAR;
           screenMainMenu();
           count = START; 
           break;
@@ -156,6 +156,7 @@ bool mainMenu(void)
           settingsScreen();
           while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET))
           {
+            WDT_CLEAR;
             if(buttonRightHandler())
             {
               speedGame += 5;

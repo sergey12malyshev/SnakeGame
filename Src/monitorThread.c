@@ -177,7 +177,7 @@ static void monitor(void)
       }
       else if (mon_strcmp(input_mon_buff, "STOP"))
       {
-        while(1);
+        while(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) WDT_CLEAR;
       }
        else if (mon_strcmp(input_mon_buff, "ADC"))
       {
