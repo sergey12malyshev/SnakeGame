@@ -41,13 +41,8 @@ typedef enum
   INFO
 }COMAND;
 
-static uint8_t hello_string[] = "Pac-ManGame\r\n";
-static uint8_t enter_help[] = "\r\nEnter HELP\r\n";
-static uint8_t r_n[] = "\r\n";
-static uint8_t error[] = "incorrect enter\r\n";
-static uint8_t mon_OK[] = "OK\r\n";
-static uint8_t backspace_str[] = " \b";
-static uint8_t mon_comand[] = "Enter monitor command:\r\n\
+
+static const uint8_t mon_comand[] = "Enter monitor command:\r\n\
 HELP - see existing commands\r\n\
 RST - restart\r\n\
 STOP - stop game process\r\n\
@@ -58,6 +53,7 @@ LV2 - set level 3\r\n\
 LV3 - set level 3\r\n\
 INFO - read about project\r\n\
 >";
+
 static uint8_t symbol_term[] = ">";
 
 uint8_t input_mon[1] = {0};
@@ -104,6 +100,9 @@ static void sendSNversion(void)
 
 void sendUART_hello(void)
 {
+  static const uint8_t hello_string[] = "Pac-ManGame\r\n";
+  static const uint8_t enter_help[] = "\r\nEnter HELP\r\n";
+
   sendUART((uint8_t *)hello_string);
   sendSNversion();
   sendUART((uint8_t *)enter_help);
@@ -117,21 +116,25 @@ void sendUART_help(void)
 
 static void sendUART_OK(void)
 {
+  static const uint8_t mon_OK[] = "OK\r\n";
   sendUART((uint8_t *)mon_OK);
 }
 
 static void sendUART_r_n(void)
 {
+  static uint8_t r_n[] = "\r\n";
   sendUART((uint8_t *)r_n);
 }
 
 static void sendUART_error(void)
 {
+  static const uint8_t error[] = "incorrect enter\r\n";
   sendUART((uint8_t *)error);
 }
 
 static void sendBackspaceStr(void)
 {
+  static const uint8_t backspace_str[] = " \b";
   sendUART((uint8_t *)backspace_str);
 }
 
