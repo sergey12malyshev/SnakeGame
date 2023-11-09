@@ -28,8 +28,6 @@
 #define LEVEL_MAX 3U
 #define WALS_SIZE 5U
 
-static struct pt gameEngine_pt;
-
 typedef enum
 {
   NONE = 0,
@@ -501,7 +499,7 @@ __attribute__((unused))static void debugStatus(void)
  *
  * 
  */
-static PT_THREAD(GameEngineThread(struct pt *pt))
+PT_THREAD(GameEngineThread(struct pt *pt))
 {
   static uint32_t timeCountGameEngine = 0;
   static uint8_t i;
@@ -641,10 +639,3 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
   PT_END(pt);
 }
-
-void runGameEngineThread_pt(void)
-{
-  GameEngineThread(&gameEngine_pt);
-}
-
-

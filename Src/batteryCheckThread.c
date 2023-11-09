@@ -16,8 +16,6 @@
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-static struct pt batteryCheck_pt;
-
 /*
 Standard operating voltage STM32: 2 - 3.6 V
 Standard operating voltage li-ion battery: 3 - 4.2 V
@@ -90,7 +88,7 @@ static void systemControlProcess(void)
  *
  * 
  */
-static PT_THREAD(BatteryCheckThread(struct pt *pt))
+PT_THREAD(BatteryCheckThread(struct pt *pt))
 {
   static uint32_t timeCount = 0, timeCount2 = 0;
 
@@ -120,10 +118,3 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
 
   PT_END(pt);
 }
-
-void runBatteryCheckThread_pt(void)
-{
-  BatteryCheckThread(&batteryCheck_pt);
-}
-
-

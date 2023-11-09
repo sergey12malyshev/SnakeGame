@@ -34,15 +34,14 @@
 #include "Screens.h"
 #include "Sound.h"
 #include "filter.h"
+#include "Menu.h"
 
-#include "pt.h"
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
 #include "monitorThread.h"
-#include "Menu.h"
-
 
 #define LC_INCLUDE "lc-addrlabels.h"
+#include "pt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -70,6 +69,9 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+static struct pt gameEngine_pt;
+static struct pt batteryCheck_pt;
+static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
 const int16_t SWversionMinor = 15;
@@ -92,6 +94,12 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void initProtothreads(void)
+{
+  PT_INIT(&gameEngine_pt);
+  PT_INIT(&batteryCheck_pt);
+  PT_INIT(&monitorCheck_pt);
+}
 /* USER CODE END 0 */
 
 /**
@@ -147,6 +155,7 @@ int main(void)
   setDefaultValueFilter(3200U);
 
   screenMainMenu();
+  initProtothreads();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -159,11 +168,10 @@ int main(void)
     }
     else
     {
-      runGameEngineThread_pt();
+      GameEngineThread(&gameEngine_pt);
     }
-    runBatteryCheckThread_pt();
-    runMonitorTread_pt();
-
+    BatteryCheckThread(&batteryCheck_pt);
+    MonitorTread(&monitorCheck_pt);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

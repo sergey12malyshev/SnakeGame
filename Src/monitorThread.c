@@ -13,12 +13,8 @@
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-static struct pt monitorCheck_pt;
-
-#define MONITOR_ENABLED  true
-
 #define LOCAL_ECHO_EN  1U
-#define SIZE_BUFF  12U
+#define SIZE_BUFF      12U
 
 #define mon_strcmp(ptr, cmd) (!strcmp(ptr, cmd))
 
@@ -308,11 +304,10 @@ static void monitor_out_test(void)
 
 
 /*
- * Протопоток monitorTread
+ * Протопоток MonitorTread
  *
- * 
  */
-static PT_THREAD(monitorTread(struct pt *pt))
+PT_THREAD(MonitorTread(struct pt *pt))
 {
   static uint32_t timeCount = 0;
 
@@ -330,11 +325,4 @@ static PT_THREAD(monitorTread(struct pt *pt))
   }
 
   PT_END(pt);
-}
-
-void runMonitorTread_pt(void)
-{
-#if MONITOR_ENABLED
-  monitorTread(&monitorCheck_pt);
-#endif
 }

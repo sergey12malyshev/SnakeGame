@@ -1,7 +1,10 @@
 #ifndef __MONITOR_H
 #define __MONITOR_H
 
-void runMonitorTread_pt(void);
+#define LC_INCLUDE "lc-addrlabels.h"
+#include "pt.h"
+PT_THREAD(MonitorTread(struct pt *pt));
+
 void sendUART(const uint8_t* TxBufferUartLocal);
 void sendUART_hello(void);
 void UART_receve_IT(void);
