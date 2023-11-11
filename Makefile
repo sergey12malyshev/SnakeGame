@@ -20,10 +20,21 @@ TARGET = pac_man_conf
 # building variables
 ######################################
 # debug build?
-DEBUG = 1
+DEBUG = 0
 # optimization
 OPT = -O2
 
+######################################
+# C defines - debug or release build
+######################################
+ifeq "$(MAKECMDGOALS)" "debug"
+C_DEFS +=  \
+-DDEBUG_MAIN 
+# set debug build
+DEBUG = 1
+OPT = -Og
+$(info ************  DEBUG VERSION ************)
+endif
 
 #######################################
 # paths
@@ -130,10 +141,10 @@ C_INCLUDES =  \
 -IPt_1.4 
 
 
-# compile gcc flags
+# compile gcc flags https://ftp.gnu.org/old-gnu/Manuals/make-3.79.1/html_node/make_97.html
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -std=c11
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
@@ -158,7 +169,8 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
-
+release: all
+debug: all
 
 #######################################
 # build the application
