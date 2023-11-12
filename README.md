@@ -1,5 +1,5 @@
 # Pac-ManGame 
-Pac-Man game project on STM32 controller and ILI9341 display
+Pac-Man game console project on STM32 controller and ILI9341 display
 
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Screen2.jpg" width=29% height=29%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Top2.jpeg" width=25% height=25%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/top3.jpeg" width=24% height=24%>
  
@@ -30,30 +30,34 @@ https://dunkels.com/adam/pt/
 ### Code editor
 *VS Code* file Pac-ManGame.code-workspace
 
+## Build 
+To make the release project , run **makeProject.bat** (OR *make -j* cmd command)
+
+To make the debug project , run **makeProjectDebug.bat** (OR *make -j1 debug* cmd command)
+
+To clean the project, run **makeClean.bat** (OR *make clean*)
+
+## Programm
+Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
+
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
 
 Run **RunStaticAnalysisCODE.cmd**
 
-Возможен вывод результата анализа в файл
-
-## Build (Сборка) 
-To make the project, run **makeProject.bat**
-
-To clean the project, run **makeClean.bat**
-
-## Programm (Прошивка ПО)
-Run **programFlash.bat**
+It is possible to output the analysis result to a file
 
 ## Peripheral setup
 STM32 CubeMX
-(Установленны галочки *Enable Full Assert* и *Set All Free Pins as Analog*)
+(Checkboxes checked: *Enable Full Assert* и *Set All Free Pins as Analog*)
 
 ## Command Line Interface
 
 UART 115200 Baud rate
 
 Connect: PA10 - RX / PA9 - TX
+
+Terminal configuration file: utils\TERATERM.INI
 
 Enter *help* command
 
@@ -82,15 +86,15 @@ Case models have been added to the project in the format **.stl**
 
 ## gcc-arm-none-eabi
 
-Магическое название компилятора gcc-arm-none-eabi означает следующее:
+The magic name of the compiler gcc-arm-none-eabi means the following:
 
-gcc - название компилятора;
+gcc - compiler name;
 
-arm - архитектура процессора;
+arm - processor architecture;
 
-none - компилятор не вносит никакого дополнительного bootstrap кода от себя;
+none - the compiler does not contribute any additional bootstrap code from itself;
 
-eabi - код соответствует спецификации EABI.
+eabi - code conforms to the EABI specification.
 
 https://tuxotronic.org/post/arm-none-eabi/
 
@@ -98,4 +102,3 @@ https://tuxotronic.org/post/arm-none-eabi/
 ## About repo
 
 Work in the repository is carried out through the Git-flow branching model
-

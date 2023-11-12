@@ -17,7 +17,10 @@
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-#define DEBUG              false       // Enable debug mode
+/* Enable debug mode */
+#define DEBUG              false       
+#define DEBUG_PRINT(...) do { if (DEBUG) sendUART(__VA_ARGS__); } while (0)
+
 #define NO_WALS_DEATH      false
 
 #define X_MIN 1U
@@ -27,8 +30,6 @@
 
 #define LEVEL_MAX 3U
 #define WALS_SIZE 5U
-
-static struct pt gameEngine_pt;
 
 typedef enum
 {
@@ -357,10 +358,12 @@ void initGame(void)
 
 static void endGame(void)
 {
+  WDT_CLEAR;
   HAL_Delay(300);
 
   while(true)
   {
+    WDT_CLEAR;
     if (buttonLeftHandler())
     {
       screenMainMenu();
@@ -469,29 +472,29 @@ __attribute__((unused))static void debugStatus(void)
 {
   uint8_t str[20]= {0};
   sprintf((char *)str, "Xpac:%d\r\n", x_PacMan);
-  sendUART((uint8_t *)str);
+  DEBUG_PRINT((uint8_t *)str);
   sprintf((char *)str, "Ypac:%d\r\n", y_PacMan);
-  sendUART((uint8_t *)str);
+  DEBUG_PRINT((uint8_t *)str);
   sprintf((char *)str, "Xm2:%d\r\n", monster2.x);
-  sendUART((uint8_t *)str);
+  DEBUG_PRINT((uint8_t *)str);
   sprintf((char *)str, "Ym2:%d\r\n", monster2.y);
-  sendUART((uint8_t *)str);
+  DEBUG_PRINT((uint8_t *)str);
 
   if (monsterCheck1())
   {
-    sendUART((uint8_t *)"M1!");
+    DEBUG_PRINT((uint8_t *)"M1!");
   }
   if (monsterCheck2())
   {
-    sendUART((uint8_t *)"M2!");
+    DEBUG_PRINT((uint8_t *)"M2!");
   }
   if (checkWalls())
   {
-    sendUART((uint8_t *)"Wals!");
+    DEBUG_PRINT((uint8_t *)"Wals!");
   }
 
   fillCircle(x_PacMan, y_PacMan, 2, getRed());
-  while(!buttonRightHandler());
+  while(!buttonRightHandler()) WDT_CLEAR;
 }
 
 /*
@@ -499,7 +502,7 @@ __attribute__((unused))static void debugStatus(void)
  *
  * 
  */
-static PT_THREAD(GameEngineThread(struct pt *pt))
+PT_THREAD(GameEngineThread(struct pt *pt))
 {
   static uint32_t timeCountGameEngine = 0;
   static uint8_t i;
@@ -639,10 +642,3 @@ static PT_THREAD(GameEngineThread(struct pt *pt))
 
   PT_END(pt);
 }
-
-void runGameEngineThread_pt(void)
-{
-  GameEngineThread(&gameEngine_pt);
-}
-
-

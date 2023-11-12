@@ -65,6 +65,8 @@ void scoreIncrement();
 #define LED_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
+#define WDT_CLEAR   __NOP() // заготовка под wdt
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

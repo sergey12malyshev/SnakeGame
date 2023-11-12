@@ -6,12 +6,17 @@
 extern ADC_HandleTypeDef hadc1;
 static uint16_t adcValue = 0, batVoltageFilt = 0;
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if(hadc->Instance == ADC1) //check if the interrupt comes from ACD1
+  {
+    adcValue = HAL_ADC_GetValue(&hadc1);
+  }
+}
+
 void ADC_conversionRun(void)
 {
-  HAL_ADC_Start(&hadc1);
-  HAL_ADC_PollForConversion(&hadc1, 100);
-  adcValue = HAL_ADC_GetValue(&hadc1);
-  HAL_ADC_Stop(&hadc1);
+  HAL_ADC_Start_IT(&hadc1);
 }
 
 uint16_t getADCvalueVrefint(void)
@@ -108,4 +113,43 @@ bool buttonRightHandler(void)
   }
   
   return rc;
+}
+
+/* Flash memory API */
+#define ADDR_FLASH_PAGE_63    ((uint32_t)0x800FC00) /* Base adress of PAGE 63, 1024 byte */
+
+uint32_t flash_get_page(void)
+{
+  return ADDR_FLASH_PAGE_63;
+}
+
+uint32_t flash_read(uint32_t address)
+{
+  return *(uint32_t*)address;
+}
+
+uint32_t flash_write(uint32_t address, uint32_t data)
+{
+  uint32_t pageError = 0;
+  static FLASH_EraseInitTypeDef EraseInitStruct;
+
+  HAL_FLASH_Unlock();
+  EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+  EraseInitStruct.PageAddress = address;
+  EraseInitStruct.NbPages = 1;
+
+  if (HAL_FLASHEx_Erase(&EraseInitStruct, &pageError) != HAL_OK) //Erase the Page Before a Write Operation
+  {
+    return HAL_FLASH_GetError();
+  }
+
+  HAL_Delay(1);
+  if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, (uint64_t)data) != HAL_OK)
+  {
+    return HAL_FLASH_GetError();
+  }
+    HAL_Delay(1);
+    HAL_FLASH_Lock();
+
+  return 0;
 }

@@ -11,11 +11,10 @@
 #include "batteryCheckThread.h"
 #include "colors.h"
 #include "menu.h"
+#include "sound.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
-
-static struct pt batteryCheck_pt;
 
 /*
 Standard operating voltage STM32: 2 - 3.6 V
@@ -45,23 +44,25 @@ uint8_t getBatChargePrecent(uint16_t vbat)
 bool overVoltageControl(uint16_t voltage)
 {
   const uint16_t V_max = 3300; //max V ili9341
+  bool rc = false;
 
   if (voltage > V_max)
   {
-    return true;
+    rc = true;
   }
-  return false;
+  return rc;
 }
 
 bool underVoltageControl(uint16_t voltage)
 {
   const uint16_t V_min = 2500; //min V ili9341
+  bool rc = false;
 
   if (voltage < V_min)
   {
-    return true;
+    rc = true;;
   }
-  return false;
+  return rc;
 }
 
 static void systemControlProcess(void)
@@ -71,12 +72,14 @@ static void systemControlProcess(void)
   if(overVoltageControl(voltage))
   {
     screenOverVoltageError();
-    while (true);
+    beep(1000);
+    while (true) WDT_CLEAR;
   }
   else if(underVoltageControl(voltage))
   {
     screenUnderVoltageError();
-    while (true);
+    beep(1000);
+    while (true) WDT_CLEAR;
   }
 }
 
@@ -85,7 +88,7 @@ static void systemControlProcess(void)
  *
  * 
  */
-static PT_THREAD(BatteryCheckThread(struct pt *pt))
+PT_THREAD(BatteryCheckThread(struct pt *pt))
 {
   static uint32_t timeCount = 0, timeCount2 = 0;
 
@@ -93,17 +96,17 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 200U); // Запускаем преобразования ~ раз в 200 мс
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 50U); // Запускаем преобразования ~ раз в 50 мс
     timeCount = HAL_GetTick();	
     
     ADC_conversionRun();
     batteryVoltageFilterProcess();
-    systemControlProcess(); 
 
-    if(++timeCount2 > 5) // Каждую секунду проверяем заряд
+    if(++timeCount2 > 20) // Каждую секунду выводим заряд и контролируем системное напряжние
     {
       timeCount2 = 0;
       heartBeatLedToggle();
+      systemControlProcess(); 
       if(!getMenuState())
       {
         STRING_NUM_L(getBatChargePrecent(getBatteryVoltageFilter()), 3, 210, 210, getGreen(), getBlack());
@@ -115,10 +118,3 @@ static PT_THREAD(BatteryCheckThread(struct pt *pt))
 
   PT_END(pt);
 }
-
-void runBatteryCheckThread_pt(void)
-{
-  BatteryCheckThread(&batteryCheck_pt);
-}
-
-

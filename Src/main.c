@@ -33,15 +33,15 @@
 #include "hard.h"
 #include "Screens.h"
 #include "Sound.h"
+#include "filter.h"
+#include "Menu.h"
 
-#include "pt.h"
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
 #include "monitorThread.h"
-#include "Menu.h"
-
 
 #define LC_INCLUDE "lc-addrlabels.h"
+#include "pt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,10 +69,13 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+static struct pt gameEngine_pt;
+static struct pt batteryCheck_pt;
+static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 14;
-const int16_t SWversionPatch = 0;
+const int16_t SWversionMinor = 15;
+const int16_t SWversionPatch = 1;
 
 /* USER CODE END PV */
 
@@ -91,6 +94,12 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void initProtothreads(void)
+{
+  PT_INIT(&gameEngine_pt);
+  PT_INIT(&batteryCheck_pt);
+  PT_INIT(&monitorCheck_pt);
+}
 /* USER CODE END 0 */
 
 /**
@@ -132,16 +141,21 @@ int main(void)
   HAL_Delay(250); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
-  
-  HAL_ADCEx_Calibration_Start(&hadc1);
+
   screenSaver();
   resetTest();
   HAL_Delay(150);
   soundPowerOn();
   sendUART_hello();
+
+  HAL_ADCEx_Calibration_Start(&hadc1);
+  HAL_ADC_Start_IT(&hadc1);
+  
   HAL_Delay(1500);
+  setDefaultValueFilter(3200U);
 
   screenMainMenu();
+  initProtothreads();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -154,11 +168,10 @@ int main(void)
     }
     else
     {
-      runGameEngineThread_pt();
+      GameEngineThread(&gameEngine_pt);
     }
-    runBatteryCheckThread_pt();
-    runMonitorTread_pt();
-
+    BatteryCheckThread(&batteryCheck_pt);
+    MonitorTread(&monitorCheck_pt);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -235,7 +248,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
@@ -248,7 +261,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_VREFINT;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -447,6 +460,10 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    uint8_t str[25] = {0};
+
+    sprintf((char *)str, "Wrong parameters value: file %s on line %lu\r\n", file, line);
+    sendUART((uint8_t *)str);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

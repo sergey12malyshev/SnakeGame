@@ -6,7 +6,8 @@
 	],
 	"settings": {
 		"files.associations": {
-			"monitorthread.h": "c"
+			"monitorthread.h": "c",
+			"colors.h": "c"
 		}
 	}
 }

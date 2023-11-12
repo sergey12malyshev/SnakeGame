@@ -1,5 +1,5 @@
 rem соборка проекта
 make clean
-make -j
+make -j2 debug
 
 pause
