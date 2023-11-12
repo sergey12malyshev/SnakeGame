@@ -16,6 +16,7 @@
 #define LOCAL_ECHO_EN  1U
 #define SIZE_BUFF      12U
 
+#define NEWLINE_STR    "\r\n"
 #define mon_strcmp(ptr, cmd) (!strcmp(ptr, cmd))
 
 extern UART_HandleTypeDef huart1;
@@ -85,22 +86,29 @@ static void sendUART_symbolTerm(void)
 
 static void sendSNversion(void)
 {
-  extern const int16_t SWversionMajor, SWversionMinor;
+  extern const int16_t SWversionMajor, SWversionMinor, SWversionPatch;
 
   sprintf((char *)str, "Version: %d", SWversionMajor);
   sendUART((uint8_t *)str);
   sendUART((uint8_t *)".");
   sprintf((char *)str, "%d", SWversionMinor);
   sendUART((uint8_t *)str);
+  sendUART((uint8_t *)".");
+  sprintf((char *)str, "%d", SWversionPatch);
+  sendUART((uint8_t *)str);
+  sendUART((uint8_t *)NEWLINE_STR);
 }
 
 void sendUART_hello(void)
 {
   static const uint8_t hello_string[] = "Pac-ManGame\r\n";
-  static const uint8_t enter_help[] = "\r\nEnter HELP\r\n";
+  static const uint8_t enter_help[] = "Enter HELP\r\n";
 
   sendUART((uint8_t *)hello_string);
   sendSNversion();
+#if DEBUG_MAIN
+  sendUART((uint8_t *)"Debug build!\r\n");
+#endif
   sendUART((uint8_t *)enter_help);
   sendUART_symbolTerm();
 }

@@ -57,6 +57,8 @@ UART 115200 Baud rate
 
 Connect: PA10 - RX / PA9 - TX
 
+Terminal configuration file: utils\TERATERM.INI
+
 Enter *help* command
 
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/ShellScreen.jpg" width=20% height=20%>

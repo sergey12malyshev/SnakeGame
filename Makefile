@@ -28,8 +28,7 @@ OPT = -O2
 # C defines - debug or release build
 ######################################
 ifeq "$(MAKECMDGOALS)" "debug"
-C_DEFS +=  \
--DDEBUG_MAIN 
+C_DEFS += -DDEBUG_MAIN 
 # set debug build
 DEBUG = 1
 OPT = -Og
@@ -123,7 +122,7 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 AS_DEFS = 
 
 # C defines
-C_DEFS =  \
+C_DEFS +=  \
 -DUSE_HAL_DRIVER \
 -DSTM32F103xB
 
