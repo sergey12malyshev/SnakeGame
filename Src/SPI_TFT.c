@@ -1,4 +1,4 @@
-#include <stdlib.h> // abs()
+#include <stdlib.h>
 
 #include "stm32f1xx_hal.h"
 #include "SPI_TFT.h"
@@ -6,14 +6,17 @@
 #include "math.h"
 #include "string.h"
 
-// массив для DMA и отправки пакетов по SPI (чем больше шрифты по размеру, тем больше массив нужно)
-uint8_t buf[4880];
+/*
+* Драйвер SPI TFT экрана, ILI9341
+*/
 
-extern SPI_HandleTypeDef hspi1; // используемый модуль SPI
+uint8_t buf[4880]; // массив для DMA и отправки пакетов по SPI (чем больше шрифты по размеру, тем больше массив нужно)
 
-// HAL'овская инициализация выводов DC и CS
+extern SPI_HandleTypeDef hspi1; 
+
 void GPIO_init(void)
 {
+    // Инициализация выводов DC и CS
 
 	GPIO_InitTypeDef GPIO_InitStruct1;
 	GPIO_InitTypeDef GPIO_InitStruct2;
@@ -203,7 +206,6 @@ void LCD_Fill(uint16_t color)
 
 	for (n = 0; n < 240; n++)
 	{
-
 		HAL_SPI_Transmit_DMA(&hspi1, buf, 640);
 
 		for (t = 0; t < 2900; t++)
@@ -249,7 +251,6 @@ void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint16_t col
 			}
 		}
 	}
-
 	else
 	{
 		HAL_SPI_Transmit_DMA(&hspi1, buf, nnum);
@@ -505,7 +506,6 @@ void simple_font_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uin
 		}
 	}
 }
-//
 
 // вывод строки символов простого шрифта с его параметрами
 void simple_font_string_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
@@ -519,7 +519,6 @@ void simple_font_string_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t siz
 			x0 += 6 * size;
 	}
 }
-//
 
 // вывод цифр (больших и красивых) в заданной точке х0у0, (size не используется), с выбранными цветами шрифта и фона шрифта
 void NUM_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
@@ -549,7 +548,6 @@ void NUM_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fg
 	for (n = 0; n < Mass; n++)
 
 	{
-		// unsigned char temp = dSDigital_72ptBitmaps[((ascii-48)*305)+n];	// because font.c starts at 0, not 32
 		unsigned char temp = dSDigital_72ptBitmaps[dSDigital_72ptDescriptors[ascii - 48][2] + n]; // because font.c starts at 0, not 32
 		unsigned char f = 0;
 		for (f = 0; f < 8; f++)
@@ -579,7 +577,6 @@ void NUM_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fg
 
 	HAL_GPIO_WritePin(TFT_CS_PORT, TFT_CS_PIN, GPIO_PIN_SET);
 }
-//
 
 // отрисовка символа шрифта (определенного размера - то что занесено в font.h) (size не используется) в заданной точке, с выбранными цветами шрифта и фона шрифта
 // лучше использовать моноширинные шрифты (не совсем красиво, но и без переборов пропорциональных шрифтов - все символы примерно посередине независимо от толщины буков)
@@ -597,10 +594,8 @@ void FONT_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t f
 	{																										   // пробел, который не входит в массив шрифта
 		LCD_fillRect(x0, y0, arialNarrow_18ptDescriptors[31][0], arialNarrow_18ptDescriptors[31][1], bgcolor); // пробел по размеру символа @
 	}
-
 	else
 	{
-
 		H = arialNarrow_18ptDescriptors[ascii - 33][0]; // читаем количество бит на ширину и длину символа
 		W = arialNarrow_18ptDescriptors[ascii - 33][1];
 		if (H % 8 != 0)
@@ -617,7 +612,6 @@ void FONT_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t f
 		HAL_GPIO_WritePin(TFT_CS_PORT, TFT_CS_PIN, GPIO_PIN_RESET);
 
 		for (n = 0; n < Mass; n++)
-
 		{
 			// переводим биты массива в байты со значением цвета в буфер SPI
 			unsigned char temp = arialNarrow_18ptBitmaps[arialNarrow_18ptDescriptors[ascii - 33][2] + n]; // because font.c starts at 0, not 32
@@ -650,9 +644,8 @@ void FONT_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t f
 		HAL_GPIO_WritePin(TFT_CS_PORT, TFT_CS_PIN, GPIO_PIN_SET);
 	}
 
-	// return arialNarrow_18ptDescriptors[ascii-33][0]; // функция возвращает значение ширины символа
 }
-//
+
 
 // вывод строки символов шрифта с его параметрами
 void STRING_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
@@ -667,7 +660,7 @@ void STRING_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t 
 			x0 += arialNarrow_18ptDescriptors[31][0]; // тут нужно прибавлять ширину символа (т.к. моноширина шриффта, то все символы одинаковой ширины)
 	}
 }
-//
+
 
 // вывод числа с количеством символов (j) от 1 до 8 (упирается в размер буфера)
 void STRING_NUM(unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor)
@@ -687,7 +680,7 @@ void STRING_NUM(unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16
 			x0 += dSDigital_72ptDescriptors[0][0] + 16;
 	}
 }
-//
+
 
 // вывод числа с количеством символов (j) от 1 до 8 (упирается в размер буфера)
 void STRING_NUM_L(unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor)
@@ -707,10 +700,11 @@ void STRING_NUM_L(unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint
 			x0 += arialNarrow_18ptDescriptors[31][0];
 	}
 }
-//
 
-// отрисовка рисунка из файла (требует много памяти для хранения массива рисунка или внешний накопитель)
-// редактировать универсально
+
+/*
+* Отрисовка рисунка из файла (требует много памяти для хранения массива рисунка или внешний накопитель)
+*/ 
 void PIC(unsigned char const *img)
 {
 	uint32_t tt;
@@ -728,4 +722,3 @@ void PIC(unsigned char const *img)
 		img++;
 	}
 }
-//

@@ -148,8 +148,9 @@ uint32_t flash_write(uint32_t address, uint32_t data)
   {
     return HAL_FLASH_GetError();
   }
-    HAL_Delay(1);
-    HAL_FLASH_Lock();
+  
+  HAL_Delay(1);
+  HAL_FLASH_Lock();
 
   return 0;
 }
