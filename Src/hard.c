@@ -116,7 +116,8 @@ bool buttonRightHandler(void)
 }
 
 /* Flash memory API */
-#define ADDR_FLASH_PAGE_63    ((uint32_t)0x800FC00) /* Base adress of PAGE 63, 1024 byte */
+#define ADDR_FLASH_PAGE_63    ((uint32_t)0x800FC00) /* Base adress of PAGE 63, 1024 byte 
+0x400 * 63 (dec) =  FC00 */
 
 uint32_t flash_get_page(void)
 {

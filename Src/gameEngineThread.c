@@ -511,7 +511,7 @@ PT_THREAD(GameEngineThread(struct pt *pt))
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > getSpeedGame());
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > (50u - getSpeedGame()));
     timeCountGameEngine = HAL_GetTick();	
 
     old_x = x_PacMan;
