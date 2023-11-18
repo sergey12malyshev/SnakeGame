@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "gameEngineThread.h"
+#include "monitorThread.h"
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
@@ -67,7 +68,7 @@ static void choiceSettings(void)
 
 static void InfoScreen(void)
 {
-  extern const int16_t SWversionMajor, SWversionMinor;
+  extern const int16_t SWversionMajor, SWversionMinor, SWversionPatch;
   const uint16_t colorBg = 0x0000;
 
   LCD_Fill(colorBg);
@@ -78,6 +79,8 @@ static void InfoScreen(void)
   STRING_NUM_L(SWversionMajor, 1, start_x+80+15+70, start_y, getWhite(), colorBg);
   STRING_OUT(".", start_x+80+15+15+70, start_y, 4, getWhite(), colorBg);
   STRING_NUM_L(SWversionMinor, 2,  start_x+80+15+10+20+70, start_y, getWhite(), colorBg);
+  STRING_OUT(".", start_x+80+15+35+30+70, start_y, 4, getWhite(), colorBg);
+  STRING_NUM_L(SWversionPatch, 2, start_x+80+15+52+30+70, start_y, getWhite(), colorBg);
 
   STRING_OUT(__DATE__, start_x, 105, 5, getWhite(), colorBg);   //https://spec-zone.ru/gcc~9_cpp/standard-predefined-macros
   STRING_OUT(__TIME__, start_x+100, 140, 5, getWhite(), colorBg);
@@ -111,7 +114,7 @@ uint8_t getSpeedGame(void)
   return speedGame;
 }
 
-uint8_t setSpeedGame(const uint8_t s)
+void setSpeedGame(const uint8_t s)
 {
   speedGame = s;
 }
@@ -170,7 +173,8 @@ bool mainMenu(void)
               speedGame += 5;
               if(speedGame > 45) speedGame = 5;
               speedMenuUpdate(speedGame);
-              flash_write(flash_get_page(), speedGame);
+              uint32_t rc = flash_write(flash_get_page(), speedGame);
+              if(rc) sendUART((uint8_t *)"Flash write error\r\n");
             }
           }
           screenMainMenu();

@@ -18,8 +18,8 @@
 #include "pt.h"
 
 /* Enable debug mode */
-#define DEBUG              false       
-#define DEBUG_PRINT(...) do { if (DEBUG) sendUART(__VA_ARGS__); } while (0)
+#define DEBUG              false
+#define DEBUG_PRINT(...) do { if (DEBUG) sendUART(__VA_ARGS__); } while (0)  
 
 #define NO_WALS_DEATH      false
 

@@ -11,4 +11,9 @@ void heartBeatLedEnable(void);
 void heartBeatLedToggle(void);
 bool buttonLeftHandler(void);
 bool buttonRightHandler(void);
+uint32_t flash_get_page(void);
+uint32_t flash_read(uint32_t address);
+uint32_t flash_write(uint32_t address, uint32_t data);
+
+
 #endif /* __HARD_H */
