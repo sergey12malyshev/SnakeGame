@@ -48,6 +48,7 @@ ADC - show ADC chanel bat\r\n\
 BAT - show bat voltage (0.01V) and stat. charge\r\n\
 LV2 - set level 2\r\n\
 LV3 - set level 3\r\n\
+NEXT - set next level\r\n\
 INFO - read about project\r\n\
 >";
 
@@ -215,13 +216,21 @@ static void monitor(void)
       }
       else if (mon_strcmp(input_mon_buff, "LV3"))
       {
+        levelReset();
         levelSet(2);
         initGame();
         sendUART_OK();
       }
       else if (mon_strcmp(input_mon_buff, "LV2"))
       {
+        levelReset();
         levelSet(1);
+        initGame();
+        sendUART_OK();
+      }
+      else if (mon_strcmp(input_mon_buff, "NEXT"))
+      {
+        levelUp();
         initGame();
         sendUART_OK();
       }

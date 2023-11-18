@@ -383,13 +383,13 @@ void levelSet(uint8_t l)
   level = l;
 }
 
-static void levelReset(void)
+void levelReset(void)
 {
   mainScore = oldMainScore = 0;
   levelSet(0);
 }
 
-static void levelUp(void)
+void levelUp(void)
 {
   level++;
   if(level > LEVEL_MAX)

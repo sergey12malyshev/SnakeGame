@@ -7,5 +7,7 @@ PT_THREAD(GameEngineThread(struct pt *pt));
 
 void initGame(void);
 void levelSet(uint8_t l);
+void levelReset(void);
+void levelUp(void);
 
 #endif /* __GAME_ENGINE_H */
