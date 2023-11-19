@@ -18,8 +18,8 @@
 #include "pt.h"
 
 /* Enable debug mode */
-#define DEBUG              false       
-#define DEBUG_PRINT(...) do { if (DEBUG) sendUART(__VA_ARGS__); } while (0)
+#define DEBUG              false
+#define DEBUG_PRINT(...) do { if (DEBUG) sendUART(__VA_ARGS__); } while (0)  
 
 #define NO_WALS_DEATH      false
 
@@ -383,13 +383,13 @@ void levelSet(uint8_t l)
   level = l;
 }
 
-static void levelReset(void)
+void levelReset(void)
 {
   mainScore = oldMainScore = 0;
   levelSet(0);
 }
 
-static void levelUp(void)
+void levelUp(void)
 {
   level++;
   if(level > LEVEL_MAX)
@@ -511,7 +511,7 @@ PT_THREAD(GameEngineThread(struct pt *pt))
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > getSpeedGame());
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > (50u - getSpeedGame()));
     timeCountGameEngine = HAL_GetTick();	
 
     old_x = x_PacMan;

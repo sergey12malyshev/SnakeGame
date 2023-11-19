@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "gameEngineThread.h"
+#include "monitorThread.h"
 #include "SPI_TFT.h"
 #include "hard.h"
 #include "Screens.h"
@@ -12,7 +13,7 @@
 
 static bool menuEnabled = true;
 
-uint8_t speedGame = 35;
+static uint8_t speedGame = 25;
 
 bool getMenuState(void)
 {
@@ -67,7 +68,7 @@ static void choiceSettings(void)
 
 static void InfoScreen(void)
 {
-  extern const int16_t SWversionMajor, SWversionMinor;
+  extern const int16_t SWversionMajor, SWversionMinor, SWversionPatch;
   const uint16_t colorBg = 0x0000;
 
   LCD_Fill(colorBg);
@@ -78,6 +79,8 @@ static void InfoScreen(void)
   STRING_NUM_L(SWversionMajor, 1, start_x+80+15+70, start_y, getWhite(), colorBg);
   STRING_OUT(".", start_x+80+15+15+70, start_y, 4, getWhite(), colorBg);
   STRING_NUM_L(SWversionMinor, 2,  start_x+80+15+10+20+70, start_y, getWhite(), colorBg);
+  STRING_OUT(".", start_x+80+15+35+30+70, start_y, 4, getWhite(), colorBg);
+  STRING_NUM_L(SWversionPatch, 2, start_x+80+15+52+30+70, start_y, getWhite(), colorBg);
 
   STRING_OUT(__DATE__, start_x, 105, 5, getWhite(), colorBg);   //https://spec-zone.ru/gcc~9_cpp/standard-predefined-macros
   STRING_OUT(__TIME__, start_x+100, 140, 5, getWhite(), colorBg);
@@ -87,6 +90,12 @@ static void InfoScreen(void)
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
 }
 
+static void speedMenuUpdate(uint8_t speedGameLoc)
+{
+  const uint16_t colorBg = 0x0000;
+  STRING_NUM_L(speedGameLoc, 2, 155, 80, getOrange(), colorBg);
+}
+
 static void settingsScreen(void)
 {
   const uint16_t colorBg = 0x0000;
@@ -94,22 +103,22 @@ static void settingsScreen(void)
   STRING_OUT("Settings", 65, 20, 5, getWhite(), colorBg);
 
   STRING_OUT("Speed:", 25 , 80, 5, getWhite(), colorBg);
-  STRING_NUM_L(speedGame, 2, 155, 80, getOrange(), colorBg);
+  speedMenuUpdate(speedGame);
 
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
   STRING_OUT("^", 290, 210, 1, 0x00FF, getGreen());
-}
-
-static void speedUpdate(uint8_t speedGameLoc)
-{
-  const uint16_t colorBg = 0x0000;
-  STRING_NUM_L(speedGameLoc, 2, 155, 80, getOrange(), colorBg);
 }
 
 uint8_t getSpeedGame(void)
 {
   return speedGame;
 }
+
+void setSpeedGame(const uint8_t s)
+{
+  speedGame = s;
+}
+
 
 bool mainMenu(void)
 {
@@ -162,11 +171,10 @@ bool mainMenu(void)
             if(buttonRightHandler())
             {
               speedGame += 5;
-              if(speedGame > 50) speedGame = 5;
-              speedUpdate(speedGame);
-              /*
-               Добавить запись во flash
-              */
+              if(speedGame > 45) speedGame = 5;
+              speedMenuUpdate(speedGame);
+              uint32_t rc = flash_write(flash_get_page(), speedGame);
+              if(rc) sendUART((uint8_t *)"Flash write error\r\n");
             }
           }
           screenMainMenu();

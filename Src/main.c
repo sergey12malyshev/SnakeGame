@@ -2,7 +2,7 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
+  * @brief          : Main program body Pac-ManGame project
   ******************************************************************************
   * @attention
   *
@@ -74,7 +74,7 @@ static struct pt batteryCheck_pt;
 static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 15;
+const int16_t SWversionMinor = 16;
 const int16_t SWversionPatch = 1;
 
 /* USER CODE END PV */
@@ -154,7 +154,11 @@ int main(void)
   HAL_Delay(1500);
   setDefaultValueFilter(3200U);
 
+  uint32_t speedIsFlash = flash_read(flash_get_page());
+  if (speedIsFlash < 55u) setSpeedGame(speedIsFlash);
+  
   screenMainMenu();
+
   initProtothreads();
   /* USER CODE END 2 */
 
