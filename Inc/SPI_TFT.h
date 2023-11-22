@@ -3,14 +3,15 @@
 библиотека предназначена для работы с HAL
 для работы необходимо в Cube настроить модуль SPI1
 выводы DC и CS настраиваются внутри библиотеки
-
-
 ---
 подредактировать названия функций LCD_***
 разобраться с задержкам после отправки по DMA (заливки)
 ---
 */
 
+/*
+* Библиотека взята с сайта cxem.net
+*/
 
 #ifndef SPI_TFT_H
 #define SPI_TFT_H
@@ -18,15 +19,12 @@
 #include "stm32f1xx_hal.h"
 
 
-//выбрать выводы
 #define TFT_DC_PIN	GPIO_PIN_3
 #define TFT_DC_PORT	GPIOA
 
 #define TFT_CS_PIN	GPIO_PIN_4
 #define TFT_CS_PORT	GPIOA
 
-
-// команды дисплея ILI9341
 /* Level 1 Commands */
 #define LCD_SWRESET             0x01   /* Software Reset */
 #define LCD_READ_DISPLAY_ID     0x04   /* Read display identification information */
@@ -117,17 +115,15 @@
 
 
 
-#define ORIENTATION_PORTRAIT 0x48
-#define ORIENTATION_LANDSCAPE 0x28
-#define ORIENTATION_PORTRAIT_MIRROR 0x88
-#define ORIENTATION_LANDSCAPE_MIRROR 0xE8
+#define ORIENTATION_PORTRAIT          0x48
+#define ORIENTATION_LANDSCAPE         0x28
+#define ORIENTATION_PORTRAIT_MIRROR   0x88
+#define ORIENTATION_LANDSCAPE_MIRROR  0xE8
 
 
 #define LCD_PIXEL_WIDTH       240
 #define LCD_PIXEL_HEIGHT      320
 #define LCD_PIXEL_COUNT    LCD_PIXEL_WIDTH * LCD_PIXEL_HEIGHT
-
-
 
 __attribute__((unused)) static uint16_t width  = LCD_PIXEL_WIDTH, height = LCD_PIXEL_HEIGHT;
 
@@ -138,39 +134,36 @@ __attribute__((unused)) static uint16_t width  = LCD_PIXEL_WIDTH, height = LCD_P
             ((((uint16_t)g) << 3) & 0x07E0) |\
             ((((uint16_t)r) << 8) & 0xf800))
 
+void LCD_SendCommand(uint8_t com);
+void LCD_SendData(uint8_t data);
 
-// функции
-void GPIO_init (void);																																// настройка выводов CS и DC
-void LCD_SendCommand(uint8_t com);																										// посылка команды
-void LCD_SendData(uint8_t data);																											// посылка данных
+void LCD_Init(void);
 
-void LCD_Init(void);																																	// инициализация дисплея
+void LCD_SetCursorPosition(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+void LCD_Fill(uint16_t color);
+void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint16_t color);
+void LCD_DrawPixel(uint16_t x, uint16_t y, uint16_t color);
+void line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
+void H_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, unsigned int size, unsigned int color);
+void line_angle (uint16_t x, uint16_t y, uint16_t r, int Angle, uint16_t size, uint16_t color);
+void circle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);
+void fillCircle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);
+void arc(int x, int y, int r, int startAngle, int endAngle, int thickness, uint16_t size, unsigned int color);
 
-void LCD_SetCursorPosition(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);				// устанавливаем позицию курсора и область отрисовки
-void LCD_Fill(uint16_t color);																												// закрасить дисплей
-void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint16_t color);	// закрасить заданную область
-void LCD_DrawPixel(uint16_t x, uint16_t y, uint16_t color);														// зажечь пиксель
-void line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);				// нарисовать линию с произвольным началом и произвольным концом
-void H_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, unsigned int size, unsigned int color);// нарисовать линию задаваемой толщтны с произвольным началом и произвольным концом
-void line_angle (uint16_t x, uint16_t y, uint16_t r, int Angle, uint16_t size, uint16_t color);//линия задаваемой толщины, повернутая на заданный угол
-void circle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);										// круг
-void fillCircle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);								//закрашенный круг
-void arc(int x, int y, int r, int startAngle, int endAngle, int thickness, uint16_t size, unsigned int color);// дуга
+void LCD_setOrientation(uint8_t o);
+void LCD_setVerticalScrolling(uint16_t startY, uint16_t endY);
+void LCD_scroll(uint16_t v);
 
-void LCD_setOrientation(uint8_t o);																										// задать расположение экрана
-void LCD_setVerticalScrolling(uint16_t startY, uint16_t endY);												// задать область вертикального скроллинга
-void LCD_scroll(uint16_t v);																													// начать скроллинг на заданную величину относительно заданной области
-
-void simple_font_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
-void simple_font_string_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
-void NUM_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
-void FONT_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
-void STRING_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);//
-void STRING_NUM (unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor);//
-void STRING_NUM_L (unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor);//
+void simple_font_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);
+void simple_font_string_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);
+void NUM_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);
+void FONT_OUT(uint8_t ascii, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);
+void STRING_OUT(char *string, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor);
+void STRING_NUM (unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor);
+void STRING_NUM_L (unsigned int value, uint16_t j, uint16_t x0, uint16_t y0, uint16_t fgcolor, uint16_t bgcolor);
 // шрифты сгенерированы при помощи TheDotFactory
 
-void PIC(unsigned char const *img);// картинка сохраненная в GMIP как файл .с
+void PIC(unsigned char const *img); // картинка сохраненная в GMIP как файл .с
 
 
 

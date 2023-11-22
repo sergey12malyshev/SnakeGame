@@ -14,9 +14,9 @@ uint8_t buf[4880]; // массив для DMA и отправки пакетов
 
 extern SPI_HandleTypeDef hspi1; 
 
-void GPIO_init(void)
+static void GPIO_init_LCD(void)
 {
-    // Инициализация выводов DC и CS
+    /* Инициализация выводов DC и CS */
 
 	GPIO_InitTypeDef GPIO_InitStruct1;
 	GPIO_InitTypeDef GPIO_InitStruct2;
@@ -63,8 +63,7 @@ void LCD_SendData(uint8_t data)
 // инициализация дисплея ILI9341
 void LCD_Init(void)
 {
-	// настраиваем ноги
-	GPIO_init();
+	GPIO_init_LCD();
 
 	// сброс дисплея
 	// TFT_RST_SET;   /* Не подключен, надо бы подключить */
