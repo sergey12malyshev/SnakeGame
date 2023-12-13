@@ -129,6 +129,7 @@ uint32_t flash_read(uint32_t address)
   return *(uint32_t*)address;
 }
 
+#if 1 // 1 = Use HAL, 0 = CMSIS
 uint32_t flash_write(uint32_t address, uint32_t data)
 {
   uint32_t pageError = 0;
@@ -155,3 +156,105 @@ uint32_t flash_write(uint32_t address, uint32_t data)
 
   return 0;
 }
+#else
+
+uint8_t checkBusyFlash(void)
+{
+  while(FLASH->SR & (FLASH_SR_BSY))
+  {
+    __NOP();
+  } 
+
+  if (FLASH->CR & FLASH_SR_EOP)
+  {
+    FLASH->SR = FLASH_SR_EOP;
+  }
+
+  if(FLASH->SR & FLASH_SR_WRPRTERR  || \
+     FLASH->SR & (OBR_REG_INDEX << 8U | FLASH_OBR_OPTERR) || \
+     FLASH->SR & FLASH_SR_PGERR)
+  {
+    return 1;
+  }
+
+  return 0;
+}
+
+static inline void flash_unlock(void)
+{
+  if((FLASH->CR & FLASH_CR_LOCK) != 0)
+  {
+    FLASH->KEYR = FLASH_KEY1;
+    FLASH->KEYR = FLASH_KEY2;
+  }
+}
+
+static inline void flash_lock(void)
+{
+  FLASH->CR |= FLASH_CR_LOCK;
+}
+
+uint8_t flash_Erase(const uint32_t pageAddress)
+{
+  uint8_t rc = 0;
+
+  flash_unlock();
+
+  rc = checkBusyFlash();
+
+  FLASH->CR |= FLASH_CR_PER;
+  FLASH->AR = pageAddress;
+  FLASH->CR |= FLASH_CR_STRT;
+  
+  rc = checkBusyFlash();
+
+  FLASH->CR &= ~FLASH_CR_PER;
+
+  flash_lock();
+
+  return rc;
+}
+
+uint8_t flash_Programm(uint32_t Address, uint64_t Data)
+{
+  uint8_t rc = 0;
+  const uint8_t nbiterations = 2; //nbiterations FLASH_TYPEPROGRAM_WORD
+
+  flash_unlock();
+
+  rc = checkBusyFlash();
+
+  for (uint8_t index = 0U; index < nbiterations; index++)
+  {
+    //FLASH_Program_HalfWord((Address + (2U*index)), (uint16_t)(Data >> (16U*index)));
+    FLASH->CR |= FLASH_CR_PG;
+  
+    *(__IO uint16_t*)(Address + (2U*index)) = (uint16_t)(Data >> (16U*index)); /* Write data in the address */
+    rc = checkBusyFlash();
+    
+    FLASH->CR &= ~ FLASH_CR_PG;
+  }
+  
+  flash_lock();
+
+  return rc;
+}
+
+uint32_t flash_write(uint32_t address, uint32_t data)
+{
+  if (flash_Erase(address) != 0) //Erase the Page Before a Write Operation
+  {
+    return 1;
+  }
+
+  HAL_Delay(1);
+  if (flash_Programm(address, (uint64_t)data) != 0)
+  {
+    return 1;
+  }
+  
+  HAL_Delay(1);
+
+  return 0;
+}
+#endif
