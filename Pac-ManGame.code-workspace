@@ -7,7 +7,10 @@
 	"settings": {
 		"files.associations": {
 			"monitorthread.h": "c",
-			"colors.h": "c"
+			"colors.h": "c",
+			"main.h": "c",
+			"unit_test.h": "c",
+			"batterycheckthread.h": "c"
 		}
 	}
 }

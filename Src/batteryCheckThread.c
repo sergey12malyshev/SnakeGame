@@ -60,7 +60,7 @@ bool underVoltageControl(uint16_t voltage)
 
   if (voltage < V_min)
   {
-    rc = true;;
+    rc = true;
   }
   return rc;
 }

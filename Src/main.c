@@ -35,6 +35,7 @@
 #include "Sound.h"
 #include "filter.h"
 #include "Menu.h"
+#include "unit_test.h"
 
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
@@ -151,6 +152,10 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_ADC_Start_IT(&hadc1);
   
+  #if RUN_UNIT_TEST
+  runUnitTests();
+  #endif
+
   HAL_Delay(1500);
   setDefaultValueFilter(3200U);
 

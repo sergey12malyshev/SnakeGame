@@ -35,6 +35,9 @@ OPT = -Og
 $(info ************  DEBUG VERSION ************)
 endif
 
+ifeq ($(RUN_UNIT_TEST), 1)
+C_DEFS += -DRUN_UNIT_TEST 
+endif
 #######################################
 # paths
 #######################################
@@ -75,7 +78,8 @@ batteryCheckThread.c \
 monitorThread.c \
 SPI_TFT.c \
 Menu.c \
-filter.c
+filter.c \
+unit_test.c
 
 # ASM sources
 ASM_SOURCES =  \

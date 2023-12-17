@@ -47,6 +47,9 @@ Run **RunStaticAnalysisCODE.cmd**
 
 It is possible to output the analysis result to a file
 
+### Unit tests
+Simple unit tests are implemented in the file "unit_test.с". Unit tests are launched if the *RUN_UNIT_TEST* key is set or when building Debug
+
 ## Peripheral setup
 STM32 CubeMX
 (Checkboxes checked: *Enable Full Assert* и *Set All Free Pins as Analog*)
