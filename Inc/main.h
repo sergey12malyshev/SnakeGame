@@ -61,6 +61,8 @@ void scoreIncrement();
 #define DC_GPIO_Port GPIOA
 #define CS_Pin GPIO_PIN_4
 #define CS_GPIO_Port GPIOA
+#define BOOT_EN_Pin GPIO_PIN_1
+#define BOOT_EN_GPIO_Port GPIOB
 #define LED_Pin GPIO_PIN_12
 #define LED_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

@@ -10,7 +10,8 @@
 			"colors.h": "c",
 			"main.h": "c",
 			"unit_test.h": "c",
-			"batterycheckthread.h": "c"
+			"batterycheckthread.h": "c",
+			"stm32f1xx_hal.h": "c"
 		}
 	}
 }

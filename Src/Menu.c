@@ -10,6 +10,7 @@
 #include "main.h"
 #include "Menu.h"
 #include "colors.h"
+#include "runBootloader.h" 
 
 static bool menuEnabled = true;
 
@@ -31,9 +32,10 @@ void screenMainMenu(void)
   LCD_Fill(colorBg);
 
   STRING_OUT("MENU", 95, 15, 10, getGreen(), colorBg);
-  STRING_OUT("START", 90, 70, 7, colorBg, getWhite());
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 170, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 65, 7, colorBg, getWhite());
+  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
 
   STRING_OUT("^", 10, 210, 1, 0x00FF, getGreen());
   STRING_OUT(">", 290, 210, 1, 0x00FF, getGreen());
@@ -43,27 +45,41 @@ static void choiceStart(void)
 {
   const uint16_t colorBg = 0x0000;
 
-  STRING_OUT("START", 90, 70, 7, colorBg, getWhite());
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 170, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 65, 7, colorBg, getWhite());
+  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
 }
 
 static void choiceInfo(void)
 {
   const uint16_t colorBg = 0x0000;
 
-  STRING_OUT("START", 90, 70, 7, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, colorBg, getWhite());
-  STRING_OUT("SETTINGS", 90, 170, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 65, 7, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 110, 7, colorBg, getWhite());
+  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
 }
 
 static void choiceSettings(void)
 {
   const uint16_t colorBg = 0x0000;
 
-  STRING_OUT("START", 90, 70, 7, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 170, 7, colorBg, getWhite());
+  STRING_OUT("START", 90, 65, 7, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 155, 7, colorBg, getWhite());
+  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
+  
+}
+
+static void choiceUpdate(void)
+{
+  const uint16_t colorBg = 0x0000;
+
+  STRING_OUT("START", 90, 65, 7, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 200, 7, colorBg, getWhite());
 }
 
 static void InfoScreen(void)
@@ -122,15 +138,14 @@ void setSpeedGame(const uint8_t s)
 
 bool mainMenu(void)
 {
-  static uint8_t count = 0;  
-  enum MENU_ITEMS {START = 0, INFO, SETTINGS};
-
+  enum MENU_ITEMS {START = 0, INFO, SETTINGS, UPDATE};
+  static uint8_t count = START;  
 
     if (buttonLeftHandler())
     {
       beep(0);
       count++;
-      if (count > 2) count = START;
+      if (count > UPDATE) count = START;
 
       switch (count)
       {
@@ -142,6 +157,9 @@ bool mainMenu(void)
           break;
         case SETTINGS: 
           choiceSettings(); 
+          break; 
+        case UPDATE: 
+          choiceUpdate(); 
           break; 
         default:
           break;
@@ -180,6 +198,8 @@ bool mainMenu(void)
           screenMainMenu();
           count = START; 
           break; 
+        case UPDATE:  
+          runBootloader();
         default:
           break;
       }
