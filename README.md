@@ -37,8 +37,12 @@ To make the debug project , run **makeProjectDebug.bat** (OR *make -j1 debug* cm
 
 To clean the project, run **makeClean.bat** (OR *make clean*)
 
-## Programm
+## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
+
+## Update firmware
+Use system bootloader: MENU->UPDATE or CLI-> LOAD command
+Connect PA10 - RX / PA9 - TX
 
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
@@ -76,7 +80,7 @@ Enter *help* command
 - Printed circuit board for soldering double-sided 7*9cm
 - P-MOSFET
   
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Shematic.png" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
 
 *See Altium directory
 
