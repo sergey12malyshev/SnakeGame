@@ -42,7 +42,6 @@ Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
 
 ## Update firmware
 Use system bootloader: MENU->UPDATE or CLI-> LOAD command
-Connect PA10 - RX / PA9 - TX
 
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
@@ -79,6 +78,7 @@ Enter *help* command
 - Active buzzer
 - Printed circuit board for soldering double-sided 7*9cm
 - P-MOSFET
+- USB-UART module (Optional for updating firmware via USB Type-C and working with CLI)
   
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Shematic.png" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
 
