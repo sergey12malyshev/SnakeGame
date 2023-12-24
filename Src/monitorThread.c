@@ -9,6 +9,7 @@
 #include "batteryCheckThread.h"
 #include "gameEngineThread.h"
 #include "Sound.h"
+#include "runBootloader.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -42,6 +43,7 @@ typedef enum
 static const uint8_t mon_comand[] = "Enter monitor command:\r\n\
 HELP - see existing commands\r\n\
 RST - restart\r\n\
+LOAD - run bootloader\r\n\
 STOP - stop game process\r\n\
 TEST - run sound test\r\n\
 ADC - show ADC chanel bat\r\n\
@@ -186,6 +188,11 @@ static void monitor(void)
       else if (mon_strcmp(input_mon_buff, "STOP"))
       {
         while(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) WDT_CLEAR;
+      }
+      else if (mon_strcmp(input_mon_buff, "LOAD"))
+      {
+        sendUART_OK();
+        runBootloader();
       }
        else if (mon_strcmp(input_mon_buff, "ADC"))
       {

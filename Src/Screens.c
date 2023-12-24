@@ -172,6 +172,13 @@ void screenUnderVoltageError(void)
   STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, getWhite(), getRed());
 }
 
+void screenBoot(void)
+{
+  LCD_Fill(getBlack());
+  STRING_OUT("Bootloader run..", 10, 100, 3, getGreen(), getBlack());
+  simple_font_string_OUT("Connect USB to PC", 10, 200, 2, getWhite(), getBlack());
+}
+
 void batterySumbolShow(void)
 {
   const uint8_t x_min = 206;

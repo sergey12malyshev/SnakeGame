@@ -2,7 +2,7 @@
 #include "filter.h"
 
 /* 
-Экспоненциальное бегущее среднее  filt = (A * filt + signal) >> k, https://alexgyver.ru/lessons/filters/ 
+* Экспоненциальное бегущее среднее  filt = (A * filt + signal) >> k, https://alexgyver.ru/lessons/filters/ 
 */
 
 static uint32_t filt = 0;

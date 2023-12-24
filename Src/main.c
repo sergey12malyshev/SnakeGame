@@ -35,6 +35,7 @@
 #include "Sound.h"
 #include "filter.h"
 #include "Menu.h"
+#include "unit_test.h"
 
 #include "gameEngineThread.h"
 #include "batteryCheckThread.h"
@@ -74,8 +75,8 @@ static struct pt batteryCheck_pt;
 static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 16;
-const int16_t SWversionPatch = 1;
+const int16_t SWversionMinor = 17;
+const int16_t SWversionPatch = 0;
 
 /* USER CODE END PV */
 
@@ -151,6 +152,10 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_ADC_Start_IT(&hadc1);
   
+  #if RUN_UNIT_TEST
+  runUnitTests();
+  #endif
+
   HAL_Delay(1500);
   setDefaultValueFilter(3200U);
 
@@ -385,7 +390,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, DC_Pin|CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|BOOT_EN_Pin|LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -408,19 +413,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB0 LED_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|LED_Pin;
+  /*Configure GPIO pins : PB0 BOOT_EN_Pin LED_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|BOOT_EN_Pin|LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB1 PB2 PB10 PB11
-                           PB3 PB4 PB5 PB6
-                           PB7 PB8 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11
-                          |GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
+  /*Configure GPIO pins : PB2 PB10 PB11 PB3
+                           PB4 PB5 PB6 PB7
+                           PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_3
+                          |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7
+                          |GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 

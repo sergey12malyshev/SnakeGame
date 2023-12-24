@@ -37,8 +37,12 @@ To make the debug project , run **makeProjectDebug.bat** (OR *make -j1 debug* cm
 
 To clean the project, run **makeClean.bat** (OR *make clean*)
 
-## Programm
+## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
+
+## Update firmware
+Use system bootloader: Go to the MENU->UPDATE or CLI-> LOAD command to launch the system bootloader. 
+Connect to PC via USB Type C. Launch STM32CubeProgrammer. Select the desired COM-port and download the firmware
 
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
@@ -46,6 +50,9 @@ Cppcheck 2.10 https://cppcheck.sourceforge.io/
 Run **RunStaticAnalysisCODE.cmd**
 
 It is possible to output the analysis result to a file
+
+### Unit tests
+Simple unit tests are implemented in the file "unit_test.с". Unit tests are launched if the *RUN_UNIT_TEST* key is set or when building Debug
 
 ## Peripheral setup
 STM32 CubeMX
@@ -72,8 +79,9 @@ Enter *help* command
 - Active buzzer
 - Printed circuit board for soldering double-sided 7*9cm
 - P-MOSFET
+- USB-UART module (Optional for updating firmware via USB Type-C and working with CLI)
   
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/Altium/shematic.jpg" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Shematic.png" width=30% height=30%>  <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Hard2.jpg" width=24% height=24%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/1688404908269.jpg" width=24% height=24%>
 
 *See Altium directory
 
