@@ -36,7 +36,8 @@ $(info ************  DEBUG VERSION ************)
 endif
 
 ifeq ($(RUN_UNIT_TEST), 1)
-C_DEFS += -DRUN_UNIT_TEST 
+C_DEFS += -DRUN_UNIT_TEST
+$(info ************  UNIT TEST VERSION ************) 
 endif
 #######################################
 # paths

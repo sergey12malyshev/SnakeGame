@@ -162,6 +162,7 @@ bool mainMenu(void)
           choiceUpdate(); 
           break; 
         default:
+          assert_param(0); // Error
           break;
       }
     }
@@ -201,6 +202,7 @@ bool mainMenu(void)
         case UPDATE:  
           runBootloader();
         default:
+          assert_param(0); // Error
           break;
       }
     }
