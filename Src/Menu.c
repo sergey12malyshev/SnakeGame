@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "gameEngineThread.h"
+#include "arkanoidEngineTread.h"
 #include "monitorThread.h"
 #include "SPI_TFT.h"
 #include "hard.h"
@@ -11,31 +12,23 @@
 #include "Menu.h"
 #include "colors.h"
 #include "runBootloader.h" 
-
-static bool menuEnabled = true;
+#include "workState.h"
 
 static uint8_t speedGame = 25;
 
-bool getMenuState(void)
-{
-  return menuEnabled;
-}
+static const uint16_t colorBg = 0x0000;
 
-void setMenuState(const bool state)
-{
-  menuEnabled = state;
-}
 
 void screenMainMenu(void)
 {
-  const uint16_t colorBg = 0x0000;
   LCD_Fill(colorBg);
 
   STRING_OUT("MENU", 95, 15, 10, getGreen(), colorBg);
-  STRING_OUT("START", 90, 65, 7, colorBg, getWhite());
-  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 50, 7, colorBg, getWhite());
+  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
   STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
 
   STRING_OUT("^", 10, 210, 1, 0x00FF, getGreen());
   STRING_OUT(">", 290, 210, 1, 0x00FF, getGreen());
@@ -43,49 +36,53 @@ void screenMainMenu(void)
 
 static void choiceStart(void)
 {
-  const uint16_t colorBg = 0x0000;
-
-  STRING_OUT("START", 90, 65, 7, colorBg, getWhite());
-  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 50, 7, colorBg, getWhite());
+  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
   STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
+}
+
+static void choiceStart2(void)
+{
+  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
+  STRING_OUT("START2", 90, 85, 1, colorBg, getWhite());
+  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
 }
 
 static void choiceInfo(void)
 {
-  const uint16_t colorBg = 0x0000;
-
-  STRING_OUT("START", 90, 65, 7, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 110, 7, colorBg, getWhite());
+  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
+  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 120, 7, colorBg, getWhite());
   STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
 }
 
 static void choiceSettings(void)
 {
-  const uint16_t colorBg = 0x0000;
-
-  STRING_OUT("START", 90, 65, 7, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
+  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
   STRING_OUT("SETTINGS", 90, 155, 7, colorBg, getWhite());
-  STRING_OUT("UPDATE", 90, 200, 7, getWhite(), colorBg);
-  
+  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
 }
 
 static void choiceUpdate(void)
 {
-  const uint16_t colorBg = 0x0000;
-
-  STRING_OUT("START", 90, 65, 7, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 110, 7, getWhite(), colorBg);
+  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
+  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
+  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
   STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 200, 7, colorBg, getWhite());
+  STRING_OUT("UPDATE", 90, 190, 7, colorBg, getWhite());
 }
 
 static void InfoScreen(void)
 {
   extern const int16_t SWversionMajor, SWversionMinor, SWversionPatch;
-  const uint16_t colorBg = 0x0000;
+  
 
   LCD_Fill(colorBg);
   STRING_OUT("PAC-MAN game", 25, 10, 5, getOrange(), colorBg);
@@ -108,13 +105,13 @@ static void InfoScreen(void)
 
 static void speedMenuUpdate(uint8_t speedGameLoc)
 {
-  const uint16_t colorBg = 0x0000;
+  
   STRING_NUM_L(speedGameLoc, 2, 155, 80, getOrange(), colorBg);
 }
 
 static void settingsScreen(void)
 {
-  const uint16_t colorBg = 0x0000;
+  
   LCD_Fill(colorBg);
   STRING_OUT("Settings", 65, 20, 5, getWhite(), colorBg);
 
@@ -138,7 +135,7 @@ void setSpeedGame(const uint8_t s)
 
 bool mainMenu(void)
 {
-  enum MENU_ITEMS {START = 0, INFO, SETTINGS, UPDATE};
+  enum MENU_ITEMS {START = 0, START2, INFO, SETTINGS, UPDATE};
   static uint8_t count = START;  
 
     if (buttonLeftHandler())
@@ -151,6 +148,9 @@ bool mainMenu(void)
       {
         case START:  
           choiceStart();
+          break;
+        case START2:  
+          choiceStart2();
           break;
         case INFO: 
           choiceInfo(); 
@@ -175,7 +175,12 @@ bool mainMenu(void)
       {
         case START:  
           initGame();
-          return false;
+          setWorkState(GAME1);
+          break;
+        case START2:
+          arkanoidInitGame();
+          setWorkState(GAME2);
+          break;
         case INFO: 
           InfoScreen();
           while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET)) WDT_CLEAR;

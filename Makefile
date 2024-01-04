@@ -75,8 +75,10 @@ Src/hard.c \
 Src/Screens.c \
 Src/sound.c \
 gameEngineThread.c \
+arkanoidEngineTread.c \
 batteryCheckThread.c \
 monitorThread.c \
+workState.c \
 SPI_TFT.c \
 Menu.c \
 filter.c \

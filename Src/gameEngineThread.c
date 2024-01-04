@@ -6,6 +6,7 @@
 
 #include "gameEngineThread.h"
 #include "monitorThread.h"
+#include "workState.h"
 #include "main.h"
 #include "Menu.h"
 #include "SPI_TFT.h"
@@ -368,7 +369,7 @@ static void endGame(void)
     if (buttonLeftHandler())
     {
       screenMainMenu();
-      setMenuState(true);
+      setWorkState(MENU);
       break;
     }
     if (buttonRightHandler())
