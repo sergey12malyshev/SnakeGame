@@ -29,6 +29,7 @@ OPT = -O2
 ######################################
 ifeq "$(MAKECMDGOALS)" "debug"
 C_DEFS += -DDEBUG_MAIN 
+C_DEFS += -DUSE_FULL_ASSERT
 # set debug build
 DEBUG = 1
 OPT = -Og

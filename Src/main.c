@@ -2,7 +2,7 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body Pac-ManGame project
+  * @brief          : Main program body GameBox project
   ******************************************************************************
   * @attention
   *
