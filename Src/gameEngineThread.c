@@ -347,6 +347,7 @@ void initGame(void)
       break;
     case LEVEL_MAX:
       levelThree(); 
+      break;
     default:
     assert_param(0); // Error
       break;

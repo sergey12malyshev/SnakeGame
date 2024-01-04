@@ -94,7 +94,7 @@ void arkanoidInitGame(void)
   /* Предустановим переменные */
   scoreArk = 0;
   ball1 = (ball){100, 100, 5, 1, -1};
-  platform1 = (platform){200, 190};
+  platform1 = (platform){100, 190};
 
   scoreUpdate(scoreArk);
   createPlatform(platform1.x, platform1.y);

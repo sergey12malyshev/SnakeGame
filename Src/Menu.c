@@ -189,6 +189,7 @@ bool mainMenu(void)
         case START2:
           arkanoidInitGame();
           setWorkState(GAME2);
+          count = START;
           break;
         case INFO: 
           InfoScreen();

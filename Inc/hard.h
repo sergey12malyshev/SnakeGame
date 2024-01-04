@@ -14,6 +14,7 @@ bool buttonRightHandler(void);
 uint32_t flash_get_page(void);
 uint32_t flash_read(uint32_t address);
 uint32_t flash_write(uint32_t address, uint32_t data);
+void delay_ap(uint32_t delay);
 
 
 #endif /* __HARD_H */
