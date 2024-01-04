@@ -495,7 +495,7 @@ __attribute__((unused))static void debugStatus(void)
 }
 
 /*
- * Протопоток gameEngineThread
+ * Протопоток gameEngineThread. Pac-man Game
  *
  * 
  */

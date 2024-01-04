@@ -13,7 +13,6 @@
 
 void runBootloader(void)
 {
-  screenBoot();
   HAL_GPIO_WritePin(BOOT_EN_GPIO_Port, BOOT_EN_Pin, GPIO_PIN_SET);
   HAL_Delay(25);
   NVIC_SystemReset();  

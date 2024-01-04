@@ -125,7 +125,7 @@ void screenSaver(void)
   extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = getBlack();
   LCD_Fill(colorBg);
-  STRING_OUT("PAC-MAN", 90, 110, 10, getBlue(), colorBg);
+  STRING_OUT("GAME BOX", 90, 110, 10, getBlue(), colorBg);
   STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
   STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
@@ -170,13 +170,6 @@ void screenUnderVoltageError(void)
 {
   LCD_Fill(getRed());
   STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, getWhite(), getRed());
-}
-
-void screenBoot(void)
-{
-  LCD_Fill(getBlack());
-  STRING_OUT("Bootloader run..", 10, 100, 3, getGreen(), getBlack());
-  simple_font_string_OUT("Connect USB to PC", 10, 200, 2, getWhite(), getBlack());
 }
 
 void batterySumbolShow(void)

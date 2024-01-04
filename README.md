@@ -1,5 +1,5 @@
-# Pac-ManGame 
-Pac-Man game console project on STM32 controller and ILI9341 display
+# GameBox 
+Game console project on STM32 controller and ILI9341 display. Contains two games: pac-man and arkanoid
 
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Screen2.jpg" width=29% height=29%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/Top2.jpeg" width=25% height=25%> <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/top3.jpeg" width=24% height=24%>
  

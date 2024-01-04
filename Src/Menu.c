@@ -14,21 +14,24 @@
 #include "runBootloader.h" 
 #include "workState.h"
 
+#define HIGHLIGHT getYellow()
+
 static uint8_t speedGame = 25;
 
 static const uint16_t colorBg = 0x0000;
 
+static const uint8_t menu_x = 85;
 
 void screenMainMenu(void)
 {
   LCD_Fill(colorBg);
 
-  STRING_OUT("MENU", 95, 15, 10, getGreen(), colorBg);
-  STRING_OUT("START", 90, 50, 7, colorBg, getWhite());
-  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
+  STRING_OUT("MENU", 95, 10, 10, getGreen(), colorBg);
+  STRING_OUT("PAC-MAN", menu_x, 50, 7, colorBg, HIGHLIGHT);
+  STRING_OUT("ARCANOID", menu_x, 90, 1, getBlue(), colorBg);
+  STRING_OUT("INFO", menu_x, 130, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", menu_x, 165, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", menu_x, 200, 7, getWhite(), colorBg);
 
   STRING_OUT("^", 10, 210, 1, 0x00FF, getGreen());
   STRING_OUT(">", 290, 210, 1, 0x00FF, getGreen());
@@ -36,47 +39,47 @@ void screenMainMenu(void)
 
 static void choiceStart(void)
 {
-  STRING_OUT("START", 90, 50, 7, colorBg, getWhite());
-  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
+  STRING_OUT("PAC-MAN", menu_x, 50, 7, colorBg, HIGHLIGHT);
+  STRING_OUT("ARCANOID", menu_x, 90, 1, getBlue(), colorBg);
+  STRING_OUT("INFO", menu_x, 130, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", menu_x, 165, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", menu_x, 200, 7, getWhite(), colorBg);
 }
 
 static void choiceStart2(void)
 {
-  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
-  STRING_OUT("START2", 90, 85, 1, colorBg, getWhite());
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
+  STRING_OUT("PAC-MAN", menu_x, 50, 7, getBlue(), colorBg);
+  STRING_OUT("ARCANOID", menu_x, 90, 1, colorBg, HIGHLIGHT);
+  STRING_OUT("INFO", menu_x, 130, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", menu_x, 165, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", menu_x, 200, 7, getWhite(), colorBg);
 }
 
 static void choiceInfo(void)
 {
-  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
-  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, colorBg, getWhite());
-  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
+  STRING_OUT("PAC-MAN", menu_x, 50, 7, getBlue(), colorBg);
+  STRING_OUT("ARCANOID", menu_x, 90, 1, getBlue(), colorBg);
+  STRING_OUT("INFO", menu_x, 130, 7, colorBg, HIGHLIGHT);
+  STRING_OUT("SETTINGS", menu_x, 165, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", menu_x, 200, 7, getWhite(), colorBg);
 }
 
 static void choiceSettings(void)
 {
-  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
-  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 155, 7, colorBg, getWhite());
-  STRING_OUT("UPDATE", 90, 190, 7, getWhite(), colorBg);
+  STRING_OUT("PAC-MAN", menu_x, 50, 7, getBlue(), colorBg);
+  STRING_OUT("ARCANOID", menu_x, 90, 1, getBlue(), colorBg);
+  STRING_OUT("INFO", menu_x, 130, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", menu_x, 165, 7, colorBg, HIGHLIGHT);
+  STRING_OUT("UPDATE", menu_x, 200, 7, getWhite(), colorBg);
 }
 
 static void choiceUpdate(void)
 {
-  STRING_OUT("START", 90, 50, 7, getWhite(), colorBg);
-  STRING_OUT("START2", 90, 85, 1, getWhite(), colorBg);
-  STRING_OUT("INFO", 90, 120, 7, getWhite(), colorBg);
-  STRING_OUT("SETTINGS", 90, 155, 7, getWhite(), colorBg);
-  STRING_OUT("UPDATE", 90, 190, 7, colorBg, getWhite());
+  STRING_OUT("PAC-MAN", menu_x, 50, 7, getBlue(), colorBg);
+  STRING_OUT("ARCANOID", menu_x, 90, 1, getBlue(), colorBg);
+  STRING_OUT("INFO", menu_x, 130, 7, getWhite(), colorBg);
+  STRING_OUT("SETTINGS", menu_x, 165, 7, getWhite(), colorBg);
+  STRING_OUT("UPDATE", menu_x, 200, 7, colorBg, HIGHLIGHT);
 }
 
 static void InfoScreen(void)
@@ -85,7 +88,7 @@ static void InfoScreen(void)
   
 
   LCD_Fill(colorBg);
-  STRING_OUT("PAC-MAN game", 25, 10, 5, getOrange(), colorBg);
+  STRING_OUT("Info", 120, 10, 5, getWhite(), colorBg);
 
   uint8_t start_x = 5, start_y = 55;
   STRING_OUT("Version:", start_x, start_y, 5, getWhite(), colorBg);
@@ -111,7 +114,6 @@ static void speedMenuUpdate(uint8_t speedGameLoc)
 
 static void settingsScreen(void)
 {
-  
   LCD_Fill(colorBg);
   STRING_OUT("Settings", 65, 20, 5, getWhite(), colorBg);
 
@@ -120,6 +122,13 @@ static void settingsScreen(void)
 
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
   STRING_OUT("^", 290, 210, 1, 0x00FF, getGreen());
+}
+
+void screenBoot(void)
+{
+  LCD_Fill(colorBg);
+  STRING_OUT("Bootloader run..", 10, 100, 3, getGreen(), getBlack());
+  simple_font_string_OUT("Connect USB to PC", 10, 200, 2, getWhite(), getBlack());
 }
 
 uint8_t getSpeedGame(void)
@@ -204,7 +213,8 @@ bool mainMenu(void)
           screenMainMenu();
           count = START; 
           break; 
-        case UPDATE:  
+        case UPDATE: 
+          screenBoot(); 
           runBootloader();
         default:
           assert_param(0); // Error

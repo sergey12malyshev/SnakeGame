@@ -69,7 +69,7 @@ static uint16_t scoreArk = 0;
 
 static void createBall(const pixel_t x, const pixel_t y, const pixel_t size)
 {
-  fillCircle(x, y, size, getGreen());
+  fillCircle(x, y, size, getWhite());
 }
 
 static void eraseBall(const pixel_t x, const pixel_t y, const pixel_t size)
@@ -79,7 +79,7 @@ static void eraseBall(const pixel_t x, const pixel_t y, const pixel_t size)
 
 static void createPlatform(const pixel_t x, const pixel_t y)
 {
-  H_line(x, y, x + lengthPlatform, y, widthPlatform, getBlue());
+  H_line(x, y, x + lengthPlatform, y, widthPlatform, getWhite());
 }
 
 static void erasePlatform(const pixel_t x, const pixel_t y)
@@ -128,7 +128,7 @@ static void arkanoidEndGame(void)
 
 /*
  * Протопоток ArcanoidgameEngineThread
- *
+ * 
  * 
  */
 PT_THREAD(ArcanoidGameEngineThread(struct pt *pt))
