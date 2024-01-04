@@ -140,7 +140,7 @@ bool mainMenu(void)
 
     if (buttonLeftHandler())
     {
-      beep(0);
+      beep(1);
       count++;
       if (count > UPDATE) count = START;
 
@@ -169,7 +169,7 @@ bool mainMenu(void)
     
     if (buttonRightHandler())
     {   
-      beep(0);
+      beep(1);
 
       switch (count)
       {

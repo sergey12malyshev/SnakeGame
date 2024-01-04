@@ -64,6 +64,7 @@ platform platform1 = {0};
 const pixel_t lengthPlatform = 40;
 const pixel_t widthPlatform = 5;
 
+static uint16_t scoreArk = 0;
 
 
 static void createBall(const pixel_t x, const pixel_t y, const pixel_t size)
@@ -91,9 +92,11 @@ void arkanoidInitGame(void)
   /* Отрисуем рабочее поле */
   createWorkRegion();
   /* Предустановим переменные */
+  scoreArk = 0;
   ball1 = (ball){100, 100, 5, 1, -1};
   platform1 = (platform){200, 190};
 
+  scoreUpdate(scoreArk);
   createPlatform(platform1.x, platform1.y);
 }
 
@@ -156,7 +159,9 @@ PT_THREAD(ArcanoidGameEngineThread(struct pt *pt))
     {
       if(((ball1.x + ball1.size) >= platform1.x)&&((ball1.x - ball1.size) <= platform1.x + lengthPlatform))
       {
-        ball1.changeY *= -1;
+        ball1.changeY = -1;
+        beep(15);
+        scoreUpdate(++scoreArk);
       }
       else
       {
@@ -166,7 +171,6 @@ PT_THREAD(ArcanoidGameEngineThread(struct pt *pt))
         }
       }
     }
-
 
     if (buttonRightHandler())
     {

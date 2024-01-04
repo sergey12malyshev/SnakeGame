@@ -121,11 +121,6 @@ static bool checkWalls(void)
   return rc;
 }
 
-static void scoreUpdate(uint16_t scoreLoc)
-{
-  STRING_NUM_L(scoreLoc, 2, 120, 210, getWhite(), getBlack());  
-}
-
 void scoreIncrement(void)
 {
   score += 1;

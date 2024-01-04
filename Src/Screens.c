@@ -197,3 +197,8 @@ void batterySumbolShow(void)
 
   line(295, y_max - 5, 295, y_min + 5, getGreen());
 }
+
+void scoreUpdate(uint16_t scoreLoc)
+{
+  STRING_NUM_L(scoreLoc, 2, 120, 210, getWhite(), getBlack());  
+}
