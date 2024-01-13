@@ -2,7 +2,7 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body Pac-ManGame project
+  * @brief          : Main program body GameBox project
   ******************************************************************************
   * @attention
   *
@@ -36,8 +36,10 @@
 #include "filter.h"
 #include "Menu.h"
 #include "unit_test.h"
+#include "workState.h"
 
 #include "gameEngineThread.h"
+#include "arkanoidEngineTread.h"
 #include "batteryCheckThread.h"
 #include "monitorThread.h"
 
@@ -71,11 +73,12 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 static struct pt gameEngine_pt;
+static struct pt arkanoid_pt;
 static struct pt batteryCheck_pt;
 static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 17;
+const int16_t SWversionMinor = 18;
 const int16_t SWversionPatch = 0;
 
 /* USER CODE END PV */
@@ -171,16 +174,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   { 
-    if (getMenuState())
-    {
-      setMenuState(mainMenu());
-    }
-    else
-    {
-      GameEngineThread(&gameEngine_pt);
-    }
     BatteryCheckThread(&batteryCheck_pt);
     MonitorTread(&monitorCheck_pt);
+
+    switch (getWorkState())
+    {
+      case MENU:
+        mainMenu();
+        break;
+      case GAME1:
+        GameEngineThread(&gameEngine_pt);
+        break;
+      case GAME2:
+        ArcanoidGameEngineThread(&arkanoid_pt);
+        break;
+    
+      default:
+        assert_param(0); // Error
+        break;
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

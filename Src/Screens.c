@@ -17,11 +17,11 @@
 const unsigned char objets[][8]=
 {
   {0x7C,0x02,0xC9,0x01,0x01,0xC9,0x02,0x7C},  // monster
-  {0x00,0x42,0xA5,0x99,0x81,0x81,0x42,0x3C},  // Pac-men 1
-  {0x00,0x42,0xE7,0xFF,0xFB,0xFF,0x7E,0x3C},  // Pac-men Left
-  {0x3C,0x7E,0xFF,0xFB,0xFF,0xE7,0x42,0x00},  // Pac-men Right
-  {0x3C,0x7E,0xFC,0xF8,0xF8,0xEC,0x7E,0x3C},  // Pac-men Up
-  {0x3C,0x7E,0x3F,0x1F,0x1F,0x37,0x7E,0x3C},  // Pac-men Down
+  {0x00,0x42,0xA5,0x99,0x81,0x81,0x42,0x3C},  // Pac-man 1
+  {0x00,0x42,0xE7,0xFF,0xFB,0xFF,0x7E,0x3C},  // Pac-man Left
+  {0x3C,0x7E,0xFF,0xFB,0xFF,0xE7,0x42,0x00},  // Pac-man Right
+  {0x3C,0x7E,0xFC,0xF8,0xF8,0xEC,0x7E,0x3C},  // Pac-man Up
+  {0x3C,0x7E,0x3F,0x1F,0x1F,0x37,0x7E,0x3C},  // Pac-man Down
 };
 
 void createMonster(uint8_t object_number, uint16_t x0, uint16_t y0, uint16_t size, uint16_t fgcolor, uint16_t bgcolor)
@@ -125,7 +125,7 @@ void screenSaver(void)
   extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = getBlack();
   LCD_Fill(colorBg);
-  STRING_OUT("PAC-MAN", 90, 110, 10, getBlue(), colorBg);
+  STRING_OUT("GAME BOX", 90, 110, 10, getBlue(), colorBg);
   STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
   STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
   STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
@@ -143,13 +143,12 @@ void stringGameOver(void)
 
 void screenEndGame(void)
 {
-  const uint16_t colorBg = COLOR(242, 65, 98);
-  LCD_Fill(colorBg);
-  STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, colorBg);
+  LCD_Fill(getOrange());
+  STRING_OUT("GAME OVER", 85, 100, 3, 0x00FF, getOrange());
   STRING_OUT(">", 290, 210, 1, 0x00FF, getGreen());
-  STRING_OUT("Go", 235, 210, 1, 0x00FF, colorBg);
+  STRING_OUT("Go", 235, 210, 1, 0x00FF, getOrange());
   STRING_OUT("<", 10, 210, 1, 0x00FF, getGreen());
-  STRING_OUT("Menu", 40, 210, 1, 0x00FF, colorBg);
+  STRING_OUT("Menu", 40, 210, 1, 0x00FF, getOrange());
 }
 
 void screenGameCompleted(void)
@@ -172,13 +171,6 @@ void screenUnderVoltageError(void)
   STRING_OUT("UNDERVOLTAGE!", 80, 180, 3, getWhite(), getRed());
 }
 
-void screenBoot(void)
-{
-  LCD_Fill(getBlack());
-  STRING_OUT("Bootloader run..", 10, 100, 3, getGreen(), getBlack());
-  simple_font_string_OUT("Connect USB to PC", 10, 200, 2, getWhite(), getBlack());
-}
-
 void batterySumbolShow(void)
 {
   const uint8_t x_min = 206;
@@ -196,4 +188,9 @@ void batterySumbolShow(void)
   line(290, y_max - 5, 295, y_max - 5, getGreen());
 
   line(295, y_max - 5, 295, y_min + 5, getGreen());
+}
+
+void scoreUpdate(uint16_t scoreLoc)
+{
+  STRING_NUM_L(scoreLoc, 2, 120, 210, getWhite(), getBlack());  
 }

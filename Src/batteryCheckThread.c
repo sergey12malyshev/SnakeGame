@@ -12,6 +12,7 @@
 #include "colors.h"
 #include "menu.h"
 #include "sound.h"
+#include "workState.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -107,7 +108,7 @@ PT_THREAD(BatteryCheckThread(struct pt *pt))
       timeCount2 = 0;
       heartBeatLedToggle();
       systemControlProcess(); 
-      if(!getMenuState())
+      if(getWorkState() != MENU)
       {
         STRING_NUM_L(getBatChargePrecent(getBatteryVoltageFilter()), 3, 210, 210, getGreen(), getBlack());
       } 

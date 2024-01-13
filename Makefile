@@ -29,6 +29,7 @@ OPT = -O2
 ######################################
 ifeq "$(MAKECMDGOALS)" "debug"
 C_DEFS += -DDEBUG_MAIN 
+C_DEFS += -DUSE_FULL_ASSERT
 # set debug build
 DEBUG = 1
 OPT = -Og
@@ -36,7 +37,8 @@ $(info ************  DEBUG VERSION ************)
 endif
 
 ifeq ($(RUN_UNIT_TEST), 1)
-C_DEFS += -DRUN_UNIT_TEST 
+C_DEFS += -DRUN_UNIT_TEST
+$(info ************  UNIT TEST VERSION ************) 
 endif
 #######################################
 # paths
@@ -74,8 +76,10 @@ Src/hard.c \
 Src/Screens.c \
 Src/sound.c \
 gameEngineThread.c \
+arkanoidEngineTread.c \
 batteryCheckThread.c \
 monitorThread.c \
+workState.c \
 SPI_TFT.c \
 Menu.c \
 filter.c \

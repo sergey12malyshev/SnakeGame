@@ -6,6 +6,7 @@
 
 #include "gameEngineThread.h"
 #include "monitorThread.h"
+#include "workState.h"
 #include "main.h"
 #include "Menu.h"
 #include "SPI_TFT.h"
@@ -118,11 +119,6 @@ static bool checkWalls(void)
   rc |= (((pacman.x + borderPacman >= (wals4.x1)) && (pacman.x - borderPacman <= (wals4.x2 + wals4.size))) && ((pacman.y - borderPacman <= (wals4.y1)) && (pacman.y + borderPacman >= (wals4.y2))));
 
   return rc;
-}
-
-static void scoreUpdate(uint16_t scoreLoc)
-{
-  STRING_NUM_L(scoreLoc, 2, 120, 210, getWhite(), getBlack());  
 }
 
 void scoreIncrement(void)
@@ -351,7 +347,9 @@ void initGame(void)
       break;
     case LEVEL_MAX:
       levelThree(); 
+      break;
     default:
+    assert_param(0); // Error
       break;
   }
 }
@@ -367,7 +365,7 @@ static void endGame(void)
     if (buttonLeftHandler())
     {
       screenMainMenu();
-      setMenuState(true);
+      setWorkState(MENU);
       break;
     }
     if (buttonRightHandler())
@@ -498,7 +496,7 @@ __attribute__((unused))static void debugStatus(void)
 }
 
 /*
- * Протопоток gameEngineThread
+ * Протопоток gameEngineThread. Pac-man Game
  *
  * 
  */

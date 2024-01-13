@@ -17,5 +17,6 @@ void disableMonster(uint16_t x0, uint16_t y0, uint16_t size);
 void createPacman(uint16_t x0, uint16_t y0, int8_t direction_x, int8_t direction_y );
 void disablePacman(uint16_t x0, uint16_t y0);
 void screenBoot(void);
+void scoreUpdate(uint16_t scoreLoc);
 
 #endif /* __Screens_H */
