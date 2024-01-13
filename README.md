@@ -40,9 +40,8 @@ To clean the project, run **makeClean.bat** (OR *make clean*)
 ## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
 
-## Update firmware
-Use system bootloader: Go to the MENU->UPDATE or CLI-> LOAD command to launch the system bootloader. 
-Connect to PC via USB Type C. Launch STM32CubeProgrammer. Select the desired COM-port and download the firmware
+## Update firmware use system bootloader
+Go to the device menu: MENU->UPDATE or CLI-> LOAD command to launch the system bootloader. Connect to PC via USB Type C. Run **updateFirmware.cmd** or launch STM32CubeProgrammer (select the desired COM-port and download the firmware).
 
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
@@ -56,6 +55,7 @@ Simple unit tests are implemented in the file "unit_test.с". Unit tests are lau
 
 ## Peripheral setup
 STM32 CubeMX
+
 (Checkboxes checked: *Enable Full Assert* и *Set All Free Pins as Analog*)
 
 ## Command Line Interface
@@ -76,6 +76,7 @@ Enter *help* command
 - Buttons К1116КП2 (Hall effect sensor) or classic buttons
 - TP4056 charge module with protection
 - Battery 18650 li-ion
+- CH340N USB-UART module
 - Active buzzer
 - Printed circuit board for soldering double-sided 7*9cm
 - P-MOSFET
