@@ -44,4 +44,10 @@ inline uint16_t getYellow(void)
   return yellow_color;
 }
 
+inline uint16_t getPurple(void)
+{
+  const uint16_t purple_color = COLOR(204, 51, 255);
+  return purple_color;
+}
+
 #endif /* __COLORS_H */

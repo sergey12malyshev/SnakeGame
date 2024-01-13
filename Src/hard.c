@@ -115,6 +115,14 @@ bool buttonRightHandler(void)
   return rc;
 }
 
+__attribute__((optimize("-O0"))) void delay_ap(uint32_t delay)
+{
+  for (uint32_t x = 0; x < delay; x++)
+  {
+	  __NOP();
+  }
+}
+
 /* Flash memory API */
 #define ADDR_FLASH_PAGE_63    ((uint32_t)0x800FC00) /* Base adress of PAGE 63, 1024 byte 
 0x400 * 63 (dec) =  FC00 */

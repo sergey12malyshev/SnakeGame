@@ -29,6 +29,7 @@ OPT = -O2
 ######################################
 ifeq "$(MAKECMDGOALS)" "debug"
 C_DEFS += -DDEBUG_MAIN 
+C_DEFS += -DUSE_FULL_ASSERT
 # set debug build
 DEBUG = 1
 OPT = -Og
@@ -75,8 +76,10 @@ Src/hard.c \
 Src/Screens.c \
 Src/sound.c \
 gameEngineThread.c \
+arkanoidEngineTread.c \
 batteryCheckThread.c \
 monitorThread.c \
+workState.c \
 SPI_TFT.c \
 Menu.c \
 filter.c \
