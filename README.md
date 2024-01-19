@@ -40,7 +40,7 @@ To clean the project, run **makeClean.bat** (OR *make clean*)
 ## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
 
-## Update firmware use system bootloader
+## Update firmware use system bootloader (DFU Mode)
 Go to the device menu: MENU->UPDATE or CLI-> LOAD command to launch the system bootloader. Connect to PC via USB Type C. Run **updateFirmware.cmd** or launch STM32CubeProgrammer (select the desired COM-port and download the firmware).
 
 ### Static code analyzer
