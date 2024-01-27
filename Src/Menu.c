@@ -127,7 +127,7 @@ static void settingsScreen(void)
 void screenBoot(void)
 {
   LCD_Fill(colorBg);
-  STRING_OUT("Bootloader run..", 10, 100, 3, getGreen(), getBlack());
+  STRING_OUT("DFU mode run..", 10, 100, 3, getGreen(), getBlack());
   simple_font_string_OUT("Connect USB to PC", 10, 200, 2, getWhite(), getBlack());
 }
 

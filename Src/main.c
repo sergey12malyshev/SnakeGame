@@ -141,19 +141,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
   heartBeatLedEnable();
   UART_receve_IT();
-
+  sendUART((uint8_t*)"[OK] UART Init\r\n");
   HAL_Delay(250); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
-
+  sendUART((uint8_t*)"[OK] LCD Init\r\n");
   screenSaver();
   resetTest();
   HAL_Delay(150);
   soundPowerOn();
-  sendUART_hello();
 
   HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_ADC_Start_IT(&hadc1);
+  sendUART((uint8_t*)"[OK] ADC Start Calibration\r\n");
   
   #if RUN_UNIT_TEST
   runUnitTests();
@@ -163,11 +163,15 @@ int main(void)
   setDefaultValueFilter(3200U);
 
   uint32_t speedIsFlash = flash_read(flash_get_page());
-  if (speedIsFlash < 55u) setSpeedGame(speedIsFlash);
-  
+  if (speedIsFlash < 55u)
+  {
+    setSpeedGame(speedIsFlash);
+    sendUART((uint8_t*)"[OK] Flash\r\n");
+  }
   screenMainMenu();
 
   initProtothreads();
+  sendUART_hello();
   /* USER CODE END 2 */
 
   /* Infinite loop */

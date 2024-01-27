@@ -26,7 +26,7 @@ static bool Test_underVoltageControl(void)
 
 static void stopTest(void)
 {
-  sendUART((uint8_t *)"Unit Tests failed!\r\n");
+  sendUART((uint8_t *)"[FAULT] Unit Tests failed!\r\n");
   for(;;)
   {
     WDT_CLEAR;
@@ -51,5 +51,5 @@ void runUnitTests(void)
     stopTest();
   }
 
-  sendUART((uint8_t *)"Unit Tests passed!\r\n");
+  sendUART((uint8_t *)"[OK] Unit Tests passed!\r\n");
 }

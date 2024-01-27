@@ -104,7 +104,7 @@ static void sendSNversion(void)
 
 void sendUART_hello(void)
 {
-  static const uint8_t hello_string[] = "Pac-ManGame\r\n";
+  static const uint8_t hello_string[] = "GameBox console started!\r\n";
   static const uint8_t enter_help[] = "Enter HELP\r\n";
 
   sendUART((uint8_t *)hello_string);
