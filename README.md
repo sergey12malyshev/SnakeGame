@@ -68,7 +68,7 @@ Terminal configuration file: utils\TERATERM.INI
 
 Enter *help* command
 
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=20% height=20%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=35% height=35%>
 
 ## Hardware
 - Black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
