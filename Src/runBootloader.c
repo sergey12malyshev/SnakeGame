@@ -15,7 +15,7 @@
 void runBootloader(void)
 {
   HAL_GPIO_WritePin(BOOT_EN_GPIO_Port, BOOT_EN_Pin, GPIO_PIN_SET);
-  sendUART((uint8_t*)"[OK] Run DFU mode\r\n");
+  sendUART((uint8_t*)OK_G "Run DFU mode\r\n");
   HAL_Delay(25);
   NVIC_SystemReset();  
 }
