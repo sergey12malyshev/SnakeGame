@@ -37,6 +37,14 @@ To make the debug project , run **makeProjectDebug.bat** (OR *make -j1 debug* cm
 
 To clean the project, run **makeClean.bat** (OR *make clean*)
 
+## Debugging
+Open On-Chip Debugger (OCD) 0.10.0-00113-g0f83948 + GNU gdb (GNU Tools for ARM Embedded Processors) 7.10.1.20160923-cvs
+
+Run **runOpenODC.bat** and run terminal: telnet localhost 4444
+
+Run **runGDBserver.bat**
+
+
 ## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
 
