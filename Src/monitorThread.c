@@ -61,6 +61,7 @@ static char printBufer[350] = {0};
 COMAND monitorTest = NONE;
 
 //-------------- UART -------------------//
+
 void sendUART(const char *serial_data, ...)
 {
   const uint8_t block_timeout_ms = 40;
@@ -74,7 +75,7 @@ void sendUART(const char *serial_data, ...)
 }
 
 void sendUARTstring(const uint8_t* TxBufferUartLocal)
-{ //передача в блокирующем режиме
+{ 
   const uint8_t block_timeout_ms = 40; //t(sec)=(FRAME/BOUND+MINT)*N = (10/115200+0.00001)*100 = 19 мс
   HAL_UART_Transmit(&huart1, (uint8_t *) TxBufferUartLocal, strlen((char *) TxBufferUartLocal), block_timeout_ms);
 }
@@ -106,7 +107,7 @@ static void sendSNversion(void)
 void sendUART_hello(void)
 {
   static const char hello_string[] = "GameBox console started!\r\n";
-  static const char enter_help[] = "Enter HELP";
+  static const char enter_help[] = "Enter HELP\r\n";
 
   sendUART(hello_string);
   sendSNversion();
@@ -148,7 +149,7 @@ static void sendBackspaceStr(void)
 
 static void convertToUppercase(void)
 {
-  static char *copy_ptr;
+  static char *copy_ptr = NULL;
 
   copy_ptr = input_mon_buff;
   while (*copy_ptr != 0)
@@ -214,11 +215,9 @@ static void monitor(void)
       {
         sendUART_OK();
         sendUART("https://github.com/sergey12malyshev/Pac-ManGame" NEWLINE_STR);
-        sendUART("HAL: %ld", HAL_GetHalVersion());
-        sendUART_r_n();
-        sendUART(__DATE__ );
-        sendUART_r_n();
-        sendUART(__TIME__);
+        sendUART("HAL: %ld"NEWLINE_STR, HAL_GetHalVersion());
+        sendUART("Data build: "__DATE__ NEWLINE_STR);
+        sendUART("Time build: "__TIME__ NEWLINE_STR ">");
       }
       else if (mon_strcmp(input_mon_buff, "LV3"))
       {
