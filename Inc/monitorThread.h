@@ -5,7 +5,7 @@
 #include "pt.h"
 PT_THREAD(MonitorTread(struct pt *pt));
 
-void sendUART(const uint8_t* TxBufferUartLocal);
+void sendUART(const char *serial_data, ...);
 void sendUART_hello(void);
 void UART_receve_IT(void);
 void resetTest(void);

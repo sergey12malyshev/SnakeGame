@@ -468,27 +468,22 @@ static void PacManUpdateProcess(void)
 
 __attribute__((unused))static void debugStatus(void)
 {
-  uint8_t str[20]= {0};
-  sprintf((char *)str, "Xpac:%d\r\n", pacman.x);
-  DEBUG_PRINT((uint8_t *)str);
-  sprintf((char *)str, "Ypac:%d\r\n", pacman.y);
-  DEBUG_PRINT((uint8_t *)str);
-  sprintf((char *)str, "Xm2:%d\r\n", monster2.x);
-  DEBUG_PRINT((uint8_t *)str);
-  sprintf((char *)str, "Ym2:%d\r\n", monster2.y);
-  DEBUG_PRINT((uint8_t *)str);
+  DEBUG_PRINT( "Xpac:%d\r\n", pacman.x);
+  DEBUG_PRINT( "Ypac:%d\r\n", pacman.y);
+  DEBUG_PRINT( "Xm2:%d\r\n", monster2.x);
+  DEBUG_PRINT( "Ym2:%d\r\n", monster2.y);
 
   if (monsterCheck1())
   {
-    DEBUG_PRINT((uint8_t *)"M1!");
+    DEBUG_PRINT("M1!");
   }
   if (monsterCheck2())
   {
-    DEBUG_PRINT((uint8_t *)"M2!");
+    DEBUG_PRINT("M2!");
   }
   if (checkWalls())
   {
-    DEBUG_PRINT((uint8_t *)"Wals!");
+    DEBUG_PRINT("Wals!");
   }
 
   fillCircle(pacman.x, pacman.y, 2, getRed());

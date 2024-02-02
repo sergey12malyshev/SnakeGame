@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 #include "main.h"
 #include "hard.h"
@@ -39,8 +40,7 @@ typedef enum
   INFO
 }COMAND;
 
-
-static const uint8_t mon_comand[] = "Enter monitor command:\r\n\
+static const char mon_comand[] = "Enter monitor command:\r\n\
 HELP - see existing commands\r\n\
 RST - restart\r\n\
 LOAD - run bootloader\r\n\
@@ -54,27 +54,34 @@ NEXT - set next level\r\n\
 INFO - read about project\r\n\
 >";
 
-static uint8_t symbol_term[] = ">";
-
-uint8_t input_mon[1] = {0};
-char input_mon_buff[SIZE_BUFF] = {0};
-
-static uint8_t str[50]= {0};
+static char input_mon[1] = {0};
+static char input_mon_buff[SIZE_BUFF] = {0};
+static char printBufer[350] = {0};
 
 COMAND monitorTest = NONE;
 
 //-------------- UART -------------------//
-
-void clear_uart_buff(void)
+void sendUART(const char *serial_data, ...)
 {
-  memset(input_mon_buff, 0, sizeof(input_mon_buff));
+  const uint8_t block_timeout_ms = 40;
+
+  va_list arg;
+  va_start(arg, serial_data);
+  uint16_t len = vsnprintf(printBufer, sizeof(printBufer), serial_data, arg);
+  va_end(arg);
+
+  HAL_UART_Transmit(&huart1, (uint8_t *)printBufer, len, block_timeout_ms);
 }
 
-void sendUART(const uint8_t* TxBufferUartLocal)
+void sendUARTstring(const uint8_t* TxBufferUartLocal)
 { //передача в блокирующем режиме
   const uint8_t block_timeout_ms = 40; //t(sec)=(FRAME/BOUND+MINT)*N = (10/115200+0.00001)*100 = 19 мс
-
   HAL_UART_Transmit(&huart1, (uint8_t *) TxBufferUartLocal, strlen((char *) TxBufferUartLocal), block_timeout_ms);
+}
+
+static void clear_uart_buff(void)
+{
+  memset(input_mon_buff, 0, sizeof(input_mon_buff));
 }
 
 void UART_receve_IT(void)
@@ -84,65 +91,59 @@ void UART_receve_IT(void)
 
 static void sendUART_symbolTerm(void)
 {
-  sendUART((uint8_t *)symbol_term);
+  static char symbol_term[] = ">";
+  sendUART(symbol_term);
 }
 
 static void sendSNversion(void)
 {
   extern const int16_t SWversionMajor, SWversionMinor, SWversionPatch;
 
-  sprintf((char *)str, "Version: %d", SWversionMajor);
-  sendUART((uint8_t *)str);
-  sendUART((uint8_t *)".");
-  sprintf((char *)str, "%d", SWversionMinor);
-  sendUART((uint8_t *)str);
-  sendUART((uint8_t *)".");
-  sprintf((char *)str, "%d", SWversionPatch);
-  sendUART((uint8_t *)str);
-  sendUART((uint8_t *)NEWLINE_STR);
+  sendUART("Version: %d.%d.%d", SWversionMajor, SWversionMinor, SWversionPatch);
+  sendUART(NEWLINE_STR);
 }
 
 void sendUART_hello(void)
 {
-  static const uint8_t hello_string[] = "GameBox console started!\r\n";
-  static const uint8_t enter_help[] = "Enter HELP\r\n";
+  static const char hello_string[] = "GameBox console started!\r\n";
+  static const char enter_help[] = "Enter HELP";
 
-  sendUART((uint8_t *)hello_string);
+  sendUART(hello_string);
   sendSNversion();
 #if DEBUG_MAIN
-  sendUART((uint8_t *)"Debug build!\r\n");
+  sendUART("Debug build!\r\n");
 #endif
-  sendUART((uint8_t *)enter_help);
+  sendUART(enter_help);
   sendUART_symbolTerm();
 }
 
 void sendUART_help(void)
 {
-  sendUART((uint8_t *)mon_comand);
+  sendUART(mon_comand);
 }
 
 static void sendUART_OK(void)
 {
-  static const uint8_t mon_OK[] = "OK\r\n";
-  sendUART((uint8_t *)mon_OK);
+  static const char mon_OK[] = "OK\r\n";
+  sendUART(mon_OK);
 }
 
 static void sendUART_r_n(void)
 {
-  static uint8_t r_n[] = "\r\n";
-  sendUART((uint8_t *)r_n);
+  static char r_n[] = "\r\n";
+  sendUART(r_n);
 }
 
 static void sendUART_error(void)
 {
-  static const uint8_t error[] = "incorrect enter\r\n";
-  sendUART((uint8_t *)error);
+  static const char error[] = "incorrect enter\r\n";
+  sendUART(error);
 }
 
 static void sendBackspaceStr(void)
 {
-  static const uint8_t backspace_str[] = " \b";
-  sendUART((uint8_t *)backspace_str);
+  static const char backspace_str[] = " \b";
+  sendUART(backspace_str);
 }
 
 static void convertToUppercase(void)
@@ -166,12 +167,12 @@ static void monitor(void)
 {
   static uint8_t rec_len = 0U;
   const uint8_t enter = 13U;
-  const uint8_t Backspace = 0x08;
+  const uint8_t backspace = 0x08;
 
-  if ((huart1.RxXferCount == 0) && (HAL_UART_Receive_IT(&huart1, input_mon, 1) != HAL_BUSY))
+  if ((huart1.RxXferCount == 0) && (HAL_UART_Receive_IT(&huart1, (uint8_t*)input_mon, 1) != HAL_BUSY))
   {
 #if LOCAL_ECHO_EN
-    HAL_UART_Transmit(&huart1, input_mon, 1, 50); // Local echo
+    HAL_UART_Transmit(&huart1, (uint8_t*)input_mon, 1, 50); // Local echo
 #endif
     if (input_mon[0] == enter)
     {
@@ -212,14 +213,12 @@ static void monitor(void)
       else if (mon_strcmp(input_mon_buff, "INFO"))
       {
         sendUART_OK();
-        sendUART((uint8_t *)"https://github.com/sergey12malyshev/Pac-ManGame\r\n");
-        sendUART((uint8_t *)"HAL: ");
-        sprintf((char *)str, "%ld", HAL_GetHalVersion());
-        sendUART(str);
+        sendUART("https://github.com/sergey12malyshev/Pac-ManGame" NEWLINE_STR);
+        sendUART("HAL: %ld", HAL_GetHalVersion());
         sendUART_r_n();
-        sendUART((uint8_t *)__DATE__);
+        sendUART(__DATE__ );
         sendUART_r_n();
-        sendUART((uint8_t *)__TIME__);
+        sendUART(__TIME__);
       }
       else if (mon_strcmp(input_mon_buff, "LV3"))
       {
@@ -261,7 +260,7 @@ static void monitor(void)
     }
     else
     {
-      if (input_mon[0] == Backspace)
+      if (input_mon[0] == backspace)
       {
         if (rec_len != 0)
         {
@@ -280,13 +279,13 @@ static void monitor(void)
           }
           else
           {
-            sendUART((uint8_t *)"\r\nswitch keyboard language\r\n");
+            sendUART(NEWLINE_STR"switch keyboard language"NEWLINE_STR);
           }
           
         }
         else
         {
-          sendUART((uint8_t *)"\r\noverflow\r\n");
+          sendUART(NEWLINE_STR"overflow" NEWLINE_STR);
         }
       }
     }
@@ -300,26 +299,21 @@ static void monitor_out_test(void)
   switch (monitorTest)
   {
     case ADC:
-      sprintf((char *)str, "%d\r\n", getADCvalueVrefint());
-      sendUART((uint8_t *)str);
+      sendUART("%d\r\n", getADCvalueVrefint());
       resetTest();
       break;
     case BAT:
       batVoltFilt = getBatteryVoltageFilter();
-      sprintf((char *)str, "System voltage, mV: %d\r\n", getSystemVoltage());
-      sendUART((uint8_t *)str);
-      sprintf((char *)str, "Battery voltage, mV: %d\r\n", getBatteryVoltage());
-      sendUART((uint8_t *)str);
-      sprintf((char *)str, "Battery filter voltage, mV: %d\r\n", batVoltFilt);
-      sendUART((uint8_t *)str);
-      sprintf((char *)str, "Battery charge, %%: %d\r\n", getBatChargePrecent(batVoltFilt));
-      sendUART((uint8_t *)str);
+      sendUART("System voltage, mV: %d\r\n", getSystemVoltage());
+      sendUART("Battery voltage, mV: %d\r\n", getBatteryVoltage());
+      sendUART("Battery filter voltage, mV: %d\r\n", batVoltFilt);
+      sendUART("Battery charge, %%: %d\r\n", getBatChargePrecent(batVoltFilt));
       resetTest();
       break;
     case TEST:
       soundGameOver();
       soundGameCompleted();
-      sendUART((uint8_t *)"TEST Ok\r\n");
+      sendUART("TEST Ok\r\n");
       resetTest();
       break;
     default:;

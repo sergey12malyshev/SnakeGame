@@ -208,7 +208,7 @@ bool mainMenu(void)
               if(speedGame > 45) speedGame = 5;
               speedMenuUpdate(speedGame);
               uint32_t rc = flash_write(flash_get_page(), speedGame);
-              if(rc) sendUART((uint8_t *)"Flash write error\r\n");
+              if(rc) sendUART("Flash write error\r\n");
             }
           }
           screenMainMenu();
