@@ -468,10 +468,10 @@ static void PacManUpdateProcess(void)
 
 __attribute__((unused))static void debugStatus(void)
 {
-  DEBUG_PRINT( "Xpac:%d\r\n", pacman.x);
-  DEBUG_PRINT( "Ypac:%d\r\n", pacman.y);
-  DEBUG_PRINT( "Xm2:%d\r\n", monster2.x);
-  DEBUG_PRINT( "Ym2:%d\r\n", monster2.y);
+  DEBUG_PRINT("Xpac:%d\r\n", pacman.x);
+  DEBUG_PRINT("Ypac:%d\r\n", pacman.y);
+  DEBUG_PRINT("Xm2:%d\r\n", monster2.x);
+  DEBUG_PRINT("Ym2:%d\r\n", monster2.y);
 
   if (monsterCheck1())
   {
