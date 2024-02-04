@@ -16,8 +16,10 @@
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-#define LOCAL_ECHO_EN  1U
-#define SIZE_BUFF      12U
+#define DEBUG_QUEUE     false
+
+#define LOCAL_ECHO_EN   true
+#define SIZE_BUFF       16U
 
 #define NEWLINE_STR    "\r\n"
 #define mon_strcmp(ptr, cmd) (!strcmp(ptr, cmd))
@@ -59,7 +61,9 @@ static char input_mon[1] = {0};
 static char input_mon_buff[SIZE_BUFF] = {0};
 static char printBufer[350] = {0};
 
-extern MESSAGE outBufer;
+  /* queue UART */
+QUEUE queue1 = {0};
+uint8_t queueOutMsg[1] = {0};
 
 COMAND monitorTest = NONE;
 
@@ -171,9 +175,9 @@ static void monitorParser(void)
   const uint8_t backspace = 0x08;
 
 #if LOCAL_ECHO_EN
-  HAL_UART_Transmit(&huart1, (uint8_t*)input_mon, 1, 50); // Local echo
+  HAL_UART_Transmit(&huart1, (uint8_t*)queueOutMsg, 1, 50); // Local echo
 #endif
-    if (input_mon[0] == enter)
+    if (queueOutMsg[0] == enter)
     {
       convertToUppercase();
       sendUART_r_n();
@@ -257,7 +261,7 @@ static void monitorParser(void)
     }
     else
     {
-      if (input_mon[0] == backspace)
+      if (queueOutMsg[0] == backspace)
       {
         if (rec_len != 0)
         {
@@ -270,9 +274,9 @@ static void monitorParser(void)
       {
         if (rec_len < SIZE_BUFF)
         {
-          if((input_mon[0] > 0) && (input_mon[0] <= 127)) //ASCIi check
+          if((queueOutMsg[0] > 0) && (queueOutMsg[0] <= 127)) //ASCIi check
           {
-            input_mon_buff[rec_len++] = input_mon[0]; //load char do string
+            input_mon_buff[rec_len++] = queueOutMsg[0]; //load char do string
           }
           else
           {
@@ -320,13 +324,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if(HAL_UART_Receive_IT (&huart1, (uint8_t*)&input_mon, 1U) == HAL_OK)
   {
-    enqueUart((uint8_t*)&input_mon); // Запишем в очередь 
+    enque(&queue1,(MESSAGE*)&input_mon); // Запишем в очередь 
+#if DEBUG_QUEUE
+    sendUART("e_ l:%d e:%d b:%d\r\n", queue1.current_load, queue1.begin, queue1.end);
+#endif
   }
 }
 
 /*
  * Протопоток MonitorTread (CLI)
  *
+ * Two buffers are used: a FIFO UART message input queue (bytes) and a srtring buffer.
  */
 PT_THREAD(MonitorTread(struct pt *pt))
 {
@@ -334,14 +342,14 @@ PT_THREAD(MonitorTread(struct pt *pt))
 
   PT_BEGIN(pt);
 
-  init_queueUart();
-  
+  init_queue(&queue1);
+
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 50U);
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 25U);
     timeCount = HAL_GetTick();	
 
-    if(dequeUart()) // чтение из очереди
+    if(deque(&queue1, (MESSAGE*)&queueOutMsg)) // чтение из очереди
     {
       monitorParser();
     }
