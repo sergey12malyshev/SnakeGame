@@ -44,12 +44,23 @@ Run **runOpenODC.bat** and run terminal: telnet localhost 4444
 
 Run **runGDBserver.bat**
 
-
 ## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
 
 ## Update firmware use system bootloader (DFU Mode)
 Go to the device menu: MENU->UPDATE or CLI-> LOAD command to launch the system bootloader. Connect to PC via USB Type C. Run **updateFirmware.cmd** or launch STM32CubeProgrammer (select the desired COM-port and download the firmware).
+
+## Command Line Interface
+
+UART 115200 Baud rate
+
+Connect: PA10 - RX / PA9 - TX
+
+Terminal configuration file: utils\TERATERM.INI
+
+Enter *help* command
+
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=20% height=20%>
 
 ### Static code analyzer
 Cppcheck 2.10 https://cppcheck.sourceforge.io/
@@ -65,18 +76,6 @@ Simple unit tests are implemented in the file "unit_test.с". Unit tests are lau
 STM32 CubeMX
 
 (Checkboxes checked: *Enable Full Assert* и *Set All Free Pins as Analog*)
-
-## Command Line Interface
-
-UART 115200 Baud rate
-
-Connect: PA10 - RX / PA9 - TX
-
-Terminal configuration file: utils\TERATERM.INI
-
-Enter *help* command
-
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=20% height=20%>
 
 ## Hardware
 - Black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)

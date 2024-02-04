@@ -274,7 +274,7 @@ static void monitorParser(void)
       {
         if (rec_len < SIZE_BUFF)
         {
-          if((queueOutMsg[0] > 0) && (queueOutMsg[0] <= 127)) //ASCIi check
+          if((queueOutMsg[0] > 0) && (queueOutMsg[0] <= 127)) //ASCII check
           {
             input_mon_buff[rec_len++] = queueOutMsg[0]; //load char do string
           }

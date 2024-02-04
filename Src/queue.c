@@ -21,7 +21,7 @@ bool enque(QUEUE *queue, MESSAGE *message)
 {
   if (queue->current_load < QUEUE_SIZE) 
   {
-    if (queue->end == QUEUE_SIZE) 
+    if (queue->end == QUEUE_SIZE)
     {
       queue->end = 0;
     }
