@@ -172,7 +172,8 @@ static void monitorParser(void)
 {
   static uint8_t rec_len = 0U;
   const uint8_t enter = 13U;
-  const uint8_t backspace = 0x08;
+  const uint8_t backspace = 0x08; //Tera Term
+  const uint8_t backspacePuTTy = 127U;
 
 #if LOCAL_ECHO_EN
   HAL_UART_Transmit(&huart1, (uint8_t*)queueOutMsg, 1, 50); // Local echo
@@ -261,7 +262,7 @@ static void monitorParser(void)
     }
     else
     {
-      if (queueOutMsg[0] == backspace)
+      if ((queueOutMsg[0] == backspace)||(queueOutMsg[0] == backspacePuTTY))
       {
         if (rec_len != 0)
         {
@@ -274,7 +275,7 @@ static void monitorParser(void)
       {
         if (rec_len < SIZE_BUFF)
         {
-          if((queueOutMsg[0] > 0) && (queueOutMsg[0] <= 127)) //ASCII check
+          if((queueOutMsg[0] > 0) && (queueOutMsg[0] < 127)) //ASCII check
           {
             input_mon_buff[rec_len++] = queueOutMsg[0]; //load char do string
           }
