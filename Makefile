@@ -84,7 +84,8 @@ SPI_TFT.c \
 Menu.c \
 filter.c \
 runBootloader.c \
-unit_test.c
+unit_test.c \
+queue.c
 
 # ASM sources
 ASM_SOURCES =  \

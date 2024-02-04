@@ -11,6 +11,7 @@
 #include "gameEngineThread.h"
 #include "Sound.h"
 #include "runBootloader.h"
+#include "queue.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -58,6 +59,8 @@ static char input_mon[1] = {0};
 static char input_mon_buff[SIZE_BUFF] = {0};
 static char printBufer[350] = {0};
 
+extern MESSAGE outBufer;
+
 COMAND monitorTest = NONE;
 
 //-------------- UART -------------------//
@@ -90,10 +93,11 @@ void UART_receve_IT(void)
   HAL_UART_Receive_IT(&huart1, (uint8_t *)input_mon, 1);
 }
 
+//-------------- CLI -------------------//
+
 static void sendUART_symbolTerm(void)
 {
-  static char symbol_term[] = ">";
-  sendUART(symbol_term);
+  sendUART(">");
 }
 
 static void sendSNversion(void)
@@ -125,26 +129,22 @@ void sendUART_help(void)
 
 static void sendUART_OK(void)
 {
-  static const char mon_OK[] = "OK\r\n";
-  sendUART(mon_OK);
+  sendUART("OK\r\n");
 }
 
 static void sendUART_r_n(void)
 {
-  static char r_n[] = "\r\n";
-  sendUART(r_n);
+  sendUART("\r\n");
 }
 
 static void sendUART_error(void)
 {
-  static const char error[] = "incorrect enter\r\n";
-  sendUART(error);
+  sendUART("incorrect enter\r\n");
 }
 
 static void sendBackspaceStr(void)
 {
-  static const char backspace_str[] = " \b";
-  sendUART(backspace_str);
+  sendUART(" \b");
 }
 
 static void convertToUppercase(void)
@@ -164,16 +164,14 @@ void resetTest(void)
   monitorTest = NONE;
 }
 
-static void monitor(void)
+static void monitorParser(void)
 {
   static uint8_t rec_len = 0U;
   const uint8_t enter = 13U;
   const uint8_t backspace = 0x08;
 
-  if ((huart1.RxXferCount == 0) && (HAL_UART_Receive_IT(&huart1, (uint8_t*)input_mon, 1) != HAL_BUSY))
-  {
 #if LOCAL_ECHO_EN
-    HAL_UART_Transmit(&huart1, (uint8_t*)input_mon, 1, 50); // Local echo
+  HAL_UART_Transmit(&huart1, (uint8_t*)input_mon, 1, 50); // Local echo
 #endif
     if (input_mon[0] == enter)
     {
@@ -288,7 +286,6 @@ static void monitor(void)
         }
       }
     }
-  }
 }
 
 static void monitor_out_test(void)
@@ -319,9 +316,16 @@ static void monitor_out_test(void)
   }
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) 
+{
+  if(HAL_UART_Receive_IT (&huart1, (uint8_t*)&input_mon, 1U) == HAL_OK)
+  {
+    enqueUart((uint8_t*)&input_mon); // Запишем в очередь 
+  }
+}
 
 /*
- * Протопоток MonitorTread
+ * Протопоток MonitorTread (CLI)
  *
  */
 PT_THREAD(MonitorTread(struct pt *pt))
@@ -330,12 +334,17 @@ PT_THREAD(MonitorTread(struct pt *pt))
 
   PT_BEGIN(pt);
 
+  init_queueUart();
+  
   while (1)
   {
     PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 50U);
     timeCount = HAL_GetTick();	
 
-    monitor();
+    if(dequeUart()) // чтение из очереди
+    {
+      monitorParser();
+    }
     monitor_out_test();
 
     PT_YIELD(pt);
