@@ -79,7 +79,7 @@ static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
 const int16_t SWversionMinor = 18;
-const int16_t SWversionPatch = 0;
+const int16_t SWversionPatch = 1;
 
 /* USER CODE END PV */
 
