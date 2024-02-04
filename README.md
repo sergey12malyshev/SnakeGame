@@ -50,14 +50,6 @@ Run **RunStaticAnalysisCODE.cmd**
 
 It is possible to output the analysis result to a file
 
-### Unit tests
-Simple unit tests are implemented in the file "unit_test.с". Unit tests are launched if the *RUN_UNIT_TEST* key is set or when building Debug
-
-## Peripheral setup
-STM32 CubeMX
-
-(Checkboxes checked: *Enable Full Assert* и *Set All Free Pins as Analog*)
-
 ## Command Line Interface
 
 UART 115200 Baud rate
@@ -68,7 +60,15 @@ Terminal configuration file: utils\TERATERM.INI
 
 Enter *help* command
 
-<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=35% height=35%>
+<img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=20% height=20%>
+
+### Unit tests
+Simple unit tests are implemented in the file "unit_test.с". Unit tests are launched if the *RUN_UNIT_TEST* key is set or when building Debug
+
+## Peripheral setup
+STM32 CubeMX
+
+(Checkboxes checked: *Enable Full Assert* и *Set All Free Pins as Analog*)
 
 ## Hardware
 - Black pill STM32F103C8T6 (ARM Cortex-M3; 72 МГц; FLASH 64 кБ; ОЗУ 20 кБ)
