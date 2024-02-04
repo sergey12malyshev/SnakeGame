@@ -26,7 +26,7 @@ static bool Test_underVoltageControl(void)
 
 static void stopTest(void)
 {
-  sendUART((uint8_t *)"Unit Tests failed!\r\n");
+  sendUART("[FAULT] Unit Tests failed!\r\n");
   for(;;)
   {
     WDT_CLEAR;
@@ -37,19 +37,19 @@ void runUnitTests(void)
 {
   if (Test_getBatChargePrecent() == false)
   {
-    sendUART((uint8_t *)"1\r\n");
+    sendUART("1\r\n");
     stopTest();
   }
   if(Test_overVoltageControl() == false)
   {    
-    sendUART((uint8_t *)"2\r\n");
+    sendUART("2\r\n");
     stopTest();
   }
   if(Test_underVoltageControl() == false)
   {
-    sendUART((uint8_t *)"3\r\n");
+    sendUART("3\r\n");
     stopTest();
   }
 
-  sendUART((uint8_t *)"Unit Tests passed!\r\n");
+  sendUART("[OK] Unit Tests passed!\r\n");
 }

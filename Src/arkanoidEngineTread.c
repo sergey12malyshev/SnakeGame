@@ -139,7 +139,7 @@ PT_THREAD(ArcanoidGameEngineThread(struct pt *pt))
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > (50u - getSpeedGame()));
+    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > (45U - getSpeedGame()));
     timeCountGameEngine = HAL_GetTick();
 
     if((ball1.x + ball1.size) >= X_MAX)

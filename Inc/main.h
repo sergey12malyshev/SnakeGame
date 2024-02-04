@@ -69,6 +69,8 @@ void scoreIncrement();
 
 #define WDT_CLEAR   __NOP() // заготовка под wdt
 
+#define OK_G "[\033[32mOK\033[0m] "
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

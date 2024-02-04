@@ -37,18 +37,18 @@ To make the debug project , run **makeProjectDebug.bat** (OR *make -j1 debug* cm
 
 To clean the project, run **makeClean.bat** (OR *make clean*)
 
+## Debugging
+Open On-Chip Debugger (OCD) 0.10.0-00113-g0f83948 + GNU gdb (GNU Tools for ARM Embedded Processors) 7.10.1.20160923-cvs
+
+Run **runOpenODC.bat** and run terminal: telnet localhost 4444
+
+Run **runGDBserver.bat**
+
 ## Programm firmware
 Connect ST-Link V2 to SWD connector. Run **programFlash.bat**
 
-## Update firmware use system bootloader
+## Update firmware use system bootloader (DFU Mode)
 Go to the device menu: MENU->UPDATE or CLI-> LOAD command to launch the system bootloader. Connect to PC via USB Type C. Run **updateFirmware.cmd** or launch STM32CubeProgrammer (select the desired COM-port and download the firmware).
-
-### Static code analyzer
-Cppcheck 2.10 https://cppcheck.sourceforge.io/
-
-Run **RunStaticAnalysisCODE.cmd**
-
-It is possible to output the analysis result to a file
 
 ## Command Line Interface
 
@@ -61,6 +61,13 @@ Terminal configuration file: utils\TERATERM.INI
 Enter *help* command
 
 <img src="https://github.com/sergey12malyshev/Pac-ManGame/blob/develop/image/CLI.png" width=20% height=20%>
+
+### Static code analyzer
+Cppcheck 2.10 https://cppcheck.sourceforge.io/
+
+Run **RunStaticAnalysisCODE.cmd**
+
+It is possible to output the analysis result to a file
 
 ### Unit tests
 Simple unit tests are implemented in the file "unit_test.с". Unit tests are launched if the *RUN_UNIT_TEST* key is set or when building Debug

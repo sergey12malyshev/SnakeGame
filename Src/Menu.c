@@ -127,7 +127,7 @@ static void settingsScreen(void)
 void screenBoot(void)
 {
   LCD_Fill(colorBg);
-  STRING_OUT("Bootloader run..", 10, 100, 3, getGreen(), getBlack());
+  STRING_OUT("DFU mode run..", 10, 100, 3, getGreen(), getBlack());
   simple_font_string_OUT("Connect USB to PC", 10, 200, 2, getWhite(), getBlack());
 }
 
@@ -208,7 +208,7 @@ bool mainMenu(void)
               if(speedGame > 45) speedGame = 5;
               speedMenuUpdate(speedGame);
               uint32_t rc = flash_write(flash_get_page(), speedGame);
-              if(rc) sendUART((uint8_t *)"Flash write error\r\n");
+              if(rc) sendUART("Flash write error\r\n");
             }
           }
           screenMainMenu();

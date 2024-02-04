@@ -79,7 +79,7 @@ static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
 const int16_t SWversionMinor = 18;
-const int16_t SWversionPatch = 0;
+const int16_t SWversionPatch = 1;
 
 /* USER CODE END PV */
 
@@ -139,21 +139,23 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  sendUART("--------------------------------\r\n");
+  sendUART("Initialization...\r\n");
   heartBeatLedEnable();
   UART_receve_IT();
-
+  sendUART(OK_G "UART Init\r\n");
   HAL_Delay(250); // Добавим задержку, для исключения дребезга питания
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
-
+  sendUART(OK_G "LCD Init\r\n");
   screenSaver();
   resetTest();
   HAL_Delay(150);
   soundPowerOn();
-  sendUART_hello();
 
   HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_ADC_Start_IT(&hadc1);
+  sendUART(OK_G "ADC Start Calibration\r\n");
   
   #if RUN_UNIT_TEST
   runUnitTests();
@@ -163,11 +165,16 @@ int main(void)
   setDefaultValueFilter(3200U);
 
   uint32_t speedIsFlash = flash_read(flash_get_page());
-  if (speedIsFlash < 55u) setSpeedGame(speedIsFlash);
-  
+  if (speedIsFlash < 55U)
+  {
+    setSpeedGame(speedIsFlash);
+    sendUART(OK_G "Flash settings loading\r\n");
+  }
   screenMainMenu();
 
   initProtothreads();
+  sendUART(OK_G "Init Protothreads\r\n");
+  sendUART_hello();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -484,7 +491,7 @@ void assert_failed(uint8_t *file, uint32_t line)
     uint8_t str[25] = {0};
 
     sprintf((char *)str, "Wrong parameters value: file %s on line %lu\r\n", file, line);
-    sendUART((uint8_t *)str);
+    sendUART(str);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
