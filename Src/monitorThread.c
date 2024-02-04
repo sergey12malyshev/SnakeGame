@@ -173,7 +173,7 @@ static void monitorParser(void)
   static uint8_t rec_len = 0U;
   const uint8_t enter = 13U;
   const uint8_t backspace = 0x08; //Tera Term
-  const uint8_t backspacePuTTy = 127U;
+  const uint8_t backspacePuTTY = 127U;
 
 #if LOCAL_ECHO_EN
   HAL_UART_Transmit(&huart1, (uint8_t*)queueOutMsg, 1, 50); // Local echo
