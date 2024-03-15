@@ -108,7 +108,7 @@ PT_THREAD(BatteryCheckThread(struct pt *pt))
       timeCount2 = 0;
       heartBeatLedToggle();
       systemControlProcess(); 
-      if(getWorkState() != MENU)
+      if((getWorkState() == GAME1)||(getWorkState() == GAME2))
       {
         STRING_NUM_L(getBatChargePrecent(getBatteryVoltageFilter()), 3, 210, 210, getGreen(), getBlack());
       } 

@@ -354,7 +354,7 @@ void initGame(void)
   }
 }
 
-static void endGame(void)
+void endGameState(void)
 {
   WDT_CLEAR;
   HAL_Delay(300);
@@ -371,6 +371,7 @@ static void endGame(void)
     if (buttonRightHandler())
     {
       initGame();
+      setWorkState(GAME1);
       break;
     }
   }
@@ -560,7 +561,7 @@ PT_THREAD(GameEngineThread(struct pt *pt))
       soundGameOver();
       screenEndGame();
       levelReset();
-      endGame();
+      setWorkState(END_GAME);
     }
 #endif
 
@@ -607,7 +608,7 @@ PT_THREAD(GameEngineThread(struct pt *pt))
       screenGameCompleted();
       soundGameCompleted();
       levelUp();
-      endGame();
+      setWorkState(END_GAME);
     }
 
     if (checkWalls() || monsterCheck1() || monsterCheck2())
@@ -619,7 +620,7 @@ PT_THREAD(GameEngineThread(struct pt *pt))
       soundGameOver();
       screenEndGame();
       levelReset();
-      endGame();
+      setWorkState(END_GAME);
     }
 	
     if (mainScore != oldMainScore)

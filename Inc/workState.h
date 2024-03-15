@@ -5,7 +5,8 @@ typedef enum
 {
   MENU = 0, 
   GAME1,
-  GAME2
+  GAME2,
+  END_GAME
 } STATE;
 
 STATE getWorkState(void);

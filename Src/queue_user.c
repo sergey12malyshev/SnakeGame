@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "queue.h"
-#include "monitorThread.h"
+#include "queue_user.h"
 
 /*
 Portable array-based cyclic FIFO queue. https://stackoverflow.com/questions/52783068/how-to-implement-a-message-queue-in-standard-c

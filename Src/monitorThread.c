@@ -11,7 +11,7 @@
 #include "gameEngineThread.h"
 #include "Sound.h"
 #include "runBootloader.h"
-#include "queue.h"
+#include "queue_user.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"

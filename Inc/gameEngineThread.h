@@ -9,5 +9,6 @@ void initGame(void);
 void levelSet(uint8_t l);
 void levelReset(void);
 void levelUp(void);
+void endGameState(void);
 
 #endif /* __GAME_ENGINE_H */
