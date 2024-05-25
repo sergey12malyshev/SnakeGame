@@ -21,7 +21,6 @@
 #define LOCAL_ECHO_EN   true
 #define SIZE_BUFF       16U
 
-#define NEWLINE_STR    "\r\n"
 #define mon_strcmp(ptr, cmd) (!strcmp(ptr, cmd))
 
 extern UART_HandleTypeDef huart1;

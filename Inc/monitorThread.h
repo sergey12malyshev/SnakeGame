@@ -3,6 +3,9 @@
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
+
+#define NEWLINE_STR    "\r\n"
+
 PT_THREAD(MonitorTread(struct pt *pt));
 
 void sendUART(const char *serial_data, ...);

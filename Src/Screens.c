@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "Screens.h"
 #include "SPI_TFT.h"
@@ -120,16 +121,31 @@ void createWorkRegion(void)
   batterySumbolShow();
 }
 
+void screenBootProcess(void)
+{
+  extern const int16_t SWversionMajor, SWversionMinor, SWversionPatch;
+  extern const char HWversion[];
+  const uint16_t colorBg = getBlack();
+  LCD_Fill(colorBg);
+  simple_font_string_OUT("GAME BOX", 30, 50, 2, getBlue(), colorBg);
+  char buf[12] = {0};
+  sprintf(buf,"SW ver.: %d.%d.%d", SWversionMajor, SWversionMinor, SWversionPatch);
+  simple_font_string_OUT(buf, 30, 100, 2, getWhite(), colorBg);
+  sprintf(buf,"HW ver.: %s", HWversion);
+  simple_font_string_OUT(buf, 30, 125, 2, getWhite(), colorBg);
+  HAL_Delay(120);
+  simple_font_string_OUT("Booting...", 30, 150, 2, getWhite(), colorBg);
+  HAL_Delay(155);
+  simple_font_string_OUT("Run sound test...", 30, 175, 2, getWhite(), colorBg);
+}
+
 void screenSaver(void)
 {
   extern const int16_t SWversionMajor, SWversionMinor;
   const uint16_t colorBg = getBlack();
   LCD_Fill(colorBg);
   STRING_OUT("GAME BOX", 90, 110, 10, getBlue(), colorBg);
-  STRING_OUT("Ver.", 100, 220, 5, 0x00FF, colorBg);
-  STRING_NUM_L(SWversionMajor, 1, 180, 220, 0x00FF, colorBg);
-  STRING_OUT(".", 195, 220, 4, 0x00FF, colorBg);
-  STRING_NUM_L(SWversionMinor, 2, 205, 220, 0x00FF, colorBg); 
+  STRING_OUT("2024 MSE", 100, 220, 5, 0x00FF, colorBg);
 
   createMonster(0, 50, 50, 5, getRed(), colorBg);
   createMonster(1, 200, 150, 5, getOrange(), colorBg);

@@ -78,8 +78,10 @@ static struct pt batteryCheck_pt;
 static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 18;
-const int16_t SWversionPatch = 1;
+const int16_t SWversionMinor = 19;
+const int16_t SWversionPatch = 0;
+
+const char HWversion[] = "1.0.0";
 
 /* USER CODE END PV */
 
@@ -148,6 +150,8 @@ int main(void)
   LCD_Init();
   LCD_setOrientation(ORIENTATION_LANDSCAPE_MIRROR);
   sendUART(OK_G "LCD Init\r\n");
+  screenBootProcess();
+  HAL_Delay(1500); 
   screenSaver();
   resetTest();
   HAL_Delay(150);
@@ -161,7 +165,7 @@ int main(void)
   runUnitTests();
   #endif
 
-  HAL_Delay(1500);
+  HAL_Delay(900);
   setDefaultValueFilter(3200U);
 
   uint32_t speedIsFlash = flash_read(flash_get_page());
