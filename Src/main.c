@@ -87,7 +87,7 @@ static struct pt batteryCheck_pt;
 static struct pt monitorCheck_pt;
 
 const int16_t SWversionMajor = 0;
-const int16_t SWversionMinor = 19;
+const int16_t SWversionMinor = 20;
 const int16_t SWversionPatch = 0;
 
 const char HWversion[] = "1.0.0";
