@@ -54,7 +54,16 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define GCC_VERSION ((__GNUC__ * 100) + (__GNUC_MINOR__ * 10) + ( __GNUC_PATCHLEVEL__ ))
 
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
+// Firmware builds require at least GCC 5.4.1
+#if (GCC_VERSION < 541)
+	#error "GCC compiler >= 5.4.1 required"
+  #pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
+#endif
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
