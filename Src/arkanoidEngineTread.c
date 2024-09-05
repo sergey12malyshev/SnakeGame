@@ -19,6 +19,7 @@
 #include "Screens.h"
 #include "Sound.h"
 #include "colors.h"
+#include "time.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -133,14 +134,16 @@ static void arkanoidEndGame(void)
  */
 PT_THREAD(ArcanoidGameEngineThread(struct pt *pt))
 {
-  static uint32_t timeCountGameEngine = 0;
+  static uint32_t timerCountGameEngine;
 
   PT_BEGIN(pt);
 
+  setTime(&timerCountGameEngine);
+
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > (45U - getSpeedGame()));
-    timeCountGameEngine = HAL_GetTick();
+    PT_DELAY_MS(pt, &timerCountGameEngine, 45U - getSpeedGame());
+
 
     if((ball1.x + ball1.size) >= X_MAX)
     {

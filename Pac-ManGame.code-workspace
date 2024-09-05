@@ -12,7 +12,8 @@
 			"unit_test.h": "c",
 			"batterycheckthread.h": "c",
 			"stm32f1xx_hal.h": "c",
-			"workstate.h": "c"
+			"workstate.h": "c",
+			"screens.h": "c"
 		}
 	}
 }

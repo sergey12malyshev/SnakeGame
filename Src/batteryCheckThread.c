@@ -13,6 +13,7 @@
 #include "menu.h"
 #include "sound.h"
 #include "workState.h"
+#include "time.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -91,21 +92,22 @@ static void systemControlProcess(void)
  */
 PT_THREAD(BatteryCheckThread(struct pt *pt))
 {
-  static uint32_t timeCount = 0, timeCount2 = 0;
+  static uint32_t timer1, timeCount;
 
   PT_BEGIN(pt);
+  
+  setTime(&timer1);
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 50U); // Запускаем преобразования ~ раз в 50 мс
-    timeCount = HAL_GetTick();	
+    PT_DELAY_MS(pt, &timer1, 50U); // Запускаем преобразования ~ раз в 50 мс
     
     ADC_conversionRun();
     batteryVoltageFilterProcess();
 
-    if(++timeCount2 > 20) // Каждую секунду выводим заряд и контролируем системное напряжние
+    if(++timeCount > 20) // Каждую секунду выводим заряд и контролируем системное напряжние
     {
-      timeCount2 = 0;
+      timeCount = 0;
       heartBeatLedToggle();
       systemControlProcess(); 
       if(getWorkState() != MENU)

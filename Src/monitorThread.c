@@ -12,6 +12,7 @@
 #include "Sound.h"
 #include "runBootloader.h"
 #include "queue.h"
+#include "time.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -338,16 +339,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  */
 PT_THREAD(MonitorTread(struct pt *pt))
 {
-  static uint32_t timeCount = 0;
+  static uint32_t timer1;
 
   PT_BEGIN(pt);
 
   init_queue(&queue1);
+  setTime(&timer1);
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCount) > 25U);
-    timeCount = HAL_GetTick();	
+    PT_DELAY_MS(pt, &timer1, 25U);
 
     if(deque(&queue1, (MESSAGE*)&queueOutMsg)) // чтение из очереди
     {

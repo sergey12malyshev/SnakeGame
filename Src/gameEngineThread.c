@@ -14,6 +14,7 @@
 #include "Screens.h"
 #include "Sound.h"
 #include "colors.h"
+#include "time.h"
 
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
@@ -497,15 +498,16 @@ __attribute__((unused))static void debugStatus(void)
  */
 PT_THREAD(GameEngineThread(struct pt *pt))
 {
-  static uint32_t timeCountGameEngine = 0;
+  static uint32_t timerCountGameEngine;
   static uint8_t i;
 
   PT_BEGIN(pt);
+  
+  setTime(&timerCountGameEngine);
 
   while (1)
   {
-    PT_WAIT_UNTIL(pt, (HAL_GetTick() - timeCountGameEngine) > (50u - getSpeedGame()));
-    timeCountGameEngine = HAL_GetTick();	
+    PT_DELAY_MS(pt, &timerCountGameEngine, (50u - getSpeedGame()));	
 
     old_pacman.x = pacman.x;
     old_pacman.y = pacman.y;
