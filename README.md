@@ -118,3 +118,5 @@ https://tuxotronic.org/post/arm-none-eabi/
 ## About repo
 
 Work in the repository is carried out through the Git-flow branching model
+
+Run the **generateRelease.bat**  to automatically generate an archive with the software 
